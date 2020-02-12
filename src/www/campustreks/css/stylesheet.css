@@ -1,5 +1,5 @@
 html {
-  background: #161616;
+  background: lightskyblue;
 }
 
 body {
@@ -8,7 +8,6 @@ body {
   margin: 0 auto;
   max-width: 900px;
   text-align: center;
-  overflow-y: scroll;
 }
 
 h1{font-size:64px}
