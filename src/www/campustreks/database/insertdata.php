@@ -11,10 +11,10 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error . "<br>");
 }
 
-$sql = "INSERT INTO Users (Email, Username, PasswordHash, PasswordSalt)
-VALUES ('John@example.com', 'JohnDoe', 'safepassword', 'salt');";
-$sql .= "INSERT INTO Users (Email, Username, PasswordHash, PasswordSalt)
-VALUES ('Tom@email.co.uk', 'TomTom', 'secretword', 'pepper');";
+$sql = "INSERT INTO Users (Email, Username, Password)
+VALUES ('John@example.com', 'JohnDoe', 'safepassword');";
+$sql .= "INSERT INTO Users (Email, Username, Password)
+VALUES ('Tom@email.co.uk', 'TomTom', 'secretword');";
 $sql .= "INSERT INTO Hunt (Name, Description, BestTeam, Highscore, Email)
 VALUES ('Forum Finder', 'There are many routes to the Forum and along the way many interesting buildings.', 'Team10', '4000', 'John@example.com');";
 $sql .= "INSERT INTO Hunt (Name, Description, BestTeam, Highscore, Email)
