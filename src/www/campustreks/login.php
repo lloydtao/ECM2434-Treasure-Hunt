@@ -14,7 +14,7 @@
   // Redirect to home.php if already logged in
   include "checklogin.php";
   if (CheckLogin()) {
-    header("location:home.php");
+    header("location:create.php");
   }
   ?>
   <body>
