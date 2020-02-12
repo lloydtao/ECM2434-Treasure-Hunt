@@ -13,7 +13,7 @@
           <input type='text' name='pin' maxlength='8' size='12' placeholder='Pin'>
         </div>
         <div class='play-content'>
-          <input type='text' name='username' maxlength='15' minlength='2' size='18' placeholder='Username'>
+          <input type='text' name='nickname' maxlength='15' minlength='2' size='18' placeholder='Nickname'>
         </div>
         <button class='play-submit' type='submit'>Play</button>
       </div>
