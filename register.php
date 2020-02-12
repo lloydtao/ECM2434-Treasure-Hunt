@@ -68,7 +68,7 @@ function registerUser($conn)
                 {
                     $dbEmail = $row['Email'];
                     $dbUsername = $row['Username'];
-                    $dbPass = $row['PasswordHash'];
+                    $dbPass = $row['Password'];
 
                     //Validates that the email and username are unique
                     if($email == $dbEmail)
@@ -89,7 +89,8 @@ function registerUser($conn)
             //Hashes password and inputs user data to database
             $pass = password_hash($password, PASSWORD_DEFAULT);
 
-            $insert = "INSERT INTO users VALUES('$email', '$username', '$pass')";
+            $insert = "INSERT INTO users (Email, Username, Password) 
+                       VALUES ('$email', '$username', '$pass')";
             $result = mysqli_query($conn, $insert);
 
             echo "<script>";
