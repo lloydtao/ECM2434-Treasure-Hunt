@@ -15,7 +15,7 @@ if ($conn->connect_error) {
 $sql = "CREATE TABLE Users (
     Email VARCHAR(50) NOT NULL PRIMARY KEY,
     Username VARCHAR(30) NOT NULL,
-    Password VARCHAR(30) NOT NULL,
+    Password VARCHAR(70) NOT NULL,
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );";
 
