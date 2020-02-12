@@ -1,15 +1,13 @@
 <?php
-// From https://www.w3schools.com/php/php_mysql_connect.asp
-$servername = "";
-$username = "";
-$password = "";
+function openCon()
+{
+    // Create connection
+    $conn = new mysqli("localhost", "root", "", "campustreks");
 
-// Create connection
-$conn = new mysqli($servername, $username, $password);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    return $conn;
 }
-echo "Connected successfully";
 ?>
