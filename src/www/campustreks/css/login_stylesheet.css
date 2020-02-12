@@ -1,0 +1,23 @@
+.login-box {
+  background-color: #585858;
+  height: 200px;
+  width: 400px;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+}
+
+.login-content {
+  margin: 10px;
+}
+
+.login-submit {
+  font-size: 20px;
+}
+
+.error {
+  color: #FF6060;
+  font-size: 15px;
+}
