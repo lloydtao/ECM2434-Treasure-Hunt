@@ -23,7 +23,6 @@ if (CheckCredentials($email, $password, $conn)) {
   // Save login info in session
   $_SESSION['isLoggedIn'] = true;
   $_SESSION['email'] = $email;
-  $_SESSION['username'] = $row["Username"];
   header("Location: home.php");
 } else {
   // Return to login page with error
