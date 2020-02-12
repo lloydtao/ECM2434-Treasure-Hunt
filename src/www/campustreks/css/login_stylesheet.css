@@ -1,0 +1,50 @@
+.login-box {
+    overflow: hidden;
+    position: static;
+    background-color: white;
+    color: black;
+    box-sizing: border-box;
+    margin: auto;
+    margin-top: 30%;
+    width: fit-content;
+    border: 3px solid black;
+    padding: 5px;
+}
+
+.login-content {
+    overflow: hidden;
+    margin: 3px auto;
+    width: fit-content;
+    padding: 3px;
+}
+
+input {
+    border: 3px solid black;
+    opacity: 0.6;
+    text-align: center;
+    min-height: 50px;
+    min-width: 50px;
+}
+
+input:focus {
+    outline-color: black;
+    transition: ease-in 0.3s;
+    opacity: 1;
+}
+
+
+.login-submit {
+    overflow: hidden;
+    margin: auto;
+    width: fit-content;
+    border: 2px solid black;
+    color: black;
+    padding: 8px;
+    text-decoration: none;
+    background-color: white;
+    outline-color: black;
+}
+
+.error {
+  color: #FF6060;
+}
