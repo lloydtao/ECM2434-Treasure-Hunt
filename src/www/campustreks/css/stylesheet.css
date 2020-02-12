@@ -1,48 +1,79 @@
 html {
-  background: #161616;
-}
-
-body {
-  color: white;
-  font-family: sans-serif;
-  margin: 0 auto;
-  max-width: 900px;
-  text-align: center;
+  background-color: #161616;
   overflow-y: scroll;
 }
 
-h1{font-size:64px}
-h2{font-size:48px}
-h3{font-size:36px}
-h4{font-size:24px}
-h5{font-size:20px}
-h6{font-size:16px}
+body {
+  color: #fff;
+  background-color: #5985B2;
+  font-family: sans-serif;
+  margin: 0 auto;
+  text-align: center;
+}
+
+h1{font-size:36px}
+h2{font-size:24px}
+h3{font-size:20px}
+h4{font-size:16px}
 
 p {
   font-size: 12px;
 }
 
-.whole {
-	min-width: 360px;
-	width: 100%;
-	float: left;
-	box-shadow: 0px 4px 6px 0 rgba(0,0,0,0.5);
+header {
+  color: #fff;
+  padding: 0;
+  margin: 0;
+  background-color: #4AAD52;
+  overflow: hidden;
 }
 
-.half {
-	min-width: 360px;
-	width: 50%;
-	float: left;
+header li {
+  float: left;
+  list-style-type: none;
 }
-@media (max-width:800px){.half{width:100%}}
 
-.quarter {
-	min-width: 180px;
-	width: 25%;
-	float: left;
+header li a {
+  text-align: justify;
+  display: block;
+  color: #eee;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
 }
-@media (max-width:800px){.quarter{width:100%}}
 
-.card {
-	margin: 8px;
+li a:hover {
+  background-color: #488B49;
+}
+
+footer {
+  color: #fff;
+  padding: 0;
+  margin: 0;
+  background: rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 20%;
+  height: 100%;
+  display: inline-block;
+  color: #eee;
+  background-color: #4AAD52;
+  overflow: hidden;
+}
+
+.sidebar-content {
+  width: 75%;
+  height: 100%;
+  display: inline-block;
+  color: #eee;
+  background-color: #4AAD52;
+  overflow: hidden;
+}
+
+.content {
+	margin: 8px auto;
+	max-width: 640px;
+	height: 400px;
 }
