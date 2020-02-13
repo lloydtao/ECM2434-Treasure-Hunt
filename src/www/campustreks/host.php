@@ -1,12 +1,11 @@
-<?php $publichtml = "c:/wamp64/www/campustreks/"; ?>
 <html>
   <head>
     <title>Host - CampusTreks</title>
-	<?php include($publichtml.'templates/head.php'); ?>
+	<?php include('templates/head.php'); ?>
   </head>
   <body>
 	<!-- Header -->
-	<?php include($publichtml.'templates/header.php'); ?>
+	<?php include('templates/header.php'); ?>
 	<!-- Content -->
 	<div class="content">
 	  <div>
@@ -38,6 +37,6 @@
 	  </div>
 	</div>
 	<!-- Footer -->
-	<?php include($publichtml.'templates/footer.php'); ?>
+	<?php include('templates/footer.php'); ?>
   </body>
 </html>
