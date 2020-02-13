@@ -1,8 +1,7 @@
-<?php $publichtml = "c:/wamp64/www/campustreks/"; ?>                 
 <html>
   <head>
     <title>Create - CampusTreks</title>
-    <?php include($publichtml.'templates/head.php'); ?>
+    <?php include('templates/head.php'); ?>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/css/stylesheet.css" />
@@ -19,7 +18,7 @@
   ?>
   <body>
     <!-- Header -->
-	  <?php include($publichtml.'templates/header.php'); ?>
+	  <?php include('templates/header.php'); ?>
     <div>
       <form action="/loginhandler.php" method="post">
         <div class="login-box">
@@ -36,6 +35,6 @@
       </form>
     </div>
 	<!-- Footer -->
-	<?php include($publichtml.'templates/footer.php'); ?>
+	<?php include('templates/footer.php'); ?>
   </body>
 </html>
