@@ -7,35 +7,45 @@
 	<!-- Header -->
 	<?php include('templates/header.php'); ?>
 	<!-- Content -->
-	<div class="content">
-	  <div>
-	  <form action='post.php' method='POST'>
-	    <div class="sidebar">
-		  <h4>Select Hunt</h4>
-		  <input type="radio" name="gender" value="male" checked>Hunt 1
-		  <br>
-		  <input type="radio" name="gender" value="female">Hunt 2
-		  <br>
-		  <input type="radio" name="gender" value="other">Hunt 3 
-		  <br> 
-		</div>
-	    <div class="sidebar-content">
-		  <h4>Launch a Hunt Session</h4>
-		  <input type="submit" value="Create New">
-		  <h4>Control Panel</h4>
-		  <div style="height:160px;background-color:#52AA8A;margin:8;padding:8">
-		    <h4>Players Joined</h4>
-			<li>HF</li>
-			<li>HF</li>
-			<li>HF</li>
-			<br>
-		    <input type="submit" value="Start Game">
-		  </div>
-	    </div>
-	  </form> 
-	  
-	  </div>
-	</div>
+    <main class="page host-page">
+        <section class="portfolio-block project-no-images">
+            <div class="container">
+                <div class="heading">
+                    <h2>Host a Hunt</h2>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="project-card-no-image">
+                            <h3>Computer Science Trail</h3>
+                            <h4>University of Exeter</h4><a class="btn btn-outline-primary btn-sm" role="button" href="#">Host</a>
+                            <div class="tags"><a href="#">est. 45 minutes</a></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="project-card-no-image">
+                            <h3>Exe-plore the Campus</h3>
+                            <h4>University of Exeter<br></h4><a class="btn btn-outline-primary btn-sm" role="button" href="#">Host</a>
+                            <div class="tags"><a href="#">EST. 90 minutes</a></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="project-card-no-image">
+                            <h3>The Wetherspoons Crawl</h3>
+                            <h4>Exeter, Devon</h4><a class="btn btn-outline-primary btn-sm" role="button" href="#">Host</a>
+                            <div class="tags"><a href="#">EST. 180 minutes</a></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="project-card-no-image">
+                            <h3>Lorem Ipsum</h3>
+                            <h4>Lorem ipsum dolor sit amet</h4><a class="btn btn-outline-primary btn-sm" role="button" href="#">Host</a>
+                            <div class="tags"><a href="#">EST. 0 MINUTES</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 	<!-- Footer -->
 	<?php include('templates/footer.php'); ?>
   </body>
