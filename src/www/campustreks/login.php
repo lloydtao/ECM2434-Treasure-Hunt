@@ -14,7 +14,7 @@
     <!-- Header -->
 	<?php include('templates/header.php'); ?>
 	<!-- Content -->
-     <main class="page contact-page">
+     <main class="page login-page">
         <section class="portfolio-block contact">
             <div class="container">
                 <div class="heading">

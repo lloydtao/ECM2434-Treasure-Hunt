@@ -7,7 +7,7 @@
 	<!-- Header -->
 	<?php include('templates/header.php'); ?>
 	<!-- Content -->
-    <main class="page projets-page">
+    <main class="page host-page">
         <section class="portfolio-block project-no-images">
             <div class="container">
                 <div class="heading">

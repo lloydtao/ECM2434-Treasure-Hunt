@@ -7,7 +7,7 @@
 	<!-- Header -->
 	<?php include('templates/header.php'); ?>
 	<!-- Content -->
-    <main class="page">
+    <main class="page create-page">
         <section class="portfolio-block hire-me">
             <div class="container">
                 <div class="heading">

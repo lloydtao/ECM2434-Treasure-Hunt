@@ -7,7 +7,7 @@
 	<!-- Header -->
 	<?php include('templates/header.php'); ?>
 	<!-- Content -->
-    <main class="page landing-page">
+    <main class="page home-page">
         <section class="portfolio-block block-intro">
             <div class="container"><img class="img-fluid" src="img/Logo_Campus_Treks_360.jpg">
 				<br><br>
