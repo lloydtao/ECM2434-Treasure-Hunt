@@ -1,25 +1,44 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html>
   <head>
-    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
-    <meta charset="utf-8">
-    <title></title>
+    <title>Register - CampusTreks</title>
+	<?php include('templates/head.php'); ?>
   </head>
   <body>
-
-    <form class="register" action="register.php" method="post">
-      Email:<br>
-      <input type="email" name="Email" required><br>
-      Username:<br>
-      <input type="text" name="Username" required><br>
-      Password:<br>
-      <input type="password" name="Password" required><br>
-      Confirm Password:<br>
-      <input type="password" name="ConfirmPassword" required><br>
-      <input type="submit" name="Submit" value="submit">
-
-    </form>
-
+	<!-- Header -->
+	<?php include('templates/header.php'); ?>
+	<!-- Content -->
+    <main class="page contact-page">
+        <section class="portfolio-block contact">
+            <div class="container">
+                <div class="heading">
+                    <h2>Sign Up</h2>
+                </div>
+                <form class="register" action="register.php" method="post">
+                    <div class="form-group">
+						<label for="username">Username</label>
+						<input class="form-control item" type="text" id="username">
+					</div>
+                    <div class="form-group">
+						<label for="password">Password</label>
+						<input class="form-control item" type="password" id="password">
+					</div>
+                    <div class="form-group">
+						<label for="confirm_password">Confirm Password</label>
+						<input class="form-control item" type="password" id="confirm_password">
+					</div>
+                    <div class="form-group">
+						<label for="email">Email</label>
+						<input class="form-control item" type="email" id="email">
+					</div>
+                    <div class="form-group">
+						<button class="btn btn-primary btn-block btn-lg" type="submit">Create Account</button>
+					</div>
+                </form>
+            </div>
+        </section>
+    </main>
+	<!-- Footer -->
+	<?php include('templates/footer.php'); ?>
   </body>
 </html>
 
