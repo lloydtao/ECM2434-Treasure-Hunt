@@ -7,11 +7,11 @@
 	<!-- Header -->
 	<?php include('templates/header.php'); ?>
 	<!-- Content -->
-    <main class="page hire-me-page">
+    <main class="page">
         <section class="portfolio-block hire-me">
             <div class="container">
                 <div class="heading">
-                    <h2>Create A HunT</h2>
+                    <h2>Create A Hunt</h2>
                 </div>
                 <form>
                     <div class="form-group">
