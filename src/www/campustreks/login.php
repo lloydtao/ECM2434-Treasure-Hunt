@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Home - CampusTreks</title>
+    <title>Login - CampusTreks</title>
 	<?php include('templates/head.php'); ?>
   </head>
   <?php
