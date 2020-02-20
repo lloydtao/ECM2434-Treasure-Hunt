@@ -15,6 +15,6 @@
 	$json_data = json_encode($huntSession);
 	file_put_contents('hunt_sessions/' . $huntSessionID . '.json', $json_data);
 
-	header('Location: /hunt.php?sessionID=' . $huntSessionID);
+	header('Location: /hunt_session.php?sessionID=' . $huntSessionID);
 	die();
 ?>
