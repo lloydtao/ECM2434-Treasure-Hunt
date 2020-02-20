@@ -1,35 +1,5 @@
 <?php
-$servername = "localhost";
-$dbUsername = "root";
-$dbPassword = "";
-$dbName = "campustreks";
-$email = "";
-$password = "";
-$error = "";
-
-session_start();
-// Create connection
-$conn = new mysqli($servername, $dbUsername, $dbPassword, $dbName);
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error . "<br>");
-}
-// Get form data
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $email = Sanitize($_POST["email"], $conn);
-  $password = Sanitize($_POST["password"], $conn);
-}
-if (CheckCredentials($email, $password, $conn)) {
-  // Save login info in session
-  $_SESSION['isLoggedIn'] = true;
-  $_SESSION['email'] = $email;
-  header("location:create.php");
-} else {
-  // Return to login page with error
-  header("location:login.php?loginFailed=true");
-}
-// Close connection
-$conn->close();
+include "utils/connection.php";
 
 /**
  * Sanitize string data
@@ -37,38 +7,51 @@ $conn->close();
  * Uses trim, stripslashes, htmlspecialchars and mysqli_real_escape_string to
  * sanitize the data
  *
- * @param string data to sanitize
- * @param mysqli databse connection
+ * @param string $data data to sanitize
+ * @param mysqli $conn database connection
  * @return string sanitized data
  */
-function Sanitize($data, $conn) {
-  $data = trim($data);
-  $data = stripslashes($data);
-  $data = htmlspecialchars($data);
-  $data = $conn->real_escape_string($data);
-  return $data;
+function makeSafe($data, $conn)
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    $data = $conn->real_escape_string($data);
+    return $data;
 }
 
 /**
- * Check if login credentials match an account in the database
+ * Check if login credentials match an account in the database, and save data to session
  *
- * @param string account email
- * @param string unhashed password
- * @param mysqli database connection
- * @return boolean true if login information is correct, otherwise false
+ * @param mysqli $conn database connection
  */
-function CheckCredentials($email, $password, $conn) {
-  // Get account with matching email from database
-  $result = $conn->query("SELECT * FROM `users` WHERE `email` = '$email'");
-  if (!$result) {
-    return false;
-  } else {
-    $row = $result->fetch_assoc();
-    if (password_verify($password, $row["PasswordHash"])) {
-      return true;
+function loginUser($conn)
+{
+    $user = makeSafe($_POST["email"], $conn);
+    $password = makeSafe($_POST["password"], $conn);
+
+    // If input is an email address, check emails, otherwise check usernames
+    if (filter_var($user, FILTER_VALIDATE_EMAIL)) {
+        $result = $conn->query("SELECT * FROM `users` WHERE `Email` = '$user'");
     } else {
-      return false;
+        $result = $conn->query("SELECT * FROM `users` WHERE `Username` = '$user'");
     }
-  }
+
+
+    $row = $result->fetch_assoc();
+    if (password_verify($password, $row["Password"])) {
+        // Save login info in session
+        session_start();
+        $_SESSION['isLoggedIn'] = true;
+        $_SESSION['username'] = $row["Username"];
+        echo("login-success");
+    } else {
+        echo("login-fail");
+    }
+    // Close connection
+    $conn->close();
 }
-?>
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    loginUser(openCon());
+}

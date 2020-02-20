@@ -2,6 +2,13 @@
   <head>
     <title>Create - CampusTreks</title>
 	<?php include('templates/head.php'); ?>
+    <?php
+    // Redirect to home.php if already logged in
+    include "checklogin.php";
+    if (!CheckLogin()) {
+      header("location:login.php");
+    }
+    ?>
   </head>
   <body>
 	<!-- Header -->
