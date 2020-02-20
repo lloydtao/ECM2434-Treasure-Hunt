@@ -1,12 +1,8 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "campustreks";
+include "../utils/connection.php";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection
+$conn = openCon();
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error . "<br>");
 }
@@ -32,20 +28,20 @@ $sql .= "CREATE TABLE Hunt (
 
 $sql .= "CREATE TABLE Objectives (
     ObjectiveID INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    HuntID INT(6) NOT NULL,
+    HuntID INT(6) UNSIGNED NOT NULL,
     FOREIGN KEY (HuntID) REFERENCES Hunt(HuntID),
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );";
 
 $sql .= "CREATE TABLE PhotoOps (
-    ObjectiveID INT(6) NOT NULL,
+    ObjectiveID INT(6) UNSIGNED NOT NULL,
     Specification TEXT NOT NULL,
     FOREIGN KEY (ObjectiveID) REFERENCES Objectives(ObjectiveID),
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );";
-    
+
 $sql .= "CREATE TABLE Location (
-    ObjectiveID INT(6) NOT NULL,
+    ObjectiveID INT(6) UNSIGNED NOT NULL,
     HuntOrder INT(6) NOT NULL,
     Longitude INT(6) NOT NULL,
     Latitude INT(6) NOT NULL,
@@ -53,8 +49,15 @@ $sql .= "CREATE TABLE Location (
     Answer VARCHAR(50) NOT NULL,
     FOREIGN KEY (ObjectiveID) REFERENCES Objectives(ObjectiveID),
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    )";
-    
+    );";
+
+$sql .= "CREATE TABLE HuntData (
+    JsonID INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    HuntID INT(6) UNSIGNED NOT NULL,
+    FOREIGN KEY (HuntID) REFERENCES Hunt(HuntID),
+    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    );";
+
     if ($conn->multi_query($sql) === TRUE) {
         echo "Tables created successfully <br>";
     } else {
