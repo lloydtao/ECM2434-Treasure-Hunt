@@ -1,12 +1,8 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "campustreks";
+include "../utils/connection.php";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection
+$conn = openCon();
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error . "<br>");
 }
@@ -24,7 +20,9 @@ VALUES ('1');";
 $sql .= "INSERT INTO PhotoOps (ObjectiveID, Specification)
 VALUES ('1', 'Take a picture of the tallest building you can see.');";
 $sql .= "INSERT INTO Location (ObjectiveID, HuntOrder, Longitude, Latitude, Question, Answer)
-VALUES ('1', '1', '400', '234', 'What are the colours that some rooms are named after inside of Peter Chalk?', 'Blue, Green, Purple and Red')";
+VALUES ('1', '1', '400', '234', 'What are the colours that some rooms are named after inside of Peter Chalk?', 'Blue, Green, Purple and Red');";
+$sql .= "INSERT INTO HuntData (HuntID)
+VALUES ('1');";
 
 if ($conn->multi_query($sql) === TRUE) {
     echo "New records created successfully";

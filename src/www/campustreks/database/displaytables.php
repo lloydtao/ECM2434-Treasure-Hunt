@@ -1,12 +1,8 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "campustreks";
+include "../utils/connection.php";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection
+$conn = openCon();
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error . "<br>");
 }
@@ -32,7 +28,7 @@ if ($result->num_rows > 0) {
     echo "Hunt <br>";
     // output data of each row
     while($row = $result->fetch_assoc()) {
-        echo "HuntID: " . $row["HuntID"]. " - Name: " . $row["Name"]. 
+        echo "HuntID: " . $row["HuntID"]. " - Name: " . $row["Name"].
         " - Description: " . $row["Description"] ." - BestTeam: " . $row["BestTeam"] .
         " - Highscore: " . $row["Highscore"] ." - Email: " . $row["Email"] . "<br>";
     }
@@ -73,9 +69,22 @@ if ($result->num_rows > 0) {
     echo "Location <br>";
     // output data of each row
     while($row = $result->fetch_assoc()) {
-        echo "ObjectiveID: " . $row["ObjectiveID"]. " - HuntOrder: " . $row["HuntOrder"]. 
-        " - Longitude: " . $row["Longitude"] ." - Latitude: " . $row["Latitude"] 
+        echo "ObjectiveID: " . $row["ObjectiveID"]. " - HuntOrder: " . $row["HuntOrder"].
+        " - Longitude: " . $row["Longitude"] ." - Latitude: " . $row["Latitude"]
         ." - Question: " . $row["Question"] . " - Answer: " . $row["Answer"] ."<br>";
+    }
+} else {
+    echo "0 results <br>";
+}
+
+$sql = "SELECT * FROM HuntData";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    echo "HuntData <br>";
+    // output data of each row
+    while($row = $result->fetch_assoc()) {
+        echo "JsonID: " . $row["JsonID"]. " - HuntID: " . $row["HuntID"] . "<br>";
     }
 } else {
     echo "0 results <br>";
