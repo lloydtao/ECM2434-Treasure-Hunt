@@ -1,0 +1,12 @@
+#leaderboard{
+	float: right;
+	width: 45%;
+	height: 500px;
+	border: solid;
+}
+#submissions{
+	height: 500px;
+	float: left;
+	width: 45%;
+	border: solid;
+}

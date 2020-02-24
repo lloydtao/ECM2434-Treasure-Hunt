@@ -1,6 +1,8 @@
+
 <html>
   <head>
 	<style>.error {color: #FF0000;}</style>
+
     <title>Create - CampusTreks</title>
 	<?php include('templates/head.php'); ?>
     <?php
