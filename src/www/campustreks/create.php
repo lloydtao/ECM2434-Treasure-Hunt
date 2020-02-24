@@ -1,5 +1,7 @@
+
 <html>
   <head>
+    <meta name="author" content = "Marek Tancak">
     <title>Create - CampusTreks</title>
 	<?php include('templates/head.php'); ?>
   </head>

@@ -1,5 +1,6 @@
 <html>
   <head>
+    <meta name="author" content = "Marek Tancak">
     <title>Host - CampusTreks</title>
     <link rel="stylesheet" href="css/hunt_session_stylesheet.css">
 	<?php include('templates/head.php'); ?>

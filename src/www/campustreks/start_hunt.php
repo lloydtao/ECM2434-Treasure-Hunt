@@ -1,3 +1,4 @@
+<meta name="author" content = "Marek Tancak">
 <?php
 	function generateGamePin() {
 	    $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
