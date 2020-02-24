@@ -75,7 +75,7 @@
 							continue;
 						$sql .= "INSERT INTO Location (HuntOrder, Longitude, Latitude, Question, Answer)
 						VALUES('{$locations}', '{$logitude}', '{$latitude}', '$question', '$answer');";
-						$locations++
+						$locations++;
 					}else{
 						
 						$description = makeSafe($_POST["objective{$x}Description"]);
