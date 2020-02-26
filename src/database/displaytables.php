@@ -1,5 +1,5 @@
 <meta name="author" content = "James Caddock">
-<meta name="Contributer" content = "Joe lintern">
+<meta name="Contributor" content = "Joe lintern">
 <?php
 include "connection.php";
 

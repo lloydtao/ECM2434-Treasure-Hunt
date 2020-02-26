@@ -3,6 +3,7 @@
  * Opens session and gets the user email
  *
  * @return string the user's email
+ * @author Michael Freeman
  */
 function getUser($conn)
 {
