@@ -10,7 +10,7 @@ $teams = array_values($hunt_session_data['teams']);
 
 $teamNames  = array();
 $scores = array();
-
+print_r($teams);
 for ($i=1; $i<count($teams); $i++){
 	array_push($teamNames, $teams[$i]["teaminfo"]["teamname"]);
 	array_push($scores, $teams[$i]["teaminfo"]["score"]);
