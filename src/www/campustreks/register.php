@@ -1,5 +1,7 @@
 <html>
 <head>
+    <meta name="author" content="Joseph Lintern">
+    <meta name="contributor" content="Jakub Kwak">
     <title>Register - CampusTreks</title>
     <?php include('templates/head.php'); ?>
     <?php

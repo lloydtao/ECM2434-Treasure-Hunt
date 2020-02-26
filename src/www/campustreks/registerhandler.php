@@ -1,5 +1,10 @@
 <?php
 include "utils/connection.php";
+/**
+ * Script for handling user registering asynchronously
+ * @author Joseph Lintern
+ * @contributor Jakub Kwak
+ */
 
 /**
  *Removes whitespace, slashes and special characters from strings

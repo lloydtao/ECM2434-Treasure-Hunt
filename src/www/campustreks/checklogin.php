@@ -3,6 +3,7 @@
  * Opens session and checks if the user is logged in
  *
  * @return boolean true if logged in, otherwise false
+ * @author Jakub Kwak
  */
 function CheckLogin()
 {
