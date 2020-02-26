@@ -1,0 +1,18 @@
+{
+  "gameinfo": {
+    "gamepPin": "0000",
+    "huntID": "0"
+  },
+  "teams": {
+    "team0": {
+      "teaminfo": {
+        "teamname": "",
+        "score": "0"
+      },
+      "players": {
+      },
+      "objectives": {
+      }
+    }
+  }
+}
