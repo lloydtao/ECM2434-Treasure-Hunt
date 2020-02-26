@@ -25,7 +25,7 @@
             <div class="container">
                 <div class="heading">
                     <h2>Game Pin</h2>
-                    <h3><?php echo $hunt_session_data['gamePIN']; ?></h3>
+                    <h3><?php echo $hunt_session_data['gameinfo']['gamePin']; ?></h3>
                 </div>
                 <div class="content">
                     <div id="submissions">submissions placeholder</div>
