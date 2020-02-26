@@ -1,8 +1,7 @@
-
 <html>
   <head>
+	<meta name="author" content = "Michael Freeman">
 	<style>.error {color: #FF0000;}</style>
-
     <title>Create - CampusTreks</title>
 	<?php include('templates/head.php'); ?>
     <?php
@@ -12,6 +11,12 @@
       header("location:login.php");
     }
     ?>
+	<?php
+	include "getuser.php";
+	include "utils/connection.php";
+	$conn = openCon();
+	$email = getUser($conn);
+	?>
 	<?php 
 	$titleErr = $descriptionErr = "";
 	$objectives = 1;
@@ -56,42 +61,68 @@
 			if($objectives == 1){
 				echo "<script type='text/javascript'>alert('At least one objective is needed');</script>";
 			}else{
-				include "utils/connection.php";
+				
 				$locations = 0;
-				$logitude = $latitude = $question = $answer = $description = "";
-				$sql = "INSERT INTO Hunt (Name, Description)
-				VALUES('$title', '$description');";
+				$logitude = $latitude = $question = $answer = $photoDescription = "";
+				
+				// Create the hunt in the database
+				$sql = "INSERT INTO Hunt (Name, Description, Email)
+				VALUES('$title', '$description', '$email');";
+				
+				if($conn->query($sql) === TRUE) {
+					$hunt_id = $conn->insert_id;
+				}else {
+					echo "<script type='text/javascript'>alert('".$conn->error."');</script>";
+				}
 				
 				for($x = 1; $x < $objectives; $x++){
 					
+					// Add new objective to database
+					if($conn->query("INSERT INTO Objectives (HuntID) Values('$hunt_id')") === TRUE) {
+						$last_id = $conn->insert_id;
+					}else {
+						echo "<script type='text/javascript'>alert('".$conn->error."');</script>";
+					}
 					
 					// Check which type each objective is and add a SQL statement to add to the correct table
 					if(array_key_exists("objective{$x}Longitude", $_POST)){
-						
+								
+						// Make the attributes database safe
 						$longitude = (string)$_POST["objective{$x}Longitude"];
 						$latitude = (string)$_POST["objective{$x}Latitude"];
 						$question = makeSafe($_POST["objective{$x}Question"]);
 						$answer = makeSafe($_POST["objective{$x}Answer"]);
 						
-						if(!($logitude && $latitude && $question && $answer))
+						if($logitude!="" && $latitude!="" && $question!="" && $answer!="")
 							continue;
-						$sql .= "INSERT INTO Location (HuntOrder, Longitude, Latitude, Question, Answer)
-						VALUES('{$locations}', '{$logitude}', '{$latitude}', '$question', '$answer');";
-						$locations++;
+						
+						// Add Location to database
+						$sql = "INSERT INTO Location (ObjectiveID, HuntOrder, Longitude, Latitude, Question, Answer)
+						VALUES('$last_id', '$locations', '$longitude', '$latitude', '$question', '$answer');";
+						
+						if($conn->query($sql) === TRUE)
+							$locations++;
+						else {
+							echo "<script type='text/javascript'>alert('".$conn->error."');</script>";
+						}
+						
 					}else{
 						
-						$description = makeSafe($_POST["objective{$x}Description"]);
-						if(!$description)
+						$photoDescription = makeSafe($_POST["objective{$x}Description"]);
+						if(!$photoDescription)
 							continue;
 						
-						$sql .= "INSERT INTO PhotoOps (Specification)
-						VALUES('$description');";
+						// Add photo objective to database
+						$sql = "INSERT INTO PhotoOps (ObjectiveID, Specification)
+						VALUES('$last_id', '$photoDescription');";
+						
+						if($conn->query($sql) === FALSE)
+							echo "<script type='text/javascript'>alert('".$conn->error."');</script>";
 					}
+					
 				}
 				
-				// Connect to database and run the SQL commands then redirect to the host page
-				$conn = openCon();
-				$result = mysqli_query($conn, $sql);
+				$conn->close();
 				header("Location: host.php");
 			}
 		}
