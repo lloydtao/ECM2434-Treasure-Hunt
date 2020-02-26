@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
     <meta name="author" content="James Caddock">
-    <meta name="contributors" content="Jakub Kwak">
+    <meta name="contributors" content="Jakub Kwak, Joseph Lintern">
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/mobile.css"/>
@@ -54,8 +54,6 @@
         </div>
     </form>
 </div>
-
-<div id="team-select">
 
 </div>
 </body>

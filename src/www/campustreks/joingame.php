@@ -90,6 +90,8 @@ function joinGame()
 }
 
 //if form was submitted, try to join game
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] == "POST" ) {
     joinGame();
+} else {
+    echo "form-error";
 }
