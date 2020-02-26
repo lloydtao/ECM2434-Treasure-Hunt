@@ -54,10 +54,10 @@ function registerUser($conn)
                     $dbPass = $row['Password'];
 
                     //Validates that the email and username are unique
-                    if ($email == $dbEmail) {
+                    if (strtoupper($email) == strtoupper($dbEmail)) {
                         echo "email-fail";
                         return;
-                    } elseif ($username == $dbUsername) {
+                    } elseif (strtoupper($username) == strtoupper($dbUsername)) {
                         echo "username-fail";
                         return;
                     }
@@ -66,7 +66,7 @@ function registerUser($conn)
             //Hashes password and inputs user data to database
             $pass = password_hash($password, PASSWORD_DEFAULT);
 
-            $insert = "INSERT INTO users (Email, Username, Password) 
+            $insert = "INSERT INTO users (Email, Username, Password)
                        VALUES ('$email', '$username', '$pass')";
             $result = mysqli_query($conn, $insert);
 
