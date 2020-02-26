@@ -1,5 +1,6 @@
 <html>
 <head>
+    <meta name="author" content="Jakub Kwak">
     <title>Login - CampusTreks</title>
     <?php include('templates/head.php'); ?>
     <?php

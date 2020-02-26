@@ -1,4 +1,10 @@
 <?php
+/**
+ * Script for connecting to the database
+ *
+ * @return mysqli
+ * @author James Caddock
+ */
 function openCon()
 {
     // Create connection

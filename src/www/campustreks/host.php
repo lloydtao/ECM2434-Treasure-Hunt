@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta name="author" content = "Lewis Lloyd">
-    <meta name="Contributer" content = "Marek Tancak">
+    <meta name="Contributor" content = "Marek Tancak">
     <title>Host - CampusTreks</title>
 	<?php include('templates/head.php'); ?>
   </head>
