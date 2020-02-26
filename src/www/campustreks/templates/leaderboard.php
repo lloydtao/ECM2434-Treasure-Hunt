@@ -12,8 +12,8 @@ $teamNames  = array();
 $scores = array();
 print_r($teams);
 for ($i=1; $i<count($teams); $i++){
-	array_push($teamNames, $teams[$i]["teamInfo"]["teamname"]);
-	array_push($scores, $teams[$i]["teamInfo"]["score"]);
+	array_push($teamNames, $teams[$i]["teaminfo"]["teamname"]);
+	array_push($scores, $teams[$i]["teaminfo"]["score"]);
 }
 
 array_multisort($scores, SORT_DESC, $teamNames, SORT_ASC);
