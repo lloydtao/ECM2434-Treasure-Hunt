@@ -17,8 +17,8 @@
 						<br>
 						Get started by creating a new hunt, hosting a hunt, or by reading more below.
 					</p>
-					<a class="btn btn-outline-primary" role="button" href="#">Create a Hunt</a>
-                    <a class="btn btn-outline-primary" role="button" href="#">Host a Hunt</a>
+					<a class="btn btn-outline-primary" role="button" href="create.php">Create a Hunt</a>
+                    <a class="btn btn-outline-primary" role="button" href="host.php">Host a Hunt</a>
                 </div>
             </div>
         </section>
