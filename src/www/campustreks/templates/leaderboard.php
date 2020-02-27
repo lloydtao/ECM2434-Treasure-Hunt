@@ -6,20 +6,17 @@ if(isset($_GET['sessionID'])){
     $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
 	$hunt_session_data = json_decode($json_data, true);
 }
-$teams = array_values($hunt_session_data['teams']);
+$teams = $hunt_session_data['teams'];
 
-$teamNames  = array();
+$teamNames  = array_keys($teams);
 $scores = array();
-print_r($teams);
 for ($i=1; $i<count($teams); $i++){
-	array_push($teamNames, $teams[$i]["teaminfo"]["teamname"]);
-	array_push($scores, $teams[$i]["teaminfo"]["score"]);
+	array_push($scores, $teams[$teamNames[$i]]["teamInfo"]["score"]);
 }
-
-array_multisort($scores, SORT_DESC, $teamNames, SORT_ASC);
+array_multisort($scores, SORT_DESC);
 
 $lightRow = true;
-for ($i=0; $i < count($teamNames); $i++) { 
+for ($i=0; $i < count($scores); $i++) { 
 	if($lightRow){
 		echo '<div class="team-light">';
 	}
@@ -28,7 +25,7 @@ for ($i=0; $i < count($teamNames); $i++) {
 	}
 	$lightRow = !$lightRow;
 	echo '<div class="team-name">';
-	echo $teamNames[$i];
+	echo $teamNames[$i+1];
 	echo '</div>';
 	echo '<div class="team-score">';
 	echo $scores[$i];

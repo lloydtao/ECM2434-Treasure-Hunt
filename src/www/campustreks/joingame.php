@@ -59,18 +59,15 @@ function joinGame()
         $parsedJson = json_decode($jsonString, true);
 
         //Check player list for duplicate names
-        $playerList = $parsedJson["teams"]["team0"]["players"];
+        $playerList = $parsedJson["teams"][""]["players"];
         foreach ($playerList as $player) {
-            if ($player["playername"] == $nickname) {
+            if (strtoupper($player) == strtoupper($nickname)) {
                 echo "name-error";
                 return;
             }
         }
-        //create new player assoc array
-        $player = array("playername"=>$nickname);
-        $playerCount = count($playerList);
         //insert player into json data
-        $parsedJson["teams"]["team0"]["players"]["player".$playerCount] = $player;
+        array_push($parsedJson["teams"][""]["players"], $nickname);
 
         //update json file
         $newJson = json_encode($parsedJson);

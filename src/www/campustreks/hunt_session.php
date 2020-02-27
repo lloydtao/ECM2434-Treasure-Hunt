@@ -3,7 +3,7 @@
     <meta name="author" content = "Marek Tancak">
     <title>Host - CampusTreks</title>
     <link rel="stylesheet" href="css/hunt_session_stylesheet.css">
-	<?php include('templates/head.php'); ?>
+    <?php include('templates/head.php'); ?>
   </head>
   <body>
     <?php 
@@ -17,9 +17,9 @@
         die();
     }
     ?>
-	<!-- Header -->
-	<?php include('templates/header.php'); ?>
-	<!-- Content -->
+    <!-- Header -->
+    <?php include('templates/header.php'); ?>
+    <!-- Content -->
     <main class="page host-page">
         <section class="portfolio-block project-no-images">
             <div class="container">
@@ -38,11 +38,10 @@
                             $teams = array_values($hunt_session_data['teams']);
                             for ($i=1; $i<count($teams); $i++){
                                 $submissions = $teams[$i]['objectives'];
-                                for ($j=1; $j<count($teams); $j++){
+                                for ($j=1; $j<count($submissions)+1; $j++){
                                     if ($submissions[$j]["type"]=="photo"){
-                                        echo $teams[$i]['teamInfo']['teamname'];
-                                        echo "<br>";
                                         echo '<img src="'.$submissions[$i]["path"].'">';
+                                        echo '<br>';
                                     }
                                 } 
                             }
@@ -55,7 +54,7 @@
             </div>
         </section>
     </main>
-	<!-- Footer -->
-	<?php include('templates/footer.php'); ?>
+    <!-- Footer -->
+    <?php include('templates/footer.php'); ?>
   </body>
 </html>
