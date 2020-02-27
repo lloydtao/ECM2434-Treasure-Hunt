@@ -7,7 +7,6 @@
  */
 function getUser($conn)
 {
-    session_start();
     $user = $_SESSION['username'];
 	if (!filter_var($user, FILTER_VALIDATE_EMAIL)){
         $result = $conn->query("SELECT `Email` FROM `users` WHERE `Username` = '$user'");
