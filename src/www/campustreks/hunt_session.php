@@ -28,7 +28,25 @@
                     <h3><?php echo $hunt_session_data['gameinfo']['gamePin']; ?></h3>
                 </div>
                 <div class="content">
-                    <div id="submissions">submissions placeholder</div>
+                    <div id="submissions"></div>
+                        <?php
+                            if(isset($_GET['sessionID'])){
+                                $huntSessionID = $_GET['sessionID'];
+                                $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
+                                $hunt_session_data = json_decode($json_data, true);
+                            }
+                            $teams = array_values($hunt_session_data['teams']);
+                            for ($i=1; $i<count($teams); $i++){
+                                $submissions = $teams[$i]['objectives'];
+                                for ($j=1; $j<count($teams); $j++){
+                                    if ($submissions[$j]["type"]=="photo"){
+                                        echo $teams[$i]['teamInfo']['teamname'];
+                                        echo "<br>";
+                                        echo '<img src="'.$submissions[$i]["path"].'">';
+                                    }
+                                } 
+                            }
+                        ?>
                     <div id="leaderboard">
                         <?php include('templates/leaderboard.php');?>
                     </div>
