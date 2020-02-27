@@ -12,7 +12,7 @@
             $huntSessionID = $_GET['game_pin'];
             $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
             $hunt_session_data = json_decode($json_data, true);
-            if(is_null($hunt_session_data['teams'][$_GET['team_id']]['objectives'])){
+            if(count($hunt_session_data['teams'][$_GET['team_id']]['objectives'])==0){
                 $objective_id = 1;
             }
             else{
