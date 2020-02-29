@@ -2,6 +2,22 @@
 <html>
   <head>
     <?php
+        function compressImage($source, $destination, $quality) {
+
+          $info = getimagesize($source);
+
+          if ($info['mime'] == 'image/jpeg') 
+            $image = imagecreatefromjpeg($source);
+
+          elseif ($info['mime'] == 'image/gif') 
+            $image = imagecreatefromgif($source);
+
+          elseif ($info['mime'] == 'image/png') 
+            $image = imagecreatefrompng($source);
+
+          imagejpeg($image, $destination, $quality);
+        }
+
         if(isset($_FILES['image'])){
             $errors= array();
             $name = $_FILES['image']['name'];
@@ -11,8 +27,9 @@
             $allowedExt = array('jpg','jpeg','png');
 
             if(in_array($ext, $allowedExt)){
-                $path = "image_uploads/".$_GET['team_id'].'-'.$_GET['objective_id'].'.'.$ext;
-                move_uploaded_file($tmp,$path);
+                $path = "image_uploads/".$_GET['team_id'].'-'.$_GET['objective_id'].'.jpg';
+                compressImage($tmp,$path, 30);
+                //move_uploaded_file($tmp,$path);
 
                 $huntSessionID = $_GET['game_pin'];
                 $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
