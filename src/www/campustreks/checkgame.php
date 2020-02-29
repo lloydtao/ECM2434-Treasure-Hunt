@@ -45,3 +45,5 @@ function CheckGame()
 }
 
 CheckGame();
+
+?>

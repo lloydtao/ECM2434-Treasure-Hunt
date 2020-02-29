@@ -5,26 +5,13 @@
  */
 
 /**
- * Make data safe my stripping slashes, removing whitespace and special chars from string
- * @param $data
- * @return string
- */
-function makeSafe($data)
-{
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
-}
-
-/**
  * Tries to create a team using POST data. Checks for duplicate team names and saves info to session.
  */
 function joinTeam() 
 {
     session_start(); 
 
-    if (!isset($_POST['tableteam']) || !isset($_SESSION['gameID'])) {
+    if (!isset($_POST['chosenteam']) || !isset($_SESSION['gameID'])) {
         echo "no team or gameID";
         return;
     }
@@ -32,7 +19,7 @@ function joinTeam()
     // Gets pin and nickname from session
     $pin = $_SESSION['gameID'];
     $nickname = $_SESSION['nickname'];
-    $team = makeSafe($_POST['tableteam']);
+    $team = $_POST['chosenteam'];
     
 
     //read and parse hunt json
@@ -42,14 +29,19 @@ function joinTeam()
 
 
     $counter = 0;
-    $playerList = $parsedJson["teams"][""]["players"];
-    $parsedJson["teams"][""]["players"] = [];
+    $oldteam = "";
+    if (isset($_SESSION["teamName"])) {
+        $oldteam = $_SESSION["teamName"];
+    }
+    $playerList = $parsedJson["teams"][$oldteam]["players"];
+    $parsedJson["teams"][$oldteam]["players"] = [];
     foreach ($playerList as $player) {
         if (!(strtoupper($player) == strtoupper($nickname))) {
-            array_push($parsedJson["teams"][""]["players"], $player);
+            array_push($parsedJson["teams"][$oldteam]["players"], $player);
             $counter += 1;
         }
     }
+
 
     $teamList = $parsedJson["teams"];
     $teamcounter = 0;
@@ -80,7 +72,6 @@ function joinTeam()
     $_SESSION["teamName"] = $team;
 
     echo "join-team-success";
-    header("location:play.php");
     return;
 }
 

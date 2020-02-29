@@ -26,15 +26,15 @@ function createTeam()
 {
     session_start(); 
 
-    if (!isset($_POST['teamName']) || !isset($_SESSION['gameID'])) {
-        echo "form-error";
+    if (!isset($_POST['newTeam']) || !isset($_SESSION['gameID'])) {
+        echo "No Team name or gameID";
         return;
     }
-    $team = makeSafe($_POST['teamName']);
+    $team = makeSafe($_POST['newTeam']);
 
     //if either field is empty, echo error
     if (empty($team)) {
-        echo "form-error";
+        echo "team is empty";
         return;
     }
 
@@ -56,21 +56,25 @@ function createTeam()
         }
     }
 
-
+    // Creates and adds player to new team
     $teamCount = count($teamList);
-    //insert team into json data
     $parsedJson["teams"][$team]["teaminfo"]["score"] = "0";
     $parsedJson["teams"][$team]["players"] = [];
     array_push($parsedJson["teams"][$team]["players"], $nickname);
     $parsedJson["teams"][$team]["objectives"] = [];
     
 
+    // Removes player from old / default team
     $counter = 0;
-    $playerList = $parsedJson["teams"][""]["players"];
-    $parsedJson["teams"][""]["players"] = [];
+    $oldteam = "";
+    if (isset($_SESSION["teamName"])) {
+        $oldteam = $_SESSION["teamName"];
+    }
+    $playerList = $parsedJson["teams"][$oldteam]["players"];
+    $parsedJson["teams"][$oldteam]["players"] = [];
     foreach ($playerList as $player) {
         if (!(strtoupper($player) == strtoupper($nickname))) {
-            array_push($parsedJson["teams"][""]["players"], $player);
+            array_push($parsedJson["teams"][$oldteam]["players"], $player);
             $counter += 1;
         }
     }
@@ -78,6 +82,8 @@ function createTeam()
     //update json file
     $newJson = json_encode($parsedJson);
     file_put_contents($filename, $newJson);
+
+    $_SESSION["teamName"] = $team;
 
     echo "create-success";
     return;
