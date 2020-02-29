@@ -77,6 +77,8 @@ function joinTeam()
     $newJson = json_encode($parsedJson);
     file_put_contents($filename, $newJson);
 
+    $_SESSION["teamName"] = $team;
+
     echo "join-team-success";
     header("location:play.php");
     return;
