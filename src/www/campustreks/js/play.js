@@ -68,6 +68,7 @@ Vue.component('game-start', {
         return {
             pin: null,
             nickname: null,
+            teamName: null,
             newteam: "",
             inteam: true,
             maketeam: false,
@@ -170,8 +171,14 @@ Vue.component('game-start', {
                         console.log(data)
                         this.pin = data["gameID"]
                         this.nickname = data["nickname"]
+<<<<<<< HEAD
                         this.fetchJson()
                         if (data["teamName"] != null) {
+=======
+                        this.teamName = data["teamName"]
+                        if (data["teamName"] != null) {
+
+>>>>>>> d7dcb3e3f8bd39601b70e6830f69b55f461e4bc7
                             //go to game
                         } else {
                             //go to team select
