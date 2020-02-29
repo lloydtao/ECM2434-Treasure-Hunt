@@ -173,7 +173,7 @@ Vue.component('game-start', {
                         this.pin = data["gameID"]
                         this.nickname = data["nickname"]
                         this.teamName = data["teamName"]
-                        if (data[teamName] != null) {
+                        if (data["teamName"] != null) {
 
                             //go to game
                         } else {
