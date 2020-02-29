@@ -6,21 +6,30 @@
             $errors= array();
             $name = $_FILES['image']['name'];
             $tmp =$_FILES['image']['tmp_name'];
-            $path = "image_uploads/".$_GET['team_id'].'-'.$_GET['objective_id'].'-'.$name;
-            move_uploaded_file($tmp,$path);
+            $nameExp = explode('.', $name);
+            $ext = end($nameExp);
+            $allowedExt = array('jpg','jpeg','png');
 
-            $huntSessionID = $_GET['game_pin'];
-            $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
-            $hunt_session_data = json_decode($json_data, true);
-            if(is_null($hunt_session_data['teams'][$_GET['team_id']]['objectives'])){
-                $objective_id = 1;
+            if(in_array($ext, $allowedExt)){
+                $path = "image_uploads/".$_GET['team_id'].'-'.$_GET['objective_id'].'.'.$ext;
+                move_uploaded_file($tmp,$path);
+
+                $huntSessionID = $_GET['game_pin'];
+                $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
+                $hunt_session_data = json_decode($json_data, true);
+                if(count($hunt_session_data['teams'][$_GET['team_id']]['objectives'])==0){
+                    $objective_id = 1;
+                }
+                else{
+                    $objective_id = max(array_keys($hunt_session_data['teams'][$_GET['team_id']]['objectives']))+1;
+                }
+                $hunt_session_data['teams'][$_GET['team_id']]['objectives'][$objective_id] = array('type' => 'photo', "completed" => true, "objectiveId" => $_GET['objective_id'], "path" => $path, "score" => 0);
+                $json_data = json_encode($hunt_session_data);
+                file_put_contents('hunt_sessions/' . $_GET['game_pin'] . '.json', $json_data);
             }
             else{
-                $objective_id = max(array_keys($hunt_session_data['teams'][$_GET['team_id']]['objectives']))+1;
+                echo "Unsupported file format";
             }
-            $hunt_session_data['teams'][$_GET['team_id']]['objectives'][$objective_id] = array('type' => 'photo', "completed" => true, "objectiveId" => $_GET['objective_id'], "path" => $path, "score" => 0);
-            $json_data = json_encode($hunt_session_data);
-            file_put_contents('hunt_sessions/' . $_GET['game_pin'] . '.json', $json_data);
         }
     ?>
     <meta name="author" content = "Marek Tancak">
