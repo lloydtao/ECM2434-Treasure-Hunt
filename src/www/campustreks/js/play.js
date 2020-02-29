@@ -168,10 +168,10 @@ Vue.component('game-start', {
                         this.killSession()
                     } else if (data["status"] === "success") {
                         console.log(data)
-                        this.fetchJson()
                         this.pin = data["gameID"]
                         this.nickname = data["nickname"]
-                        if (data[teamName] != null) {
+                        this.fetchJson()
+                        if (data["teamName"] != null) {
                             //go to game
                         } else {
                             //go to team select
