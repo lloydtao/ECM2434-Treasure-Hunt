@@ -32,8 +32,10 @@ function CheckGame()
             if (isset($_SESSION['teamName'])) {
                 $teamName = $_SESSION['teamName'];
                 echo json_encode(array("status" => "success", "gameID" => $gameID, "nickname" => $nickname, "teamName" => $teamName));
+                return;
             } else {
                 echo json_encode(array("status" => "success", "gameID" => $gameID, "nickname" => $nickname, "teamName" => null));
+                return;
             }
             echo json_encode(array("status" => "success", "gameID" => $gameID, "nickname" => $nickname));
             return;
@@ -41,7 +43,9 @@ function CheckGame()
         unset($_SESSION['gameID']);
         unset($_SESSION['nickname']);
         echo json_encode(array("status" => "fail", "gameID" => null, "nickname" => null));
+        return;
     }
+    echo json_encode(array("status" => "fail", "gameID" => null, "nickname" => null));
 }
 
 CheckGame();
