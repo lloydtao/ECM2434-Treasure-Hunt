@@ -26,15 +26,15 @@ function createTeam()
 {
     session_start(); 
 
-    if (!isset($_POST['newTeam']) || !isset($_SESSION['gameID'])) {
-        echo "No Team name or gameID";
+    if (!isset($_SESSION['gameID'])) {
+        echo "session-error";
         return;
     }
-    $team = makeSafe($_POST['newTeam']);
+    $team = makeSafe($_POST['newteam']);
 
     //if either field is empty, echo error
     if (empty($team)) {
-        echo "team is empty";
+        echo "team-form-error";
         return;
     }
 
@@ -51,7 +51,7 @@ function createTeam()
     $teamList = $parsedJson["teams"];
     foreach ($teamList as $t) {
         if (strtoupper($t) == strtoupper($team)) {
-            echo "name-error";
+            echo "team-error";
             return;
         }
     }

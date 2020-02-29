@@ -50,7 +50,7 @@ function joinTeam()
         $playerList = $parsedJson["teams"][$key]["players"];
         foreach ($playerList as $player) {
             if (strtoupper($player) == strtoupper($nickname)) {
-                echo "name-error";
+                echo "duplicate name";
                 return;
             }
         }
