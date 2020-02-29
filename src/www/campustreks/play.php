@@ -9,7 +9,13 @@
   
     <script src="js/jquery-3.4.1.min.js"></script>
     <script>
+        var gameID;
+        var nickname;
+        var teamName;
+
         $(document).ready(function () {
+            checkGame();
+
             /**
              * use ajax to submit the form asynchronously
              * @author Jakub Kwak
@@ -36,6 +42,36 @@
                     }
                 });
             }); */
+
+            /**
+             * ajax call to check if player is already in a game
+             *
+             * @author Jakub Kwak
+             */
+            function checkGame() {
+                $.ajax({
+                    type: "POST",
+                    url: "checkgame.php",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data["status"] === "fail") {
+                            //no game
+                        } else if (data["status"] === "success") {
+                            gameID = data["gameID"];
+                            nickname = data["nickname"];
+                            if (data["teamName"] != null) {
+                                teamName = data["teamName"];
+                                //go to game
+                            } else {
+                                //go to team select
+                            }
+                        }
+                    }
+                    error: function () {
+                        //no game
+                    }
+                })
+            }
 
             /**
              * @author James Caddock
