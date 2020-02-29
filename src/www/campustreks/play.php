@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<head>
-    <meta name="author" content="James Caddock">
-    <meta name="contributors" content="Jakub Kwak, Joseph Lintern">
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/css/mobile.css"/>
-    <link rel="stylesheet" href="/css/stylesheet.css"/>
+<?php session_start();?>
 
+<!DOCTYPE html>
+  <head>
+  <meta name="author" content = "James Caddock">
+	<meta name="contributors" content="Jakub Kwak, Joseph Lintern">
+    <?php include('templates/head.php'); ?>
+    <!--<link rel="stylesheet" href="css/mobile.css">-->
+  
     <script src="js/jquery-3.4.1.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -32,6 +32,23 @@
                             $("#name-error").css("display", "block");
                         } else if (data === "form-error") {
                             $("#form-error").css("display", "block");
+                        }
+                    }
+                });
+            });
+
+            /**
+             * @author James Caddock
+             */
+            $("#createteam").submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "createteam.php",
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        if (data === "create-success") {
+                            updateTeams();
                         }
                     }
                 });
@@ -69,6 +86,15 @@
         }
 
         /**
+         * Show the teams
+         * @author James Caddock
+         */
+        function updateTeams() {
+          document.getElementById("team-table").style.display = 'block';
+          document.getElementById("create-form").style.display = 'none';
+        }
+
+        /**
          * Hide the current team info
          * @author Joseph Lintern
          */
@@ -76,66 +102,109 @@
             document.getElementById("currentTeam").style.display = 'none';
         }
     </script>
-</head>
+  </head>
 
-<body>
-<div id="game-join">
-    <form id='join-form' method='POST'>
-        <div class='play-box'>
-            <div class='play-content'>
-                <input type='text' name='pin' maxlength='4' size='4' placeholder='Pin'>
-                <p id='pin-error' style="display: none">Game not found</p>
-            </div>
-            <div class='play-content'>
-                <input type='text' name='nickname' maxlength='15' minlength='2' size='18' placeholder='Nickname'>
-                <p id="name-error" style="display: none">Nickname taken</p>
-            </div>
-            <button class='play-submit' name='submit' type='submit'>Play</button>
-            <p id="form-error" style="display: none">Please fill in all fields</p>
-        </div>
-    </form>
-</div>
-<div id='team-table' style='display:none'>
-    <table id='tableData'>
-        <tr>
-            <th>Team Name</th>
-            <th>No. Players</th>
-            <th>Players</th>
-            <th>Join</th>
-        </tr>
-        <tr onclick="showCurrentTeam(this)">
-            <td>Team1</td>
-            <td>4</td>
-            <td>Player1, Player2, Player3, Player4</td>
-            <td>
-                <form><input type="button" value="Join"></form>
-            </td>
-        </tr>
-        <tr onclick="showCurrentTeam(this)">
-            <td>Hackers</td>
-            <td>3</td>
-            <td>Alice, Bob, Eve</td>
-            <td>
-                <form><input type="button" value="Join"></form>
-            </td>
-        </tr>
-    </table>
+  <body>
+    <main class="page">
+      <section class="portfolio-block hire-me">
+	    <div id="game-join">
+			<form id='join-form' method='POST'>
+			  <div class='container'>
+				<div class='form-group'>
+				  <input class="form-control" type='text' name='pin' maxlength='4' size='12' placeholder='Pin'>
+				  <p id='pin-error' style="display: none">Game not found</p>
+				</div>
+				<div class='form-group'>
+				  <input class="form-control" type='text' name='nickname' id='nickname' maxlength='15' minlength='2' size='18' placeholder='Nickname'>
+				  <p id="name-error" style="display: none">Nickname taken</p>
+				</div>
+				<button class='btn btn-outline-primary' type='submit'>Play</button>
+				<p id="form-error" style="display: none">Please fill in all fields</p>
+			  </div>
+			</form>
+		</div>
+	
+	    <div class="container">
+			<div id='team-table' class='form-group' style='display:none'>
+				<table id='tableData'>
+					<tr>
+						<th>Team Name</th>
+						<th>No. Players</th>
+						<th>Players</th>
+						<th>Join</th>
+					</tr>
 
-    <form><input type="button" value="Create Team" onclick="createTeam()"></form>
-</div>
+          <?php 
+          teamDisplay();
+         ?>
 
-<div id='create-form' style='display:none'>
-    <form class="" action="" method="post">
-        Team name: <br>
-        <input type="text" name="teamName" value="">
-        <input type="submit" name="createButton" value="Create team">
-    </form>
-</div>
+				</table>
 
-<div id='currentTeam' style="display:none">
-    <p id="team"></p>
-    <button type="button" onclick="leaveTeam()">Leave team</button>
-    <button type="button">Play game</button>
-</div>
-</body>
+				<form><input type="button" class='btn btn-outline-primary' value="Create Team" onclick="createTeam()">
+        <form id="refresh" method="POST"><input type="button" class='btn btn-outline-primary' value="Refresh"></form>
+        </form>
+			</div>
+
+			<div id='create-form' class='form-group' style='display:none'>
+				<form class="" id="createteam" method="post">
+					Team name: <br>
+					<input type="text" name="teamName" value="">
+					<input type="submit" class='btn btn-outline-primary' name="createButton" value="Create team">
+				</form>
+			</div>
+
+			<div id='currentTeam' class='form-group' style="display:none">
+				<p id="team"></p>
+				<button type="button" class='btn btn-outline-primary' onclick="leaveTeam()">Leave team</button>
+				<button type="button" class='btn btn-outline-primary'>Play game</button>
+			</div>
+		</div>
+	  </section>
+    </main>
+  </body>
 </html>
+
+<?php 
+
+function teamDisplay()
+{
+  $pin = $_SESSION["gameID"];
+  //read and parse hunt json
+  $filename = './hunt_sessions/' . $pin . '.json';
+  $jsonString = file_get_contents($filename);
+  $parsedJson = json_decode($jsonString, true);
+
+  $teamList = $parsedJson["teams"];
+
+  echo '<div id = "tableteams">';
+  foreach ($teamList as $key => $value) {
+    $t = $key;
+
+    if (!($t == "")) {
+      $playerList = $value["players"];
+      $playerCount = count($playerList);
+      echo '<tr onclick="showCurrentTeam(this)">';
+      echo '<td>'. $t .'</td>';
+      echo '<td>' . $playerCount . '</td>';
+      echo '<td>';
+      $counter = 0;
+      foreach ($playerList as $player) {
+        $counter += 1;
+        echo $player;
+        if (!($counter == $playerCount)) { 
+          echo ', ';
+        }
+      }
+
+      echo '</td>';
+      echo '<td>';
+      echo '<form action="jointeam.php" method="POST">';
+      echo '<input type="hidden" name="tableteam" value="'.$t.'">';
+      echo '<input type="submit" class="btn btn-outline-primary" value="Join"></form>';
+      echo '</td>';
+      echo '</tr>';
+    }
+  }
+  echo '</div>';
+}
+?>
