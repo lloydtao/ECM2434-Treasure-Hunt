@@ -1,18 +1,18 @@
 {
-  "gameinfo": {
-    "gamepPin": "0000",
-    "huntID": "0"
-  },
-  "teams": {
-    "team0": {
-      "teaminfo": {
-        "teamname": "",
-        "score": "0"
-      },
-      "players": {
-      },
-      "objectives": {
-      }
+    "gameinfo": {
+        "gamepPin": "0000",
+        "huntID": "0"
+    },
+    "teams": {
+        "": {
+            "teaminfo": {},
+            "players": ["James"],
+            "objectives": []
+        },
+        "GreatTeam": {
+            "teaminfo": {},
+            "players": ["John"],
+            "objectives": []
+        }
     }
-  }
 }

@@ -14,7 +14,7 @@
              * use ajax to submit the form asynchronously
              * @author Jakub Kwak
              */
-            $("#join-form").submit(function (e) {
+            /**$("#join-form").submit(function (e) {
                 e.preventDefault();
                 $("#pin-error").css("display", "none");
                 $("#name-error").css("display", "none");
@@ -35,7 +35,7 @@
                         }
                     }
                 });
-            });
+            }); */
 
             /**
              * @author James Caddock
@@ -107,59 +107,11 @@
   <body>
     <main class="page">
       <section class="portfolio-block hire-me">
-	    <div id="game-join">
-			<form id='join-form' method='POST'>
-			  <div class='container'>
-				<div class='form-group'>
-				  <input class="form-control" type='text' name='pin' maxlength='4' size='12' placeholder='Pin'>
-				  <p id='pin-error' style="display: none">Game not found</p>
-				</div>
-				<div class='form-group'>
-				  <input class="form-control" type='text' name='nickname' id='nickname' maxlength='15' minlength='2' size='18' placeholder='Nickname'>
-				  <p id="name-error" style="display: none">Nickname taken</p>
-				</div>
-				<button class='btn btn-outline-primary' type='submit'>Play</button>
-				<p id="form-error" style="display: none">Please fill in all fields</p>
-			  </div>
-			</form>
-		</div>
-	
-	    <div class="container">
-			<div id='team-table' class='form-group' style='display:none'>
-				<table id='tableData'>
-					<tr>
-						<th>Team Name</th>
-						<th>No. Players</th>
-						<th>Players</th>
-						<th>Join</th>
-					</tr>
-
-          <?php 
-          teamDisplay();
-         ?>
-
-				</table>
-
-				<form><input type="button" class='btn btn-outline-primary' value="Create Team" onclick="createTeam()">
-        <form id="refresh" method="POST"><input type="button" class='btn btn-outline-primary' value="Refresh"></form>
-        </form>
-			</div>
-
-			<div id='create-form' class='form-group' style='display:none'>
-				<form class="" id="createteam" method="post">
-					Team name: <br>
-					<input type="text" name="teamName" value="">
-					<input type="submit" class='btn btn-outline-primary' name="createButton" value="Create team">
-				</form>
-			</div>
-
-			<div id='currentTeam' class='form-group' style="display:none">
-				<p id="team"></p>
-				<button type="button" class='btn btn-outline-primary' onclick="leaveTeam()">Leave team</button>
-				<button type="button" class='btn btn-outline-primary'>Play game</button>
-			</div>
-		</div>
-	  </section>
+        <div id="play">
+          <game-start :insession="insession"></game-start>
+        </div>
+      </div>
+    </section>
     </main>
   </body>
 </html>
@@ -208,3 +160,6 @@ function teamDisplay()
   echo '</div>';
 }
 ?>
+
+<script src="https://unpkg.com/vue"></script>
+<script src="js/play.js"></script>
