@@ -42,6 +42,11 @@ function joinTeam()
         }
     }
 
+    //check if team is left empty and should be deleted
+    if (count($parsedJson["teams"][$oldteam]["players"]) == 0) {
+        unset($parsedJson["teams"][$oldteam]);
+    }
+
 
     $teamList = $parsedJson["teams"];
     $teamcounter = 0;
