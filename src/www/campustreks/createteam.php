@@ -49,8 +49,8 @@ function createTeam()
 
     //Check teams for duplicate team names
     $teamList = $parsedJson["teams"];
-    foreach ($teamList as $t) {
-        if (strtoupper($t) == strtoupper($team)) {
+    foreach ($teamList as $key => $t) {
+        if (strtoupper($key) == strtoupper($team)) {
             echo "team-error";
             return;
         }
@@ -78,6 +78,8 @@ function createTeam()
             $counter += 1;
         }
     }
+    require("createteamobjectives.php");
+    $parsedJson = addTeamObjectives($parsedJson, $team);
 
     //update json file
     $newJson = json_encode($parsedJson);

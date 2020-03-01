@@ -22,7 +22,7 @@ function findGame($pin)
  *
  * @author Jakub Kwak
  */
-function CheckGame()
+function checkGame()
 {
     session_start();
     if (isset($_SESSION['gameID']) && isset($_SESSION['nickname'])) {
@@ -37,17 +37,16 @@ function CheckGame()
                 echo json_encode(array("status" => "success", "gameID" => $gameID, "nickname" => $nickname, "teamName" => null));
                 return;
             }
-            echo json_encode(array("status" => "success", "gameID" => $gameID, "nickname" => $nickname));
-            return;
         }
         unset($_SESSION['gameID']);
         unset($_SESSION['nickname']);
-        echo json_encode(array("status" => "fail", "gameID" => null, "nickname" => null));
+        unset($_SESSION['teamName']);
+        echo json_encode(array("status" => "fail", "gameID" => null, "nickname" => null, "teamName" => null));
         return;
     }
-    echo json_encode(array("status" => "fail", "gameID" => null, "nickname" => null));
+    echo json_encode(array("status" => "fail", "gameID" => null, "nickname" => null, "teamName" => null));
 }
 
-CheckGame();
+checkGame();
 
 ?>

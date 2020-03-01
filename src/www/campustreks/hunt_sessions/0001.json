@@ -1,0 +1,139 @@
+{
+  "gameinfo": {
+    "gamePin": "0001",
+    "huntID": "4"
+  },
+  "teams": {
+    "": {
+      "teamInfo": {
+      },
+      "players": [
+        "user1",
+        "USER 2",
+        "user three"
+      ],
+      "objectives": []
+    },
+    "KWAK3TEAM": {
+      "teaminfo": {
+        "score": "0"
+      },
+      "players": [
+        "user4",
+        "UsER5"
+      ],
+      "objectives": {
+        "objective0": {
+          "type": "gps",
+          "completed": false,
+          "objectiveId": "4"
+        },
+        "objective1": {
+          "type": "gps",
+          "completed": false,
+          "objectiveId": "5"
+        },
+        "objective2": {
+          "type": "gps",
+          "completed": false,
+          "objectiveId": "3"
+        },
+        "objective3": {
+          "type": "photo",
+          "completed": false,
+          "objectiveId": "6",
+          "path": null,
+          "score": 0
+        },
+        "objective4": {
+          "type": "photo",
+          "completed": false,
+          "objectiveId": "7",
+          "path": null,
+          "score": 0
+        }
+      }
+    },
+    "KWAK4TEAM": {
+      "teaminfo": {
+        "score": "0"
+      },
+      "players": [
+        "User6",
+        "User777",
+        "UserEIGHT"
+      ],
+      "objectives": {
+        "objective0": {
+          "type": "gps",
+          "completed": false,
+          "objectiveId": "3"
+        },
+        "objective1": {
+          "type": "gps",
+          "completed": false,
+          "objectiveId": "4"
+        },
+        "objective2": {
+          "type": "gps",
+          "completed": false,
+          "objectiveId": "5"
+        },
+        "objective3": {
+          "type": "photo",
+          "completed": false,
+          "objectiveId": "6",
+          "path": null,
+          "score": 0
+        },
+        "objective4": {
+          "type": "photo",
+          "completed": false,
+          "objectiveId": "7",
+          "path": null,
+          "score": 0
+        }
+      }
+    },
+    "KWAK5TEAM": {
+      "teaminfo": {
+        "score": "0"
+      },
+      "players": [
+        "USerNINE",
+        "user10"
+      ],
+      "objectives": {
+        "objective0": {
+          "type": "gps",
+          "completed": false,
+          "objectiveId": "4"
+        },
+        "objective1": {
+          "type": "gps",
+          "completed": false,
+          "objectiveId": "5"
+        },
+        "objective2": {
+          "type": "gps",
+          "completed": false,
+          "objectiveId": "3"
+        },
+        "objective3": {
+          "type": "photo",
+          "completed": false,
+          "objectiveId": "6",
+          "path": null,
+          "score": 0
+        },
+        "objective4": {
+          "type": "photo",
+          "completed": false,
+          "objectiveId": "7",
+          "path": null,
+          "score": 0
+        }
+      }
+    }
+  }
+}
