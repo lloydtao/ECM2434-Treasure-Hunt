@@ -85,7 +85,7 @@ function createTeam()
 
     $_SESSION["teamName"] = $team;
 
-    echo "create-success";
+    echo "create-team-success";
     return;
 }
 
@@ -93,6 +93,6 @@ function createTeam()
 if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] == "POST" ) {
     createTeam();
 } else {
-    echo "form-error";
+    echo "team-form-error";
 }
 ?>

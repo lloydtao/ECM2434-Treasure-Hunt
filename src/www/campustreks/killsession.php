@@ -34,15 +34,12 @@ function killSession()
     file_put_contents($filename, $newJson);
 
     
-    unset($_SESSION);
+    unset($_SESSION['nickname']);
+    unset($_SESSION['teamName']);
     session_destroy();
 
     echo "session-killed";
 }
-
-
-
-
 
 
 //if form was submitted, try to join game
