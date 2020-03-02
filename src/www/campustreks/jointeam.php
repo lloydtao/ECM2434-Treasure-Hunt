@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Script for handling team joining
  * @author James Caddock
@@ -7,9 +7,9 @@
 /**
  * Tries to create a team using POST data. Checks for duplicate team names and saves info to session.
  */
-function joinTeam() 
+function joinTeam()
 {
-    session_start(); 
+    session_start();
 
     if (!isset($_POST['chosenteam']) || !isset($_SESSION['gameID'])) {
         echo "no team or gameID";
@@ -20,7 +20,7 @@ function joinTeam()
     $pin = $_SESSION['gameID'];
     $nickname = $_SESSION['nickname'];
     $team = $_POST['chosenteam'];
-    
+
 
     //read and parse hunt json
     $filename = './hunt_sessions/' . $pin . '.json';
@@ -43,7 +43,7 @@ function joinTeam()
     }
 
     //check if team is left empty and should be deleted
-    if (count($parsedJson["teams"][$oldteam]["players"]) == 0) {
+    if (count($parsedJson["teams"][$oldteam]["players"]) == 0 && $oldteam != "") {
         unset($parsedJson["teams"][$oldteam]);
     }
 
@@ -68,7 +68,6 @@ function joinTeam()
         $teamcounter += 1;
     }
 
-    
 
     //update json file
     $newJson = json_encode($parsedJson);
@@ -81,7 +80,7 @@ function joinTeam()
 }
 
 //if form was submitted, try to join game
-if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] == "POST" ) {
+if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] == "POST") {
     joinTeam();
 } else {
     echo "form-error";
