@@ -1,1 +1,22 @@
-{"teams":{"mmkdf":{"objectives":{"1":{"type":"photo","completed":true,"objectiveId":"dfs","path":"image_uploads\/mmkdf-dfs-googlelogo_color_92x30dp.png","score":0},"2":{"type":"photo","completed":true,"objectiveId":"sdd","path":"image_uploads\/mmkdf-sdd-googlelogo_color_92x30dp.png","score":0}}}}}
+{
+    "teams":{
+        "mmkdf":{
+            "objectives":{
+                "1":{
+                    "type":"photo",
+                    "completed":true,
+                    "objectiveId":"dfs",
+                    "path":"image_uploads\/mmkdf-dfs-googlelogo_color_92x30dp.png",
+                    "score":0
+                },
+                "2":{
+                    "type":"photo",
+                    "completed":true,
+                    "objectiveId":"sdd",
+                    "path":"image_uploads\/mmkdf-sdd-googlelogo_color_92x30dp.png",
+                    "score":0
+                }
+            }
+        }
+    }
+}
