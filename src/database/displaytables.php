@@ -73,7 +73,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         echo "ObjectiveID: " . $row["ObjectiveID"]. " - HuntOrder: " . $row["HuntOrder"].
         " - Longitude: " . $row["Longitude"] ." - Latitude: " . $row["Latitude"]
-        ." - Question: " . $row["Question"] . " - Answer: " . $row["Answer"] ."<br>";
+        ." - Question: " . $row["Question"] . " - Answer: " . $row["Answer"] . " - Direction: " . $row["Direction"] ."<br>";
     }
 } else {
     echo "0 results <br>";
