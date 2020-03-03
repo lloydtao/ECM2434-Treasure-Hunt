@@ -92,13 +92,14 @@
 						$latitude = (string)$_POST["objective{$x}Latitude"];
 						$question = makeSafe($_POST["objective{$x}Question"]);
 						$answer = makeSafe($_POST["objective{$x}Answer"]);
+                        $directions = (string)$_POST["objective{$x}Directions"];
 						
 						if($logitude!="" && $latitude!="" && $question!="" && $answer!="")
 							continue;
 						
 						// Add Location to database
-						$sql = "INSERT INTO Location (ObjectiveID, HuntOrder, Longitude, Latitude, Question, Answer)
-						VALUES('$last_id', '$locations', '$longitude', '$latitude', '$question', '$answer');";
+						$sql = "INSERT INTO Location (ObjectiveID, HuntOrder, Longitude, Latitude, Question, Answer, Direction)
+						VALUES('$last_id', '$locations', '$longitude', '$latitude', '$question', '$answer', '$directions');";
 						
 						if($conn->query($sql) === TRUE)
 							$locations++;
@@ -177,6 +178,14 @@
             function newGPSObjective(){
                 var objective = newObjective();
                 var content = objective.querySelector("#content");
+
+                content.innerHTML += "Directions:<br>";
+                var txtBoxDir = document.createElement("input");
+                txtBoxDir.type = "text";
+                txtBoxDir.className = "form-control";
+                txtBoxDir.name = "objective" + objectiveCounter + "Directions";
+                content.appendChild(txtBoxDir);
+                content.appendChild(document.createElement("br"));
 
                 content.innerHTML += "Latitude:<br>";
                 var txtBoxLat = document.createElement("input");
