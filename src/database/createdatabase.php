@@ -79,6 +79,7 @@ $sql .= "CREATE TABLE Location (
     Latitude INT(6) NOT NULL,
     Question VARCHAR(255) NOT NULL,
     Answer VARCHAR(50) NOT NULL,
+    Direction VARCHAR(255) NOT NULL,
     FOREIGN KEY (ObjectiveID) REFERENCES Objectives(ObjectiveID),
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );";
