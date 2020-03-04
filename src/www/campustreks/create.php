@@ -12,10 +12,9 @@
     }
     ?>
 	<?php
-	include "getuser.php";
 	include "utils/connection.php";
 	$conn = openCon();
-	$email = getUser($conn);
+	$user = $_SESSION["username"];
 	?>
 	<?php 
 	$titleErr = $descriptionErr = "";
@@ -66,8 +65,8 @@
 				$logitude = $latitude = $question = $answer = $photoDescription = "";
 				
 				// Create the hunt in the database
-				$sql = "INSERT INTO Hunt (Name, Description, Email)
-				VALUES('$title', '$description', '$email');";
+				$sql = "INSERT INTO Hunt (Name, Description, Username)
+				VALUES('$title', '$description', '$username');";
 				
 				if($conn->query($sql) === TRUE) {
 					$hunt_id = $conn->insert_id;

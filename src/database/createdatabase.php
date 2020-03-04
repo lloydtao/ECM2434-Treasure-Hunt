@@ -42,7 +42,7 @@ if ($conn->connect_error) {
 // sql to create table
 $sql = "CREATE TABLE Users (
     Email VARCHAR(50) NOT NULL PRIMARY KEY,
-    Username VARCHAR(30) NOT NULL,
+    Username VARCHAR(30) UNIQUE NOT NULL,
     Password VARCHAR(70) NOT NULL,
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );";
@@ -53,8 +53,8 @@ $sql .= "CREATE TABLE Hunt (
     Description TEXT NOT NULL,
     BestTeam VARCHAR(50),
     Highscore INT(6),
-    Email VARCHAR(50) NOT NULL,
-    FOREIGN KEY (Email) REFERENCES Users(Email),
+    Username VARCHAR(30) NOT NULL,
+    FOREIGN KEY (Username) REFERENCES Users(Username),
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );";
 
