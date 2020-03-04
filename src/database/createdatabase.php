@@ -31,7 +31,7 @@ if ($conn->query($sql) === TRUE) {
 
 $conn->close();
 
-include "connection.php";
+include "../www/campustreks/utils/connection.php";
 
 // Check connection
 $conn = openCon();
@@ -42,8 +42,9 @@ if ($conn->connect_error) {
 // sql to create table
 $sql = "CREATE TABLE Users (
     Email VARCHAR(50) NOT NULL PRIMARY KEY,
-    Username VARCHAR(30) NOT NULL UNIQUE,
+    Username VARCHAR(30) UNIQUE NOT NULL,
     Password VARCHAR(70) NOT NULL,
+    Verified BOOLEAN NOT NULL,
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );";
 
@@ -75,8 +76,8 @@ $sql .= "CREATE TABLE PhotoOps (
 $sql .= "CREATE TABLE Location (
     ObjectiveID INT(6) UNSIGNED NOT NULL,
     HuntOrder INT(6) NOT NULL,
-    Longitude FLOAT(6) NOT NULL,
-    Latitude FLOAT(6) NOT NULL,
+    Longitude INT(6) NOT NULL,
+    Latitude INT(6) NOT NULL,
     Question VARCHAR(255) NOT NULL,
     Answer VARCHAR(50) NOT NULL,
     Direction VARCHAR(255) NOT NULL,
