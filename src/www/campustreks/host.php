@@ -50,6 +50,7 @@
                             echo '<div class="col-md-6 col-lg-4">';
                             echo '<div class="project-card-no-image">';
                             echo '<h3>' . $row["Name"] . '</h3>';
+                            echo '<h4>Author: ' . $row["Username"] . '</h4>';
                             echo '<h4>' . $row["Description"] . '</h4>';
                             echo '<a class="btn btn-outline-primary btn-sm" role="button" href="#" onclick=startHunt(' . $row["HuntID"] . ')>Host</a>';
                             echo '<div class="tags">High Score: ' . $row["Highscore"] . '</div>';
