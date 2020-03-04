@@ -19,10 +19,8 @@
         $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
         $hunt_session_data = json_decode($json_data, true);
         if ($hunt_session_data["gameinfo"]["master"] != $_SESSION["username"]) {
-            echo $_SESSION["username"];
-            echo $_SESSION["gameinfo"]["master"];
-            //header('Location: /host.php');
-            //die();
+            header('Location: /host.php');
+            die();
         }
     }
     else{
