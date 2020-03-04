@@ -12,17 +12,16 @@
     }
     ?>
 	<?php
-	include "getuser.php";
 	include "utils/connection.php";
 	$conn = openCon();
-	$email = getUser($conn);
+	$user = $_SESSION["username"];
 	?>
-	<?php
+	<?php 
 	$titleErr = $descriptionErr = "";
 	$objectives = 1;
 	$sql = "";
 	$title = $description = "";
-
+	
 	/**
 	 *Removes whitespace, slashes && special characters from strings
 	 *@param string $data
@@ -39,15 +38,15 @@
 
 	// Only run if the submit button has been pressed
 	if(isset($_POST['submit'])){
-
+		
 		$title = makeSafe($_POST["title"]);
 		$description = makeSafe($_POST["description"]);
-
+		
 		// Count how many objectives have been added
 		while(array_key_exists("objective{$objectives}Name", $_POST))
 			$objectives++;
-
-
+		
+		
 		// Check the hunt title and description have been set
 		if(!$title || !$description){
 			if(!$title)
@@ -61,68 +60,68 @@
 			if($objectives == 1){
 				echo "<script type='text/javascript'>alert('At least one objective is needed');</script>";
 			}else{
-
+				
 				$locations = 0;
 				$logitude = $latitude = $question = $answer = $photoDescription = "";
-
+				
 				// Create the hunt in the database
-				$sql = "INSERT INTO Hunt (Name, Description, Email)
-				VALUES('$title', '$description', '$email');";
-
+				$sql = "INSERT INTO Hunt (Name, Description, Username)
+				VALUES('$title', '$description', '$user');";
+				
 				if($conn->query($sql) === TRUE) {
 					$hunt_id = $conn->insert_id;
 				}else {
 					echo "<script type='text/javascript'>alert('".$conn->error."');</script>";
 				}
-
+				
 				for($x = 1; $x < $objectives; $x++){
-
+					
 					// Add new objective to database
 					if($conn->query("INSERT INTO Objectives (HuntID) Values('$hunt_id')") === TRUE) {
 						$last_id = $conn->insert_id;
 					}else {
 						echo "<script type='text/javascript'>alert('".$conn->error."');</script>";
 					}
-
+					
 					// Check which type each objective is and add a SQL statement to add to the correct table
 					if(array_key_exists("objective{$x}Longitude", $_POST)){
-
+								
 						// Make the attributes database safe
 						$longitude = (string)$_POST["objective{$x}Longitude"];
 						$latitude = (string)$_POST["objective{$x}Latitude"];
 						$question = makeSafe($_POST["objective{$x}Question"]);
 						$answer = makeSafe($_POST["objective{$x}Answer"]);
                         $directions = (string)$_POST["objective{$x}Directions"];
-
+						
 						if($logitude!="" && $latitude!="" && $question!="" && $answer!="" && $directions!="");
 							continue;
-
+						
 						// Add Location to database
 						$sql = "INSERT INTO Location (ObjectiveID, HuntOrder, Longitude, Latitude, Question, Answer, Direction)
 						VALUES('$last_id', '$locations', '$longitude', '$latitude', '$question', '$answer', '$directions');";
-
+						
 						if($conn->query($sql) === TRUE)
 							$locations++;
 						else {
 							echo "<script type='text/javascript'>alert('".$conn->error."');</script>";
 						}
-
+						
 					}else{
-
+						
 						$photoDescription = makeSafe($_POST["objective{$x}Description"]);
 						if(!$photoDescription)
 							continue;
-
+						
 						// Add photo objective to database
 						$sql = "INSERT INTO PhotoOps (ObjectiveID, Specification)
 						VALUES('$last_id', '$photoDescription');";
-
+						
 						if($conn->query($sql) === FALSE)
 							echo "<script type='text/javascript'>alert('".$conn->error."');</script>";
 					}
-
+					
 				}
-
+				
 				$conn->close();
 				header("Location: host.php");
 			}
@@ -160,7 +159,7 @@
 
                 var content = document.createElement("div");
                 content.id = "content";
-
+                
                 var txtBoxName = document.createElement("input");
                 txtBoxName.type = "text";
                 txtBoxName.name = "objective" + objectiveCounter + "Name";
@@ -171,7 +170,7 @@
 
                 newObjective.appendChild(expandButton);
                 newObjective.appendChild(content);
-
+                
                 return newObjective;
             }
 
@@ -194,7 +193,7 @@
                 txtBoxLat.name = "objective" + objectiveCounter + "Latitude";
                 content.appendChild(txtBoxLat);
                 content.appendChild(document.createElement("br"));
-
+                
                 content.innerHTML += "Longitude:<br>";
                 var txtBoxLong = document.createElement("input");
                 txtBoxLong.type = "number";
@@ -202,7 +201,7 @@
                 txtBoxLong.className = "form-control";
                 content.appendChild(txtBoxLong);
                 content.appendChild(document.createElement("br"));
-
+				
 				content.innerHTML += "Question:<br>";
                 var txtBoxLong = document.createElement("input");
                 txtBoxLong.type = "text";
@@ -210,7 +209,7 @@
                 txtBoxLong.className = "form-control";
                 content.appendChild(txtBoxLong);
                 content.appendChild(document.createElement("br"));
-
+				
 				content.innerHTML += "Answer:<br>";
                 var txtBoxLong = document.createElement("input");
                 txtBoxLong.type = "text";
@@ -242,7 +241,7 @@
                 <div class="heading">
                     <h2>Create A Hunt</h2>
                 </div>
-
+				
                 <form  method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 					<p><span class="error">* required field</span></p>
                     <div class="form-group">

@@ -5,6 +5,16 @@
     <title>Host - CampusTreks</title>
 	<?php include('templates/head.php'); ?>
   </head>
+  <?php
+  include "checkhunts.php";
+  session_start();
+  if (isset($_SESSION["username"])) {
+      $pin = checkHunts($_SESSION["username"]);
+      if ($pin != null) {
+          header("Location: /hunt_session.php?sessionID=".$pin);
+      }
+  }
+  ?>
   <body>
     <script>
         function startHunt(huntID){
