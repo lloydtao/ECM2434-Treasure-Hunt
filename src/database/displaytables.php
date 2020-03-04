@@ -17,7 +17,7 @@ if ($result->num_rows > 0) {
     echo "Users <br>";
     // output data of each row
     while($row = $result->fetch_assoc()) {
-        echo "Email: " . $row["Email"]. " - Username: " . $row["Username"]. " - Password: " . $row["Password"] . "<br>";
+        echo "Email: " . $row["Email"]. " - Username: " . $row["Username"]. " - Password: " . $row["Password"] . " - Verified: " . $row["Verified"] . "<br>";
     }
 } else {
     echo "0 results <br>";
