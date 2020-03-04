@@ -66,7 +66,7 @@
 				
 				// Create the hunt in the database
 				$sql = "INSERT INTO Hunt (Name, Description, Username)
-				VALUES('$title', '$description', '$username');";
+				VALUES('$title', '$description', '$user');";
 				
 				if($conn->query($sql) === TRUE) {
 					$hunt_id = $conn->insert_id;
@@ -222,12 +222,12 @@
             function newPhotoObjective(){
                 var objective = newObjective();
                 var content = objective.querySelector("#content");
-                
+
+                content.innerHTML += "Description:<br>";
                 var txtBoxDesc = document.createElement("input");
                 txtBoxDesc.type = "text";
                 txtBoxDesc.name = "objective" + objectiveCounter + "Description";
                 txtBoxDesc.className = "form-control";
-                txtBoxDesc.placeholder = "Add a short description of what should be achieved in the photo"
                 content.appendChild(txtBoxDesc);
                 content.appendChild(document.createElement("br"));
             }

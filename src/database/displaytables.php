@@ -1,7 +1,7 @@
 <meta name="author" content = "James Caddock">
 <meta name="Contributor" content = "Joe lintern">
 <?php
-include "connection.php";
+include "../www/campustreks/utils/connection.php";
 
 // Check connection
 $conn = openCon();
