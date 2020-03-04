@@ -63,16 +63,16 @@
       },
       "objectives": {
         "objective0": {
+          "type": "gps",
+          "completed": false,
+          "objectiveId": "3"
+        },
+        "objective1": {
           "type": "photo",
           "completed": false,
           "objectiveId": 1,
           "path": "",
           "score": "0"
-        },
-        "objective1": {
-          "type": "gps",
-          "completed": false,
-          "objectiveId": "3"
         }
       }
     }

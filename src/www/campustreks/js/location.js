@@ -16,9 +16,10 @@ function showPosition(position) {
 function showError(error){
     switch(error.code){
         case error.PERMISSION_DENIED:
-
+            
     }
 }
+
 /**
  * Uses the Haversine formula to calculate the distanc ebewee two points
  * @param  pos1 - The first position
