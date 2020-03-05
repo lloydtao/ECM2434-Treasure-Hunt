@@ -189,6 +189,7 @@
                 content.innerHTML += "Latitude:<br>";
                 var txtBoxLat = document.createElement("input");
                 txtBoxLat.type = "number";
+                txtBoxLat.step = "any"
                 txtBoxLat.className = "form-control";
                 txtBoxLat.name = "objective" + objectiveCounter + "Latitude";
                 content.appendChild(txtBoxLat);
@@ -197,6 +198,7 @@
                 content.innerHTML += "Longitude:<br>";
                 var txtBoxLong = document.createElement("input");
                 txtBoxLong.type = "number";
+                txtBoxLong.step = "any"
                 txtBoxLong.name = "objective" + objectiveCounter + "Longitude";
                 txtBoxLong.className = "form-control";
                 content.appendChild(txtBoxLong);

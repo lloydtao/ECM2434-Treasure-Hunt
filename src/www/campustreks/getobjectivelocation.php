@@ -7,12 +7,12 @@ function getNextLoc($conn, $id){
     $result = $conn->query($sql);
     $row = $result->fetch_assoc();
     $conn->close();
-    $json = array("latitude"=>$row["Latitude"], "longitude"=>$row["Longitude"])
+    $json = array("coords"=>array("latitude"=>$row["Latitude"], "longitude"=>$row["Longitude"]));
     echo json_encode($json);
     
 }
         
-#if($_SERVER["REQUEST_METHOD"] == "POST"){
-    getNextLoc(opencon(), "3");
-#}
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+    getNextLoc(opencon(), $_POST["ID"]);
+}
 

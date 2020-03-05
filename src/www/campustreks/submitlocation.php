@@ -12,6 +12,8 @@
         <script>
             var gamePin  = "1234";
             var team = "team2";
+
+            // game json
             var game = {
                 "gameinfo": {
                     "gamePin": "1234",
@@ -79,7 +81,7 @@
                         "objective0": {
                         "type": "gps",
                         "completed": false,
-                        "objectiveId": "3"
+                        "objectiveId": "2"
                         },
                         "objective1": {
                         "type": "photo",
@@ -91,7 +93,7 @@
                     }
                     }
                 }
-                }
+                };
             var id;
 
             for(objective in game["teams"][team]["objectives"]){
@@ -101,10 +103,25 @@
                     break;
                 }
             }
+            function compareLocation(objLoc) {
+                var pos;
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position){
+                        
+                                             
+                        func(objLoc, position);
+                    });
+                    
+                
+                } else { 
+                    console.log("jhkv");
+                }
+            }
 
-            function compareLoc(objLoc){
-                if(abs(distance(objLoc, getLocation())) < 10){
-                    alert("sljnsvln")
+            function func(objLoc, pos){
+                console.log(pos);
+                if (Math.abs(distance(objLoc, pos)) < 10){
+                    alert('sj');
                 }
             }
 
@@ -113,9 +130,11 @@
                     $.post("getobjectivelocation.php",
                     {ID:id},
                     function(data){
-                        
-                        document.getElementById("demo").innerHTML = "Latitude: " + data["Latitude"] + 
-                        " Longitude: " + data["Longitude"];
+                        console.log(data);
+                        console.log('aif');
+                        document.getElementById("demo").innerHTML = "Latitude: " + data.coords.latitude + 
+                        " Longitude: " + data.coords.longitude;
+                        compareLocation(data);
                     },
                     "json");
                     console.log("\srgln\sdg'nish'nil");    
