@@ -227,7 +227,7 @@ Vue.component('game-start', {
                 }
             });
         }
-    },
+    }
 })
 
 

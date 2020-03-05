@@ -93,7 +93,7 @@
 						$answer = makeSafe($_POST["objective{$x}Answer"]);
                         $directions = (string)$_POST["objective{$x}Directions"];
 						
-						if($logitude!="" && $latitude!="" && $question!="" && $answer!="" && $directions!="");
+						if($logitude!="" && $latitude!="" && $question!="" && $answer!="" && $directions!="")
 							continue;
 						
 						// Add Location to database

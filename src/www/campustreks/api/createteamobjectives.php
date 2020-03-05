@@ -11,7 +11,7 @@
 function addTeamObjectives($parsedJson, $teamName) {
     $huntID = $parsedJson["gameinfo"]["huntID"];
 
-    include "utils/connection.php";
+    include "../utils/connection.php";
     $conn = openCon();
 
     //fetch all objective IDS for this hunt from db
