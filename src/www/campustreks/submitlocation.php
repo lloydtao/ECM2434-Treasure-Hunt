@@ -5,6 +5,10 @@
     </head>
     <body>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="js/location.js"></script>
+        
+        <button></button>
+        <p id="demo"></p>
         <script>
             var gamePin  = "1234";
             var team = "team2";
@@ -87,35 +91,38 @@
                     }
                     }
                 }
-                };
-            var objLoc;
-            
-            console.log(game);
+                }
+            var id;
+
             for(objective in game["teams"][team]["objectives"]){
-                if(objective["type"] == "gps" && objective["completed"]){
-                    var id = objective["objectiveId"];
+                
+                if(game["teams"][team]["objectives"][objective]["type"] == "gps" && !game["teams"][team]["objectives"][objective]["completed"]){
+                    id = game["teams"][team]["objectives"][objective]["objectiveId"];
                     break;
                 }
             }
+
+            function compareLoc(objLoc){
+                if(abs(distance(objLoc, getLocation())) < 10){
+                    alert("sljnsvln")
+                }
+            }
+
             $(document).ready(function(){
-                $("button").click(function(e){
-                    e.preventDefault();
-                    $.ajax({
-                        type: "POST",
-                        url: "getobjectivelocation.php",
-                        data: {ID:id},
-                        dataType: "json", 
-                        success: function(data){
-                            objLoc = data
-                        }
-                    });
+                $("button").click(function(){
+                    $.post("getobjectivelocation.php",
+                    {ID:id},
+                    function(data){
+                        
+                        document.getElementById("demo").innerHTML = "Latitude: " + data["Latitude"] + 
+                        " Longitude: " + data["Longitude"];
+                    },
+                    "json");
+                    console.log("\srgln\sdg'nish'nil");    
                 });
+                
             });
-            document.getElementById("demo").innerHTML = "Latitude: " + objLoc.Latitude + 
-            " Longitude: " + objLoc.Longitude;
+           
         </script>
-        <button></button>
-        <p id="demo"></p>
-        <script src="js/location.js"></script>
     </body>
 </html>
