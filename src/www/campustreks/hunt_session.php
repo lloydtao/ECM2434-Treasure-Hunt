@@ -16,9 +16,9 @@
 
     if(isset($_GET['sessionID'])){
         $huntSessionID = $_GET['sessionID'];
-        $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
-        $hunt_session_data = json_decode($json_data, true);
-        if ($hunt_session_data["gameinfo"]["master"] != $_SESSION["username"]) {
+        $jsonData = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
+        $huntSessionData = json_decode($jsonData, true);
+        if ($huntSessionData["gameinfo"]["master"] != $_SESSION["username"]) {
             header('Location: /host.php');
             die();
         }
@@ -35,6 +35,11 @@
         <section class="portfolio-block project-no-images">
             <div class="container">
                 <div class="heading">
+                    <script type="text/javascript">
+                        function end(){
+                            window.location.replace("/endsession.php?pin="+document.getElementById("pin").innerHTML);
+                        }
+                    </script>
                     <h2>Game Pin</h2>
                     <h3><div id="pin"><?php echo $huntSessionData['gameinfo']['gamePin']; ?></div></h3>
                 </div>
@@ -157,7 +162,7 @@
                                                 var teams = Object.keys(huntSessionData["teams"]);
                                                 for (var team of teams){
                                                     if(team!=''){
-                                                        this.teamScores.push([team, huntSessionData["teams"][team]["teamInfo"]["score"]]);
+                                                        this.teamScores.push([team, huntSessionData["teams"][team]["teaminfo"]["score"]]);
                                                     }
                                                 }
 
@@ -174,7 +179,7 @@
                             });
                         </script>
                     </div>
-                    <button class="btn btn-primary" type="button">End Game</button>
+                    <button class="btn btn-primary" type="button" onclick = end()>End Game</button>
                     <button class="btn btn-primary" type="button" onclick = refresh()>Refresh</button>
                 </div>
             </div>

@@ -32,3 +32,7 @@
 body{
 	background-image: linear-gradient(to right, green , brown);
 }
+
+h2,h3{
+	color:magenta;
+}
