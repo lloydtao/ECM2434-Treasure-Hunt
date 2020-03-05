@@ -1,12 +1,34 @@
 #leaderboard{
 	float: right;
 	width: 45%;
-	height: 500px;
+	min-height: 500px;
 	border: solid;
+	background-image: linear-gradient(to bottom, lime , gold);
 }
 #submissions{
 	height: 500px;
 	float: left;
 	width: 45%;
 	border: solid;
+	background-image: linear-gradient(to right, silver , orange);
+}
+#leaderboard li:nth-child(even){
+	color: red;
+	background-image: linear-gradient(to right, cyan , purple)
+}
+#leaderboard li:nth-child(odd){
+	color: cyan;
+	background-image: linear-gradient(to right, hotpink , yellow);
+}
+
+#leaderboard li{
+	list-style-type: none;
+}
+
+#submissions img{
+	max-width: 100%;
+}
+
+body{
+	background-image: linear-gradient(to right, green , brown);
 }
