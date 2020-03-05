@@ -187,7 +187,7 @@
 <?php include('templates/footer.php'); ?>
 </body>
 <script async defer
-        src='https://maps.googleapis.com/maps/api/js?key=AIzaSyCVSOlXOUbOFgVT6An3ymYEAWZdEkD-tWY&callback=init'></script>
+        src='https://maps.googleapis.com/maps/api/js?key=[API-KEY]&callback=init'></script>
 <script type="text/javascript">
     var map;
     var marker;
