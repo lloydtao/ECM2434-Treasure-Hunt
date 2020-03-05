@@ -24,7 +24,7 @@ function makeSafe($data)
  */
 function findGame($pin)
 {
-    $filename = './hunt_sessions/' . $pin . '.json';
+    $filename = '../hunt_sessions/' . $pin . '.json';
     if (file_exists($filename))
     {
         return true;
@@ -54,23 +54,24 @@ function joinGame()
     if (findGame($pin))
     {
         //read and parse hunt json
-        $filename = './hunt_sessions/' . $pin . '.json';
+        $filename = '../hunt_sessions/' . $pin . '.json';
         $jsonString = file_get_contents($filename);
         $parsedJson = json_decode($jsonString, true);
 
         //Check player list for duplicate names
-        $playerList = $parsedJson["teams"]["team0"]["players"];
-        foreach ($playerList as $player) {
-            if ($player["playername"] == $nickname) {
-                echo "name-error";
-                return;
+        $teamList = $parsedJson["teams"];
+        foreach ($teamList as $t) {
+            $playerList = $t["players"];
+            foreach ($playerList as $player) {
+                if (strtoupper($player) == strtoupper($nickname)) {
+                    echo "name-error";
+                    return;
+                }
             }
         }
-        //create new player assoc array
-        $player = array("playername"=>$nickname);
-        $playerCount = count($playerList);
+
         //insert player into json data
-        $parsedJson["teams"]["team0"]["players"]["player".$playerCount] = $player;
+        array_push($parsedJson["teams"][""]["players"], $nickname);
 
         //update json file
         $newJson = json_encode($parsedJson);

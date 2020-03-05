@@ -1,5 +1,10 @@
 <?php
 include "utils/connection.php";
+/**
+ * Script for handling user registering asynchronously
+ * @author Joseph Lintern
+ * @contributor Jakub Kwak
+ */
 
 /**
  *Removes whitespace, slashes and special characters from strings
@@ -49,10 +54,10 @@ function registerUser($conn)
                     $dbPass = $row['Password'];
 
                     //Validates that the email and username are unique
-                    if ($email == $dbEmail) {
+                    if (strtoupper($email) == strtoupper($dbEmail)) {
                         echo "email-fail";
                         return;
-                    } elseif ($username == $dbUsername) {
+                    } elseif (strtoupper($username) == strtoupper($dbUsername)) {
                         echo "username-fail";
                         return;
                     }
@@ -61,8 +66,8 @@ function registerUser($conn)
             //Hashes password and inputs user data to database
             $pass = password_hash($password, PASSWORD_DEFAULT);
 
-            $insert = "INSERT INTO users (Email, Username, Password) 
-                       VALUES ('$email', '$username', '$pass')";
+            $insert = "INSERT INTO users (Email, Username, Password, Verified)
+                       VALUES ('$email', '$username', '$pass', false)";
             $result = mysqli_query($conn, $insert);
 
             echo "register-success";

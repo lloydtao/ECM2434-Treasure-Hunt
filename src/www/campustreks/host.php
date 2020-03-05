@@ -1,10 +1,20 @@
 <html>
   <head>
     <meta name="author" content = "Lewis Lloyd">
-    <meta name="Contributer" content = "Marek Tancak">
+    <meta name="Contributor" content = "Marek Tancak">
     <title>Host - CampusTreks</title>
 	<?php include('templates/head.php'); ?>
   </head>
+  <?php
+  include "checkhunts.php";
+  session_start();
+  if (isset($_SESSION["username"])) {
+      $pin = checkHunts($_SESSION["username"]);
+      if ($pin != null) {
+          header("Location: /hunt_session.php?sessionID=".$pin);
+      }
+  }
+  ?>
   <body>
     <script>
         function startHunt(huntID){
@@ -40,6 +50,7 @@
                             echo '<div class="col-md-6 col-lg-4">';
                             echo '<div class="project-card-no-image">';
                             echo '<h3>' . $row["Name"] . '</h3>';
+                            echo '<h4>Author: ' . $row["Username"] . '</h4>';
                             echo '<h4>' . $row["Description"] . '</h4>';
                             echo '<a class="btn btn-outline-primary btn-sm" role="button" href="#" onclick=startHunt(' . $row["HuntID"] . ')>Host</a>';
                             echo '<div class="tags">High Score: ' . $row["Highscore"] . '</div>';

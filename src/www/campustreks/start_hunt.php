@@ -15,9 +15,16 @@
 	    return $randomPIN;
 	}
 
+    include "checklogin.php";
+    if (!CheckLogin()) {
+        header("location:login.php");
+    }
+
+    $user = $_SESSION["username"];
 	$huntID = $_GET['huntID'];
 	$gamePIN = generateGamePin();
-	$huntSession = array('gameinfo'=> array('gamePin' => $gamePIN, 'huntID'=>$huntID), 'teams'=>array('team0' => array('teamInfo' => array('teamname' => ''), 'players' => json_decode ("{}")), 'objectives' => json_decode ("{}")));
+	$huntSession = array('gameinfo'=> array('gamePin' => $gamePIN, 'huntID'=>$huntID, 'master'=>$user),
+		'teams'=>array('' => array('teamInfo' => array(), 'players' => array(), 'objectives' => json_decode ("{}"))));
 	$json_data = json_encode($huntSession);
 	file_put_contents('hunt_sessions/' . $gamePIN . '.json', $json_data);
 

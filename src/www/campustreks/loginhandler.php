@@ -1,5 +1,10 @@
 <?php
 include "utils/connection.php";
+/**
+ * Script for asynchronously handling login form data
+ * @author Jakub Kwak
+ */
+
 
 /**
  * Sanitize string data
