@@ -59,13 +59,17 @@ function joinGame()
         $parsedJson = json_decode($jsonString, true);
 
         //Check player list for duplicate names
-        $playerList = $parsedJson["teams"][""]["players"];
-        foreach ($playerList as $player) {
-            if (strtoupper($player) == strtoupper($nickname)) {
-                echo "name-error";
-                return;
+        $teamList = $parsedJson["teams"];
+        foreach ($teamList as $t) {
+            $playerList = $t["players"];
+            foreach ($playerList as $player) {
+                if (strtoupper($player) == strtoupper($nickname)) {
+                    echo "name-error";
+                    return;
+                }
             }
         }
+
         //insert player into json data
         array_push($parsedJson["teams"][""]["players"], $nickname);
 
