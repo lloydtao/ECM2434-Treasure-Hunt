@@ -66,8 +66,8 @@ function registerUser($conn)
             //Hashes password and inputs user data to database
             $pass = password_hash($password, PASSWORD_DEFAULT);
 
-            $insert = "INSERT INTO users (Email, Username, Password)
-                       VALUES ('$email', '$username', '$pass')";
+            $insert = "INSERT INTO users (Email, Username, Password, Verified)
+                       VALUES ('$email', '$username', '$pass', false)";
             $result = mysqli_query($conn, $insert);
 
             echo "register-success";

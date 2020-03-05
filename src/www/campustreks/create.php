@@ -12,10 +12,9 @@
     }
     ?>
 	<?php
-	include "getuser.php";
 	include "utils/connection.php";
 	$conn = openCon();
-	$email = getUser($conn);
+	$user = $_SESSION["username"];
 	?>
 	<?php 
 	$titleErr = $descriptionErr = "";
@@ -66,8 +65,8 @@
 				$logitude = $latitude = $question = $answer = $photoDescription = "";
 				
 				// Create the hunt in the database
-				$sql = "INSERT INTO Hunt (Name, Description, Email)
-				VALUES('$title', '$description', '$email');";
+				$sql = "INSERT INTO Hunt (Name, Description, Username)
+				VALUES('$title', '$description', '$user');";
 				
 				if($conn->query($sql) === TRUE) {
 					$hunt_id = $conn->insert_id;
@@ -92,13 +91,14 @@
 						$latitude = (string)$_POST["objective{$x}Latitude"];
 						$question = makeSafe($_POST["objective{$x}Question"]);
 						$answer = makeSafe($_POST["objective{$x}Answer"]);
+                        $directions = (string)$_POST["objective{$x}Directions"];
 						
-						if($logitude!="" && $latitude!="" && $question!="" && $answer!="")
+						if($logitude!="" && $latitude!="" && $question!="" && $answer!="" && $directions!="");
 							continue;
 						
 						// Add Location to database
-						$sql = "INSERT INTO Location (ObjectiveID, HuntOrder, Longitude, Latitude, Question, Answer)
-						VALUES('$last_id', '$locations', '$longitude', '$latitude', '$question', '$answer');";
+						$sql = "INSERT INTO Location (ObjectiveID, HuntOrder, Longitude, Latitude, Question, Answer, Direction)
+						VALUES('$last_id', '$locations', '$longitude', '$latitude', '$question', '$answer', '$directions');";
 						
 						if($conn->query($sql) === TRUE)
 							$locations++;
@@ -178,6 +178,14 @@
                 var objective = newObjective();
                 var content = objective.querySelector("#content");
 
+                content.innerHTML += "Directions:<br>";
+                var txtBoxDir = document.createElement("input");
+                txtBoxDir.type = "text";
+                txtBoxDir.className = "form-control";
+                txtBoxDir.name = "objective" + objectiveCounter + "Directions";
+                content.appendChild(txtBoxDir);
+                content.appendChild(document.createElement("br"));
+
                 content.innerHTML += "Latitude:<br>";
                 var txtBoxLat = document.createElement("input");
                 txtBoxLat.type = "number";
@@ -214,12 +222,12 @@
             function newPhotoObjective(){
                 var objective = newObjective();
                 var content = objective.querySelector("#content");
-                
+
+                content.innerHTML += "Description:<br>";
                 var txtBoxDesc = document.createElement("input");
                 txtBoxDesc.type = "text";
                 txtBoxDesc.name = "objective" + objectiveCounter + "Description";
                 txtBoxDesc.className = "form-control";
-                txtBoxDesc.placeholder = "Add a short description of what should be achieved in the photo"
                 content.appendChild(txtBoxDesc);
                 content.appendChild(document.createElement("br"));
             }

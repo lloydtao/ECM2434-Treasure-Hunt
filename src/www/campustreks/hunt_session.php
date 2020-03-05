@@ -1,16 +1,27 @@
 <html>
   <head>
     <meta name="author" content = "Marek Tancak">
+      <meta name="contributors" content = "Jakub Kwak">
     <title>Host - CampusTreks</title>
     <link rel="stylesheet" href="css/hunt_session_stylesheet.css">
     <?php include('templates/head.php'); ?>
   </head>
   <body>
-    <?php 
+    <?php
+    include "checklogin.php";
+    if (!CheckLogin()) {
+        header("location:login.php");
+    }
+
+
     if(isset($_GET['sessionID'])){
         $huntSessionID = $_GET['sessionID'];
         $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
         $hunt_session_data = json_decode($json_data, true);
+        if ($hunt_session_data["gameinfo"]["master"] != $_SESSION["username"]) {
+            header('Location: /host.php');
+            die();
+        }
     }
     else{
         header('Location: /host.php');
