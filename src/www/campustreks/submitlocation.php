@@ -7,7 +7,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="js/location.js"></script>
         
-        <button></button>
+        <button>Submit Location</button>
         <p id="demo"></p>
         <script>
             var gamePin  = "1234";
@@ -81,7 +81,7 @@
                         "objective0": {
                         "type": "gps",
                         "completed": false,
-                        "objectiveId": "2"
+                        "objectiveId": "1"
                         },
                         "objective1": {
                         "type": "photo",
@@ -95,7 +95,8 @@
                 }
                 };
             var id;
-
+            
+            // Find the next location objective
             for(objective in game["teams"][team]["objectives"]){
                 
                 if(game["teams"][team]["objectives"][objective]["type"] == "gps" && !game["teams"][team]["objectives"][objective]["completed"]){
@@ -103,28 +104,8 @@
                     break;
                 }
             }
-            function compareLocation(objLoc) {
-                var pos;
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function(position){
-                        
-                                             
-                        func(objLoc, position);
-                    });
-                    
-                
-                } else { 
-                    console.log("jhkv");
-                }
-            }
-
-            function func(objLoc, pos){
-                console.log(pos);
-                if (Math.abs(distance(objLoc, pos)) < 10){
-                    alert('sj');
-                }
-            }
-
+            
+            // Get the location of the objective and compare it with the user's location
             $(document).ready(function(){
                 $("button").click(function(){
                     $.post("getobjectivelocation.php",
