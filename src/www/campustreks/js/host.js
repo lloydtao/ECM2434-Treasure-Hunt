@@ -1,36 +1,6 @@
-<html>
-<head>
-    <meta name="author" content = "Marek Tancak">
-      <meta name="contributors" content = "Jakub Kwak">
-    <title>Host - CampusTreks</title>
-    <link rel="stylesheet" href="css/hunt_session_stylesheet.css">
-    <?php include('templates/head.php'); ?>
-  </head>
-  <body>
-    <?php
-    include "checklogin.php";
-    if (!CheckLogin()) {
-        header("location:login.php");
-    }
-
-
-    if(isset($_GET['sessionID'])){
-        $huntSessionID = $_GET['sessionID'];
-        $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
-        $hunt_session_data = json_decode($json_data, true);
-        if ($hunt_session_data["gameinfo"]["master"] != $_SESSION["username"]) {
-            header('Location: /host.php');
-            die();
-        }
-    }
-    else{
-        header('Location: /host.php');
-        die();
-    }
-    ?>
-    <!-- Header -->
-    <?php include('templates/header.php'); ?>
-    <!-- Content -->
+var host = new Vue({
+    el: "#host",
+    template: `
     <main class="page host-page">
         <section class="portfolio-block project-no-images">
             <div class="container">
@@ -111,7 +81,6 @@
                             refresh();
                             setInterval(function(){refresh()}, 5000)
                         </script>
-
                     </div>
                     <div id="leaderboard" content="no-cache">
 
@@ -180,12 +149,8 @@
             </div>
         </section>
     </main>
-    <!-- Footer -->
-    <?php include('templates/footer.php'); ?>
+    `,
+    methods: {
 
-</body>
-
-</html>
-
-<script src="https://unpkg.com/vue"></script>
-<script src="js/host.js"></script>
+    }
+})
