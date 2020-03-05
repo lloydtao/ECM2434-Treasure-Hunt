@@ -76,8 +76,8 @@ $sql .= "CREATE TABLE PhotoOps (
 $sql .= "CREATE TABLE Location (
     ObjectiveID INT(6) UNSIGNED NOT NULL,
     HuntOrder INT(6) NOT NULL,
-    Longitude INT(6) NOT NULL,
-    Latitude INT(6) NOT NULL,
+    Longitude FLOAT(20) NOT NULL,
+    Latitude FLOAT(20) NOT NULL,
     Question VARCHAR(255) NOT NULL,
     Answer VARCHAR(50) NOT NULL,
     Direction VARCHAR(255) NOT NULL,
