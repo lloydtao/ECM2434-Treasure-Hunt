@@ -1,6 +1,10 @@
 <?php
 
-function killSession() 
+/**
+ * 
+ * @author James Caddock
+ */
+function endSession() 
 {
     session_start();
 
@@ -36,15 +40,14 @@ function killSession()
     
     unset($_SESSION['nickname']);
     unset($_SESSION['teamName']);
-    session_destroy();
 
-    echo "session-killed";
+    echo "session-ended";
 }
 
 
 //if form was submitted, try to join game
 if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] == "POST" ) {
-    killSession();
+    endSession();
 } else {
     echo "form-error";
 }

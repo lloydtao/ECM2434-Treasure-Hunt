@@ -32,7 +32,7 @@ Vue.component('game-start', {
                 </tr>
 
 
-                <tr v-for="(data, key) in jsondata.teams" v-if="realTeam(key)">
+                <tr v-for="(data, key) in jsondata.teams" v-if='key!=""'>
                     <td>{{ key }}</td>
                     <td>{{ data.players.length }}</td>
                     <td v-for="player in data.players">{{ player }}</td>
@@ -70,7 +70,7 @@ Vue.component('game-start', {
             pin: null,
             nickname: null,
             newteam: null,
-            inteam: true,
+            inteam: false,
             maketeam: false,
             jsondata: []
         }
@@ -79,6 +79,10 @@ Vue.component('game-start', {
         this.checkGame()
     },
     methods: {
+        /**
+         * Fetches the json data
+         * @author James Caddock
+         */
         fetchJson() {
             reqjson = this.pin
             safejson = './hunt_sessions/' + encodeURI(reqjson) + '.json'
@@ -91,6 +95,10 @@ Vue.component('game-start', {
                 this.alertSession()
             })            
         },
+        /** 
+         * Sends an ajax request to join a Game 
+         * @author Jakub Kwak
+         * */ 
         joinGame() {
             $("#pin-error").css("display", "none")
             $("#name-error").css("display", "none")
@@ -115,6 +123,10 @@ Vue.component('game-start', {
                 }
             });
         },
+        /**
+         * Lets vue know there's a session
+         * @author James Caddock
+         */
         alertSession() {
             if (this.jsondata != [] && this.nickname != null) {
                 this.$emit('has-session')
@@ -124,11 +136,11 @@ Vue.component('game-start', {
                 this.maketeam = false
             }
         },
-        realTeam(chosenteam){
-            if (chosenteam != "") {
-                return true
-            } return false
-        },
+        /**
+         * Adds the user to the chosenteam
+         * @author James Caddock
+         * @param string 
+         */
         joinTeam(chosenteam) {
             $.ajax({
                 type: "POST",
@@ -142,6 +154,10 @@ Vue.component('game-start', {
                 }
             });
         },
+        /**
+         * Posts the new team data to add to the json
+         * @author James Caddock
+         */
         createTeam() {
             $("#team-error").css("display", "none");
             $("#team-form-error").css("display", "none");
@@ -168,6 +184,10 @@ Vue.component('game-start', {
                 }
             });
         },
+        /**
+         * Checks PHP session data with json data
+         * @author Jakub Kwak
+         */
         checkGame() {
             $.ajax({
                 type: "POST",
@@ -182,21 +202,26 @@ Vue.component('game-start', {
                         this.pin = data["gameID"]
                         this.nickname = data["nickname"]
                         this.fetchJson()
-                        if (data["teamName"] != null) {
+                        if (data["teamName"] != "") {
                             this.maketeam = false
+                            this.inteam = true
                         } else {
-                            //go to team select
+                            this.inteam = false
                         }
                     }
                 }
             });
         },
-        killSession() {
+        /**
+         * Sends an ajax request to end the current session
+         * @author James Caddock
+         */
+        endSession() {
             $.ajax({
                 type: "POST",
-                url: "killsession.php",
+                url: "endsession.php",
                 success: (data) => {
-                    if (data === "session-killed") {
+                    if (data === "session-ended") {
                         this.$emit('no-session')
                     }
                 }
