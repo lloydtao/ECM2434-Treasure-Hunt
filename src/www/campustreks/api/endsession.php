@@ -13,7 +13,7 @@ function endSession()
     $nickname = $_SESSION['nickname'];
 
     //read and parse hunt json
-    $filename = './hunt_sessions/' . $pin . '.json';
+    $filename = '../hunt_sessions/' . $pin . '.json';
     $jsonString = file_get_contents($filename);
     $parsedJson = json_decode($jsonString, true);
 

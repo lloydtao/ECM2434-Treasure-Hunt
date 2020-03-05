@@ -8,7 +8,7 @@
  */
 function findGame($pin)
 {
-    $filename = './hunt_sessions/' . $pin . '.json';
+    $filename = '../hunt_sessions/' . $pin . '.json';
     if (file_exists($filename))
     {
         return true;

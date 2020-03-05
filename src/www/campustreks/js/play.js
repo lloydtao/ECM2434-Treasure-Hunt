@@ -44,7 +44,7 @@ Vue.component('game-start', {
             <div>
                 <input type="button" class='btn btn-outline-primary' @click="maketeam = true" value="Create Team">
                 <input type="button" class='btn btn-outline-primary' @click="fetchJson()" value="Refresh">
-                <input type="button" class='btn btn-outline-primary' @click="killSession()" value="Quit">
+                <input type="button" class='btn btn-outline-primary' @click="endSession()" value="Quit">
             </div>
 
             <div id='currentTeam' class='form-group' v-if="inteam">
@@ -105,7 +105,7 @@ Vue.component('game-start', {
             $("#form-error").css("display", "none")
             $.ajax({
                 type: "POST",
-                url: "joingame.php",
+                url: "api/joingame.php",
                 data: {
                     pin: this.pin,
                     nickname: this.nickname
@@ -144,7 +144,7 @@ Vue.component('game-start', {
         joinTeam(chosenteam) {
             $.ajax({
                 type: "POST",
-                url: "jointeam.php",
+                url: "api/jointeam.php",
                 data: {chosenteam: chosenteam},
                 success: (data) => {
                     if (data === "join-team-success") {
@@ -163,7 +163,7 @@ Vue.component('game-start', {
             $("#team-form-error").css("display", "none");
             $.ajax({
                 type: "POST",
-                url: "createteam.php",
+                url: "api/createteam.php",
                 data: {newteam: this.newteam},
                 success: (data) => {
                     if (data === "create-team-success") {
@@ -191,12 +191,12 @@ Vue.component('game-start', {
         checkGame() {
             $.ajax({
                 type: "POST",
-                url: "checkgame.php",
+                url: "api/checkgame.php",
                 dataType: "json",
                 success: (data) => {
                     if (data["status"] === "fail") {
                         console.log(data)
-                        this.killSession()
+                        this.endSession()
                     } else if (data["status"] === "success") {
                         console.log(data)
                         this.pin = data["gameID"]
@@ -219,7 +219,7 @@ Vue.component('game-start', {
         endSession() {
             $.ajax({
                 type: "POST",
-                url: "endsession.php",
+                url: "api/endsession.php",
                 success: (data) => {
                     if (data === "session-ended") {
                         this.$emit('no-session')
