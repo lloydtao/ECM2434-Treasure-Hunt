@@ -73,12 +73,12 @@ Vue.component('game-start', {
             inteam: false,
             maketeam: false,
             jsondata: [],
-            gameInterval: setInterval(this.checkGame, 1000)
+            gameInterval: null
         }
     },
     mounted() {
         this.checkGame()
-        this.gameInterval
+        this.gameInterval = setInterval(this.checkGame, 1000)
     },
     methods: {
         /**
@@ -113,7 +113,8 @@ Vue.component('game-start', {
                 },
                 success: (data) => {
                     if (data === "join-success") {
-                        this.fetchJson()
+                        this.checkGame()
+                        this.gameInterval = setInterval(this.checkGame, 1000)
                     } else if (data === "pin-error") {
                         $("#pin-error").css("display", "block")
                     } else if (data === "name-error") {
