@@ -72,12 +72,15 @@ Vue.component('game-start', {
             newteam: null,
             inteam: false,
             maketeam: false,
-            jsondata: []
+            jsondata: [],
+            interval: setInterval(this.fetchJson, 1000)
         }
     },
     mounted() {
         this.checkGame()
-        setInterval(this.checkGame, 2000)
+        if(!this.interval) {
+            this.interval
+        }
     },
     methods: {
         /**
@@ -94,7 +97,7 @@ Vue.component('game-start', {
                 this.jsondata = data
                 console.log(data)
                 this.alertSession()
-            })            
+            })   
         },
         /** 
          * Sends an ajax request to join a Game 
@@ -113,7 +116,7 @@ Vue.component('game-start', {
                 },
                 success: (data) => {
                     if (data === "join-success") {
-                        this.fetchJson()
+                        this.interval
                     } else if (data === "pin-error") {
                         $("#pin-error").css("display", "block")
                     } else if (data === "name-error") {
@@ -129,14 +132,12 @@ Vue.component('game-start', {
          * @author James Caddock
          */
         alertSession() {
-            if (this.jsondata != [] && this.nickname != null) {
+            if (this.pin != null && this.nickname != null) {
                 this.$emit('has-session')
             } else {
                 this.$emit('no-session')
-            } if (this.newteam != null) {
-                this.maketeam = false
             }
-        },
+        }, 
         /**
          * Adds the user to the chosenteam
          * @author James Caddock
@@ -169,6 +170,7 @@ Vue.component('game-start', {
                 success: (data) => {
                     if (data === "create-team-success") {
                         console.log(data);
+                        this.maketeam = false;s
                         this.checkGame();
                     } 
                     else if (data === "team-error") {
@@ -196,19 +198,19 @@ Vue.component('game-start', {
                 dataType: "json",
                 success: (data) => {
                     if (data["status"] === "fail") {
-                        console.log(data)
+                        this.$emit('no-session')
                         this.endSession()
                     } else if (data["status"] === "success") {
-                        this.fetchJson()
                         console.log(data)
                         this.pin = data["gameID"]
                         this.nickname = data["nickname"]
-                        if (data["teamName"] != "null") {
-                            this.maketeam = false
+                        
+                        if (data["teamName"] != "" && data["teamName"] != null) {
                             this.inteam = true
                         } else {
                             this.inteam = false
                         }
+                        this.fetchJson()
                     }
                 }
             });

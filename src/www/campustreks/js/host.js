@@ -37,7 +37,7 @@ Vue.component('submissions-leaderboard', {
     },
     mounted() {
         this.fetchJson()
-        setInterval(this.fetchJson, 2000)
+        setInterval(this.fetchJson, 1000)
     },
     methods: {
         /**
@@ -171,11 +171,8 @@ Vue.component('submissions-leaderboard', {
                 }
             }
 
-            if (this.teamscores.length == 0) {
-                newtscores.sort(this.sortScores)
-                this.teamscores = newtscores
-            }
-            
+            newtscores.sort(this.sortScores)
+            this.teamscores = newtscores
         }
     }
 })
