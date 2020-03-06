@@ -203,7 +203,7 @@ Vue.component('game-start', {
                         console.log(data)
                         this.pin = data["gameID"]
                         this.nickname = data["nickname"]
-                        if (data["teamName"] != "") {
+                        if (data["teamName"] != "null") {
                             this.maketeam = false
                             this.inteam = true
                         } else {

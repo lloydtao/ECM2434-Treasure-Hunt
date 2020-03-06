@@ -18,7 +18,7 @@ Vue.component('submissions-leaderboard', {
             </div>
 
             <div id="leaderboard" content="no-cache">
-                <li v-for="team in teamscores" v-if='team[0]!=""'>
+                <li v-for="team in teamscores">
                     {{ team[0] }}<br>
                     {{ team[1] }}
                 </li>
@@ -37,7 +37,7 @@ Vue.component('submissions-leaderboard', {
     },
     mounted() {
         this.fetchJson()
-        setInterval(this.updateLeaderboard, 1000)
+        setInterval(this.fetchJson, 2000)
     },
     methods: {
         /**
@@ -51,7 +51,7 @@ Vue.component('submissions-leaderboard', {
                 this.gameID = url.searchParams.get("sessionID")
             }
             safejson = './hunt_sessions/'+this.gameID+'.json'
-            console.log(safejson)
+
             fetch(safejson)
             .then(response => response.json())
             .then(data => {
@@ -72,50 +72,62 @@ Vue.component('submissions-leaderboard', {
                     }
                 }
                 this.photosubmission = newphotosubmission 
-                this.jsondata = data     
-            })            
+                this.jsondata = data
+            })   
+            
+            this.updateLeaderboard()         
         },
         teamUpdate(photoID, team) {
             if (this.teamscores.length != 0) {
-                var newscores = this.teamscores
-                for (let t in newscores) {
-                    if (newscores[t][0] == team) {
-                        console.log(this.photosubmission[photoID]["score"])
-                        newscores[t][1] = newscores[t][1] - this.photosubmission[photoID]["score"] + this.newscore
+
+                var newtscores = this.teamscores
+                var newscore = this.newscore
+                var oldscore = this.photosubmission[photoID]["score"]
+                console.log(newtscores)
+                for (t in newtscores) {
+                    if (newtscores[t][0] == team) {
+                        newtscores[t][1] += (newscore - oldscore)
+                    }
+
+                    if (newtscores[t][1] < 0) {
+                        newtscores[t][1] = 0
                     }
                 }
 
-                newscores.sort(this.sortScores)
-                this.teamscores = newscores
-            } else {
-                this.updateLeaderboard()
+                this.teamscores = newtscores
+                this.teamscores.sort(this.sortScores)
+            
+            } else { 
+                this.fetchJson()
             }
         },
         switchCurrentPhoto(dir) {
-            var newPhoto = this.currentPhoto;
-            var counter = -1
-            for (let photo in this.photosubmission) {
-                if (dir == "next" && this.currentPhoto == (photo[0]-1)) {
-                    newPhoto = photo[0]
-                } else if (dir == "prev" && this.currentPhoto == (photo[0]+1)) {
-                    newPhoto = photo[0]
+            if (this.photosubmission.length > 1) {
+                var newPhoto = this.currentPhoto;
+                var counter = -1
+                for (let photo in this.photosubmission) {
+                    if (dir == "next" && this.currentPhoto == (photo[0]-1)) {
+                        newPhoto = photo[0]
+                    } else if (dir == "prev" && this.currentPhoto == (photo[0]+1)) {
+                        newPhoto = photo[0]
+                    }
+                    counter++
                 }
-                counter++
-            }
-            if (dir =="next" && newPhoto == this.currentPhoto) {
-                if (this.currentPhoto == 0) {
-                    this.currentPhoto += 1
+                if (dir =="next" && newPhoto == this.currentPhoto) {
+                    if (this.currentPhoto == 0) {
+                        this.currentPhoto += 1
+                    } else {
+                        this.currentPhoto = 0
+                    }
+                } else if (dir == "prev" && newPhoto == this.currentPhoto) {
+                    if (this.currentPhoto == counter) {
+                        this.currentPhoto -= 1
+                    } else {
+                        this.currentPhoto = counter
+                    }
                 } else {
-                    this.currentPhoto = 0
+                    this.currentPhoto = newPhoto
                 }
-            } else if (dir == "prev" && newPhoto == this.currentPhoto) {
-                if (this.currentPhoto == counter) {
-                    this.currentPhoto -= 1
-                } else {
-                    this.currentPhoto = counter
-                }
-            } else {
-                this.currentPhoto = newPhoto
             }
         },
         submitScore(photoID, team, objective) {
@@ -151,20 +163,19 @@ Vue.component('submissions-leaderboard', {
             }
         },
         updateLeaderboard(){
-            this.fetchJson()
-
-            var newscores = []
+            var newtscores = []
             var teamlist = this.jsondata["teams"]
             for (let team in teamlist) {
-                if (teamlist[team] != "") {
-                    newscores.push([team, teamlist[team]["teaminfo"]["score"]])
+                if (team != "") {
+                    newtscores.push([team, teamlist[team]["teaminfo"]["score"]])
                 }
             }
 
             if (this.teamscores.length == 0) {
-                newscores.sort(this.sortScores)
-                this.teamscores = newscores
+                newtscores.sort(this.sortScores)
+                this.teamscores = newtscores
             }
+            
         }
     }
 })
