@@ -88,16 +88,16 @@ Vue.component('game-start', {
          * @author James Caddock
          */
         fetchJson() {
-            reqjson = this.pin
-            safejson = './hunt_sessions/' + encodeURI(reqjson) + '.json'
-            console.log(safejson)
-            fetch(safejson)
-            .then(response => response.json())
-            .then(data => {
-                this.jsondata = data
-                console.log(data)
-                this.alertSession()
-            })   
+            if (this.pin != null) {
+                reqjson = this.pin
+                safejson = './hunt_sessions/' + encodeURI(reqjson) + '.json'
+                fetch(safejson)
+                .then(response => response.json())
+                .then(data => {
+                    this.jsondata = data
+                    this.alertSession()
+                })   
+            } else { this.checkGame() }
         },
         /** 
          * Sends an ajax request to join a Game 
@@ -116,7 +116,9 @@ Vue.component('game-start', {
                 },
                 success: (data) => {
                     if (data === "join-success") {
-                        this.interval
+                        if(!this.interval) {
+                            this.interval
+                        }
                     } else if (data === "pin-error") {
                         $("#pin-error").css("display", "block")
                     } else if (data === "name-error") {
@@ -150,9 +152,8 @@ Vue.component('game-start', {
                 data: {chosenteam: chosenteam},
                 success: (data) => {
                     if (data === "join-team-success") {
-                        console.log(data)
                         this.checkGame()
-                    } else { console.log(data) }
+                    }
                 }
             });
         },
@@ -169,21 +170,15 @@ Vue.component('game-start', {
                 data: {newteam: this.newteam},
                 success: (data) => {
                     if (data === "create-team-success") {
-                        console.log(data);
                         this.maketeam = false;s
                         this.checkGame();
                     } 
                     else if (data === "team-error") {
                         $("#team-error").css("display", "block");
-                        console.log(data);
                     } 
                     else if (data === "team-form-error") {
                         $("#team-form-error").css("display", "block");
-                        console.log(data);
-                    } 
-                    else if (data === "session-error") {
-                        console.log(data)
-                    } console.log(data)
+                    }
                 }
             });
         },
@@ -201,7 +196,6 @@ Vue.component('game-start', {
                         this.$emit('no-session')
                         this.endSession()
                     } else if (data["status"] === "success") {
-                        console.log(data)
                         this.pin = data["gameID"]
                         this.nickname = data["nickname"]
                         
