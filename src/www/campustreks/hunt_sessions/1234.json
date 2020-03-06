@@ -1,8 +1,7 @@
 {
   "gameinfo": {
     "gamePin": "1234",
-    "huntID": "1",
-    "master": "master"
+    "huntID": "1"
   },
   "teams": {
     "team0": {
@@ -19,17 +18,9 @@
         },
         "player2": {
           "playername": "UserThree"
-        },
-        "player3": {
-          "playername": "sadasddasd"
         }
       },
       "objectives": {
-        "objective0": {
-          "type": "gps",
-          "completed": false,
-          "objectiveId": "1"
-        }
       }
     },
     "team1": {
@@ -72,16 +63,16 @@
       },
       "objectives": {
         "objective0": {
+          "type": "gps",
+          "completed": false,
+          "objectiveId": "3"
+        },
+        "objective1": {
           "type": "photo",
           "completed": false,
           "objectiveId": 1,
           "path": "",
           "score": "0"
-        },
-        "objective1": {
-          "type": "gps",
-          "completed": false,
-          "objectiveId": "3"
         }
       }
     }

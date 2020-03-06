@@ -1,0 +1,14 @@
+{
+    "gameinfo":{
+        "gamePin":"U26V",
+        "huntID":"2"
+    },
+    "teams":{
+        "":{
+            "teamInfo":[],
+            "players":[]
+            },
+        "objectives":{ 
+        }
+    }
+}
