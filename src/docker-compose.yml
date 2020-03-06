@@ -3,7 +3,7 @@ version: "3"
 services:
   webserver:
     build: 
-      context: ./bin/webserver
+      context: ./src/bin/webserver
     container_name: 'png-webserver'
     restart: 'always'
     ports:
@@ -12,19 +12,19 @@ services:
     links: 
       - mysql
     volumes: 
-      - ${DOCUMENT_ROOT-./www}:/var/www/html
-      - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/php.ini
-      - ${VHOSTS_DIR-./config/vhosts}:/etc/apache2/sites-enabled
-      - ${LOG_DIR-./logs/apache2}:/var/log/apache2
+      - ${DOCUMENT_ROOT-./src/www}:/var/www/campustreks/html
+      - ${PHP_INI-./src/config/php/php.ini}:/usr/local/etc/php/php.ini
+      - ${VHOSTS_DIR-./src/config/vhosts}:/etc/apache2/sites-enabled
+      - ${LOG_DIR-./src/logs/apache2}:/var/log/apache2
   mysql:
-    build: ./bin/mysql
+    build: ./src/bin/mysql
     container_name: 'png-mysql'
     restart: 'always'
     ports:
       - "3306:3306"
     volumes: 
-      - ${MYSQL_DATA_DIR-./data/mysql}:/var/lib/mysql
-      - ${MYSQL_LOG_DIR-./logs/mysql}:/var/log/mysql
+      - ${MYSQL_DATA_DIR-./src/data/mysql}:/var/lib/mysql
+      - ${MYSQL_LOG_DIR-./src/logs/mysql}:/var/log/mysql
     environment:
       MYSQL_ROOT_PASSWORD: tiger
       MYSQL_DATABASE: png
