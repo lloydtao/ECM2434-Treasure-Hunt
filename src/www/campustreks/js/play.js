@@ -78,7 +78,7 @@ Vue.component('game-start', {
     },
     mounted() {
         this.checkGame()
-        if(!this.interval) {
+        if(!this.interval && this.pin != null) {
             this.interval
         }
     },
