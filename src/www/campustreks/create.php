@@ -148,7 +148,7 @@
                 <h2>Create A Hunt</h2>
             </div>
 
-            <form id="create-form" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+          <form id="create-form" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                 <p><span class="error">* required field</span></p>
                 <div class="form-group">
                     <label for="title">Title</label><span class="error">*<?php echo $titleErr; ?></span><br>
