@@ -62,7 +62,7 @@
                     <div id="objectives">
                         <?php
                         if(isset($_GET['objective'])){
-                            echo '<img v-if="(objectives[\'objective1\'][\'completed\'])" v-bind:src="(objectives[\'objective1\'][\'path\'])">';
+                            echo '<img width=500px v-if="(objectives[\'objective1\'][\'completed\'])" v-bind:src="(objectives[\'objective1\'][\'path\'])">';
                             echo '<form method="post" action="/new_submit_photo.php?objective_id='.$_GET['objective'].'" enctype="multipart/form-data">';
                             echo '    Select image to upload:<br>';
                             echo '<input type="file" name="image" /><br>';
@@ -81,7 +81,5 @@
             </div>
         </section>
     </main>
-    <!-- Footer -->
-    <?php include('templates/footer.php'); ?>
   </body>
 </html>

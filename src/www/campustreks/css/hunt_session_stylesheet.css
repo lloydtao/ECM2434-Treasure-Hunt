@@ -3,22 +3,37 @@
 	width: 45%;
 	min-height: 500px;
 	border: solid;
-	background-image: linear-gradient(to bottom, lime , gold);
+	/*background-color: yellwo;
+	background-image: 
+	linear-gradient(to right, purple, yellow);
+	animation:change 5s infinite;*/
 }
 #submissions{
 	height: 500px;
 	float: left;
 	width: 45%;
 	border: solid;
-	background-image: linear-gradient(to right, silver , orange);
+	/*background-color: lime;
+	background-image: 
+	radial-gradient(circle farthest-side at bottom left, transparent, hotpink), radial-gradient(circle farthest-side at bottom left	, transparent, lime);
+	animation:change 5s infinite;*/
 }
+
 #leaderboard li:nth-child(even){
-	color: red;
-	background-image: linear-gradient(to right, cyan , purple)
+	color: black;
+	background-color: lightgrey;
+	/*background-color: magenta;
+	background-image: 
+	radial-gradient(circle farthest-side at top right, magenta, cyan), radial-gradient(circle farthest-side at top right, cyan, magenta);
+	animation:change 3s infinite;*/
 }
 #leaderboard li:nth-child(odd){
-	color: cyan;
-	background-image: linear-gradient(to right, hotpink , yellow);
+	color: black;
+	background-color: #1dc25f;
+	/*background-color: magenta;
+	background-image: 
+	radial-gradient(circle farthest-side at top right, cyan, magenta), radial-gradient(circle farthest-side at top right, magenta, cyan);
+	animation:change 3s infinite;*/
 }
 
 #leaderboard li{
@@ -30,9 +45,40 @@
 }
 
 body{
-	background-image: linear-gradient(to right, green , brown);
+	/*background-image: linear-gradient(to right, green , brown);*/
 }
 
-h2,h3{
+h2,h3{/*
 	color:magenta;
+	animation:change 10s infinite;*/
 }
+/*
+body::before {
+		content:"";
+		position:fixed;
+		z-index:-100;
+		width:100%;
+		height:100%;
+		background-color:#hotpink;
+		background-image: 
+		radial-gradient(circle farthest-side at top right, transparent, hotpink), radial-gradient(ellipse farthest-corner at 0% 100%, transparent, orange);
+		animation:change 10s infinite;
+}
+
+@keyframes change {
+	0%, 100% {
+		filter:hue-rotate(0deg);
+	}
+	50% {
+		filter:hue-rotate(-45deg);
+	}
+}
+
+button{
+	animation:change 10s infinite;
+}
+
+nav{
+	background-image: linear-gradient(to right, yellow, pink);
+	animation:change 3s infinite;
+}*/
