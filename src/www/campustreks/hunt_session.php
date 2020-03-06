@@ -40,72 +40,15 @@
                         <h3><div id="pin"><?php echo $huntSessionData['gameinfo']['gamePin']; ?></div></h3>
                     </div>
                     
-                    <submissions></submissions>
-                        <div id="leaderboard" content="no-cache">
-
-                            <li v-for="team in teamScores">
-                                {{ team[0] }}<br>
-                                {{ team[1] }}
-                            </li>
-                            <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-                            <script type="text/javascript">
-                                var app = new Vue({
-                                    el: '#leaderboard',
-                                    data: {
-                                        teamScores: [],
-                                        weatherDataList: [1,2,3],
-                                        huntData: {}
-                                    },
-                                    methods: {
-                                        updateLeaderboard(){
-                                            function sortScores(a, b) {
-                                                if (a[1] === b[1]) {
-                                                    return 0;
-                                                }
-                                                else {
-                                                    return (a[1] > b[1]) ? -1 : 1;
-                                                }
-                                            }
-                                            var headers = new Headers();
-                                            headers.append('pragma', 'no-cache');
-                                            headers.append('cache-control', 'no-cache');
-
-                                            var init = {
-                                            method: 'GET',
-                                            headers: headers,
-                                            };
-
-                                            fetch("hunt_sessions/"+document.getElementById("pin").innerHTML+".json",init)
-                                            .then(response => response.text())
-                                            .then((response) => {
-                                                var json = response;
-                                                this.teamScores = [];
-                                                if(json != ''){
-                                                    var huntSessionData = JSON.parse(json);
-                                                    var teams = Object.keys(huntSessionData["teams"]);
-                                                    for (var team of teams){
-                                                        if(team!=''){
-                                                            this.teamScores.push([team, huntSessionData["teams"][team]["teamInfo"]["score"]]);
-                                                        }
-                                                    }
-
-                                                    this.teamScores.sort(sortScores);
-                                                }
-                                            })
-
-                                        }
-
-                                    }
-                                });
-                            </script>
-                        </div>
-                        <button class="btn btn-primary" type="button">End Game</button>
-                        <button class="btn btn-primary" type="button" onclick = refresh()>Refresh</button>
-                    </div>
+                    <submissions-leaderboard></submissions-leaderboard>
+                
+                    
+                    <button class="btn btn-primary" type="button" @onclick ="this.fetchJson()">Refresh</button>
+                    <button class="btn btn-primary" type="button">End Game</button>
                 </div>
             </section>
         </main>
-    <div>
+    </div>
     <!-- Footer -->
     <?php include('templates/footer.php'); ?>
 
@@ -113,6 +56,5 @@
 
 </html>
 
-<script src="js/jquery-3.4.1.min.js"></script>
 <script src="https://unpkg.com/vue"></script>
 <script src="js/host.js"></script>
