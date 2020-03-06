@@ -199,6 +199,7 @@ Vue.component('game-start', {
                         console.log(data)
                         this.endSession()
                     } else if (data["status"] === "success") {
+                        this.fetchJson()
                         console.log(data)
                         this.pin = data["gameID"]
                         this.nickname = data["nickname"]

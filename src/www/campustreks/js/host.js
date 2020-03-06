@@ -2,18 +2,23 @@ Vue.component('submissions-leaderboard', {
     template: `
         <div>
             <div class="form-group" id="submissions">
-                <div v-for="photo in photosubmission">
-                    <h4>{{ photo[0] }}</h4>
-                    <img class="img-fluid" :src='photo[1]' height="150" width="150">
-                    <form @submit.prevent="submitScore(photo[0], photo[2])" style="width:50%; height:10%; margin-right:50px; margin-top:-90px">
-                        <input type="number" v-model="newscore" :name="newscore" required style="width:40%;">
-                        <button type="submit" class='btn btn-outline-primary'>Submit</button>
-                    </form>
+                <div v-for="photo in photosubmission" v-if="currentPhoto == photo.photoID">
+                    <h4>{{ photo.team }}</h4>
+                    <img class="img-fluid" :src='photo.image'>
+
+                    <div>
+                        <form @submit.prevent="submitScore(photo.photoID, photo.team, photo.objective)" style="margin-left: -40px">
+                            <button type="button" class='btn btn-outline-primary' @click="switchCurrentPhoto('prev')">Previous</button>
+                            <input type="number" v-model.number="newscore" :name="newscore" required style="width:40%;">
+                            <button type="submit" class='btn btn-outline-primary'>Submit</button>
+                            <button type="button" class='btn btn-outline-primary' @click="switchCurrentPhoto('next')">Next</button>
+                        </form>
+                    </div>
                 </div>
             </div>
 
             <div id="leaderboard" content="no-cache">
-                <li v-for="team in teamscores">
+                <li v-for="team in teamscores" v-if='team[0]!=""'>
                     {{ team[0] }}<br>
                     {{ team[1] }}
                 </li>
@@ -23,6 +28,7 @@ Vue.component('submissions-leaderboard', {
     data() {
         return {
             photosubmission: [],
+            currentPhoto: 0,
             jsondata: [],
             teamscores: [],
             newscore: null,
@@ -51,13 +57,17 @@ Vue.component('submissions-leaderboard', {
             .then(data => {
                 var teamlist = data["teams"]                
                 var newphotosubmission = []
+                var counter = 0
 
                 for (let team in teamlist) {
-                    var objectivelist = teamlist[team]["objectives"]["photo"]
-                    for (let objective in objectivelist) {
-                        console.log(objectivelist[objective])
-                        if (objectivelist[objective]["completed"] === true) {
-                            newphotosubmission.push([team, objectivelist[objective]["path"], objective])
+                    if (teamlist[team] != "") {
+                        var objectivelist = teamlist[team]["objectives"]["photo"]
+                        for (let objective in objectivelist) {
+                            if (objectivelist[objective]["completed"] === true) {
+                                newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"], 
+                                                        "objective": objective, "score": objectivelist[objective]["score"]})
+                                counter++
+                            }
                         }
                     }
                 }
@@ -65,7 +75,53 @@ Vue.component('submissions-leaderboard', {
                 this.jsondata = data     
             })            
         },
-        submitScore(team, objective) {
+        teamUpdate(photoID, team) {
+            if (this.teamscores.length != 0) {
+                var newscores = this.teamscores
+                for (let t in newscores) {
+                    if (newscores[t][0] == team) {
+                        console.log(this.photosubmission[photoID]["score"])
+                        newscores[t][1] = newscores[t][1] - this.photosubmission[photoID]["score"] + this.newscore
+                    }
+                }
+
+                newscores.sort(this.sortScores)
+                this.teamscores = newscores
+            } else {
+                this.updateLeaderboard()
+            }
+        },
+        switchCurrentPhoto(dir) {
+            var newPhoto = this.currentPhoto;
+            var counter = -1
+            for (let photo in this.photosubmission) {
+                if (dir == "next" && this.currentPhoto == (photo[0]-1)) {
+                    newPhoto = photo[0]
+                } else if (dir == "prev" && this.currentPhoto == (photo[0]+1)) {
+                    newPhoto = photo[0]
+                }
+                counter++
+            }
+            if (dir =="next" && newPhoto == this.currentPhoto) {
+                if (this.currentPhoto == 0) {
+                    this.currentPhoto += 1
+                } else {
+                    this.currentPhoto = 0
+                }
+            } else if (dir == "prev" && newPhoto == this.currentPhoto) {
+                if (this.currentPhoto == counter) {
+                    this.currentPhoto -= 1
+                } else {
+                    this.currentPhoto = counter
+                }
+            } else {
+                this.currentPhoto = newPhoto
+            }
+        },
+        submitScore(photoID, team, objective) {
+            this.switchCurrentPhoto('next')
+            this.teamUpdate(photoID, team)
+
             if (this.newscore != null) {
                 var xhttp = new XMLHttpRequest()
                 params = "pin="+this.jsondata["gameinfo"]["gamePin"]+"&team="+team+"&submission="+objective+"&score="+this.newscore
@@ -76,10 +132,11 @@ Vue.component('submissions-leaderboard', {
                     if (xhttp.readyState === XMLHttpRequest.DONE) {
                         if (xhttp.status === 200) {
                             var response = xhttp.response
-                            console.log(response)
-                        } else { console.log(params) }
+                            //console.log(response)
+                        } else { //console.log(params) 
+                        }
                     } else {
-                        console.log(params)
+                        //console.log(params)
                     }
                 };
                 xhttp.send(params)
@@ -104,8 +161,10 @@ Vue.component('submissions-leaderboard', {
                 }
             }
 
-            newscores.sort(this.sortScores)
-            this.teamscores = newscores
+            if (this.teamscores.length == 0) {
+                newscores.sort(this.sortScores)
+                this.teamscores = newscores
+            }
         }
     }
 })
