@@ -72,12 +72,13 @@ Vue.component('game-start', {
             newteam: null,
             inteam: false,
             maketeam: false,
-            jsondata: []
+            jsondata: [],
+            gameInterval: setInterval(this.checkGame, 1000)
         }
     },
     mounted() {
         this.checkGame()
-        setInterval(this.checkGame, 2000)
+        this.gameInterval
     },
     methods: {
         /**
@@ -86,7 +87,8 @@ Vue.component('game-start', {
          */
         fetchJson() {
             reqjson = this.pin
-            safejson = './hunt_sessions/' + encodeURI(reqjson) + '.json'
+            randomString =  Math.random().toString(18).substring(2, 15)
+            safejson = './hunt_sessions/' + encodeURI(reqjson) + '.json?' + randomString
             fetch(safejson)
             .then(response => response.json())
             .then(data => {
@@ -188,6 +190,7 @@ Vue.component('game-start', {
                     if (data["status"] === "fail") {
                         this.$emit('no-session')
                         this.endSession()
+                        clearInterval(this.gameInterval)
                     } else if (data["status"] === "success") {
                         this.pin = data["gameID"]
                         this.nickname = data["nickname"]

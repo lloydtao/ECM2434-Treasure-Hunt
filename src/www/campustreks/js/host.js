@@ -50,7 +50,8 @@ Vue.component('submissions-leaderboard', {
                 url = new URL(url_string)
                 this.gameID = url.searchParams.get("sessionID")
             }
-            safejson = './hunt_sessions/'+this.gameID+'.json'
+            randomString =  Math.random().toString(18).substring(2, 15)
+            safejson = './hunt_sessions/'+this.gameID+'.json?' + randomString
 
             fetch(safejson)
             .then(response => response.json())
