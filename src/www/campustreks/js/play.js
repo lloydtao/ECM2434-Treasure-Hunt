@@ -72,15 +72,11 @@ Vue.component('game-start', {
             newteam: null,
             inteam: false,
             maketeam: false,
-            jsondata: [],
-            interval: setInterval(this.fetchJson, 1000)
+            jsondata: []
         }
     },
     mounted() {
         this.checkGame()
-        if(!this.interval && this.pin != null) {
-            this.interval
-        }
     },
     methods: {
         /**
@@ -88,16 +84,14 @@ Vue.component('game-start', {
          * @author James Caddock
          */
         fetchJson() {
-            if (this.pin != null) {
-                reqjson = this.pin
-                safejson = './hunt_sessions/' + encodeURI(reqjson) + '.json'
-                fetch(safejson)
-                .then(response => response.json())
-                .then(data => {
-                    this.jsondata = data
-                    this.alertSession()
-                })   
-            } else { this.checkGame() }
+            reqjson = this.pin
+            safejson = './hunt_sessions/' + encodeURI(reqjson) + '.json'
+            fetch(safejson)
+            .then(response => response.json())
+            .then(data => {
+                this.jsondata = data
+                this.alertSession()
+            })   
         },
         /** 
          * Sends an ajax request to join a Game 
@@ -116,9 +110,7 @@ Vue.component('game-start', {
                 },
                 success: (data) => {
                     if (data === "join-success") {
-                        if(!this.interval) {
-                            this.interval
-                        }
+                        this.fetchJson()
                     } else if (data === "pin-error") {
                         $("#pin-error").css("display", "block")
                     } else if (data === "name-error") {
@@ -198,13 +190,13 @@ Vue.component('game-start', {
                     } else if (data["status"] === "success") {
                         this.pin = data["gameID"]
                         this.nickname = data["nickname"]
+                        this.jsondata
                         
                         if (data["teamName"] != "" && data["teamName"] != null) {
                             this.inteam = true
                         } else {
                             this.inteam = false
                         }
-                        this.fetchJson()
                     }
                 }
             });
