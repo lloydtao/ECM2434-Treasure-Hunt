@@ -52,9 +52,10 @@
         $description = makeSafe($_POST["description"]);
         // Count how many objectives have been added
         while (array_key_exists("objective{$objectives}Directions", $_POST) || array_key_exists("objective{$objectives}Description", $_POST)) {
-            $objectives++;
             if(array_key_exists("objective{$objectives}Directions", $_POST))
                 $locationObjectives++;
+            $objectives++;
+            
         }
 
         
