@@ -43,7 +43,7 @@
                     <submissions-leaderboard></submissions-leaderboard>
                 
                     
-                    <button class="btn btn-primary" type="button" @onclick ="this.fetchJson()">Refresh</button>
+                    <button class="btn btn-primary" type="button">Refresh</button>
                     <button class="btn btn-primary" type="button">End Game</button>
                 </div>
             </section>

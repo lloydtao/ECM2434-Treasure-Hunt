@@ -32,66 +32,25 @@ Vue.component('submissions-leaderboard', {
             jsondata: [],
             teamscores: [],
             newscore: null,
-            gameID: null
+            gameID: null,
+            updateTimeout: null
         }
     },
-    mounted() {
-        this.fetchJson()
-        setInterval(this.fetchJson, 1000)
+    beforeMount() {
+        this.updateLeaderboard()
     },
     methods: {
-        /**
-         * Fetches the json data
-         * @author James Caddock
-         */
-        fetchJson() {
-            if (this.gameID === null) {
-                url_string = window.location.href
-                url = new URL(url_string)
-                this.gameID = url.searchParams.get("sessionID")
-            }
-            randomString =  Math.random().toString(18).substring(2, 15)
-            safejson = './hunt_sessions/'+this.gameID+'.json?' + randomString
-
-            fetch(safejson)
-            .then(response => response.json())
-            .then(data => {
-                var teamlist = data["teams"]                
-                var newphotosubmission = []
-                var counter = 0
-
-                for (let team in teamlist) {
-                    if (teamlist[team] != "") {
-                        var objectivelist = teamlist[team]["objectives"]["photo"]
-                        for (let objective in objectivelist) {
-                            if (objectivelist[objective]["completed"] === true) {
-                                newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"], 
-                                                        "objective": objective, "score": objectivelist[objective]["score"]})
-                                counter++
-                            }
-                        }
-                    }
-                }
-                this.photosubmission = newphotosubmission 
-                this.jsondata = data
-            })   
-            
-            this.updateLeaderboard()         
-        },
         teamUpdate(photoID, team) {
             if (this.teamscores.length != 0) {
 
                 var newtscores = this.teamscores
-                var newscore = this.newscore
+                var nscore = this.newscore
                 var oldscore = this.photosubmission[photoID]["score"]
-                console.log(newtscores)
                 for (t in newtscores) {
                     if (newtscores[t][0] == team) {
-                        newtscores[t][1] += (newscore - oldscore)
-                    }
-
-                    if (newtscores[t][1] < 0) {
-                        newtscores[t][1] = 0
+                        newtscores[t][1] -= oldscore
+                        this.photosubmission[photoID]["score"] = nscore
+                        newtscores[t][1] += nscore
                     }
                 }
 
@@ -99,7 +58,7 @@ Vue.component('submissions-leaderboard', {
                 this.teamscores.sort(this.sortScores)
             
             } else { 
-                this.fetchJson()
+                this.updateLeaderboard()
             }
         },
         switchCurrentPhoto(dir) {
@@ -132,28 +91,28 @@ Vue.component('submissions-leaderboard', {
             }
         },
         submitScore(photoID, team, objective) {
+            clearTimeout(this.updateTimeout)
+
             this.switchCurrentPhoto('next')
             this.teamUpdate(photoID, team)
 
-            if (this.newscore != null) {
-                var xhttp = new XMLHttpRequest()
-                params = "pin="+this.jsondata["gameinfo"]["gamePin"]+"&team="+team+"&submission="+objective+"&score="+this.newscore
-                this.newscore = null
-                xhttp.open('POST', 'update_score.php', true)
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-                xhttp.onreadystatechange = function() {
-                    if (xhttp.readyState === XMLHttpRequest.DONE) {
-                        if (xhttp.status === 200) {
-                            var response = xhttp.response
-                            //console.log(response)
-                        } else { //console.log(params) 
-                        }
-                    } else {
-                        //console.log(params)
+            var xhttp = new XMLHttpRequest()
+            params = "pin="+this.jsondata["gameinfo"]["gamePin"]+"&team="+team+"&submission="+objective+"&score="+this.newscore
+            this.newscore = null
+            xhttp.open('POST', 'update_score.php', true)
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState === XMLHttpRequest.DONE) {
+                    if (xhttp.status === 200) {
+                    } else { //console.log(params) 
                     }
-                };
-                xhttp.send(params)
-            }
+                } else {
+                    //console.log(params)
+                }
+            };
+            xhttp.send(params)
+            
+            this.updateTimeout = setTimeout(this.updateLeaderboard, 10000)
         },
         sortScores(a, b) {
             if (a[1] === b[1]) {
@@ -164,6 +123,38 @@ Vue.component('submissions-leaderboard', {
             }
         },
         updateLeaderboard(){
+            if (this.gameID === null) {
+                url_string = window.location.href
+                url = new URL(url_string)
+                this.gameID = url.searchParams.get("sessionID")
+            }
+
+            randomString =  Math.random().toString(18).substring(2, 15)
+            safejson = './hunt_sessions/'+this.gameID+'.json?' + randomString
+
+            fetch(safejson)
+            .then(response => response.json())
+            .then(data => {
+                var teamlist = data["teams"]                
+                var newphotosubmission = []
+                var counter = 0
+
+                for (let team in teamlist) {
+                    if (teamlist[team] != "") {
+                        var objectivelist = teamlist[team]["objectives"]["photo"]
+                        for (let objective in objectivelist) {
+                            if (objectivelist[objective]["completed"] === true) {
+                                newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"], 
+                                                        "objective": objective, "score": objectivelist[objective]["score"]})
+                                counter++
+                            }
+                        }
+                    }
+                }
+                this.photosubmission = newphotosubmission 
+                this.jsondata = data
+            })   
+
             var newtscores = []
             var teamlist = this.jsondata["teams"]
             for (let team in teamlist) {
@@ -174,6 +165,8 @@ Vue.component('submissions-leaderboard', {
 
             newtscores.sort(this.sortScores)
             this.teamscores = newtscores
+            
+            this.updateTimeout = setTimeout(this.updateLeaderboard, 1000)  
         }
     }
 })
