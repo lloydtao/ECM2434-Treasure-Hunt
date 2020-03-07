@@ -1,3 +1,3 @@
 FROM scratch
 
-CMD ["docker-compose", "up", "-d"]
+CMD ["sudo", "docker-compose", "up", "-d"]
