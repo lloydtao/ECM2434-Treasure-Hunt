@@ -248,8 +248,8 @@
      * @author Jakub Kwak
      */
     function submitMap() {
-        var lat = Math.round((marker.getPosition().lat() + Number.EPSILON) * 100000) / 1000000;
-        var lng = Math.round((marker.getPosition().lng() + Number.EPSILON) * 100000) / 1000000;
+        var lat = Math.round((marker.getPosition().lat() + Number.EPSILON) * 100000) / 100000;
+        var lng = Math.round((marker.getPosition().lng() + Number.EPSILON) * 100000) / 100000;
 
         document.getElementById("map-window").style.display = "none";
         document.getElementById("create-form").style.display = "block";
