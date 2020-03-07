@@ -40,6 +40,7 @@ function endSession()
     
     unset($_SESSION['nickname']);
     unset($_SESSION['teamName']);
+    session_destroy();
 
     echo "session-ended";
 }

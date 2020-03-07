@@ -11,7 +11,7 @@
 function addTeamObjectives($parsedJson, $teamName) {
     $huntID = $parsedJson["gameinfo"]["huntID"];
 
-    include "utils/connection.php";
+    include "../utils/connection.php";
     $conn = openCon();
 
     //fetch all objective IDS for this hunt from db
@@ -39,24 +39,22 @@ function addTeamObjectives($parsedJson, $teamName) {
     //add location objectives to json
     foreach ($locations as $location) {
         $jsonData = array(
-            "type" => "gps",
             "completed" => false,
             "objectiveId" => $location["ObjectiveID"]);
 
-        $parsedJson["teams"][$teamName]["objectives"]["objective".$objectiveIndex] = $jsonData;
+        $parsedJson["teams"][$teamName]["objectives"]["gps"]["objective".$objectiveIndex] = $jsonData;
         $objectiveIndex++;
     }
 
     //add photo objectives to json
     foreach ($photos as $photo) {
         $jsonData = array(
-            "type" => "photo",
             "completed" => false,
             "objectiveId" => $photo["ObjectiveID"],
             "path" => null,
             "score" => 0);
 
-        $parsedJson["teams"][$teamName]["objectives"]["objective".$objectiveIndex] = $jsonData;
+        $parsedJson["teams"][$teamName]["objectives"]["photo"]["objective".$objectiveIndex] = $jsonData;
         $objectiveIndex++;
     }
 

@@ -27,17 +27,17 @@
             $allowedExt = array('jpg','jpeg','png');
 
             if(in_array($ext, $allowedExt)){
-                $path = "image_uploads/".$_GET['team_id'].'-'.$_GET['objective_id'].'.jpg';
+                $path = "image_uploads/".'test'.'-'.$_GET['objective_id'].'.jpg';
                 compressImage($tmp,$path, 50);
                 //move_uploaded_file($tmp,$path);
 
-                $huntSessionID = $_GET['game_pin'];
+                $huntSessionID = 'C0A3';
                 $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
                 $hunt_session_data = json_decode($json_data, true);
                 $objective_id = $_GET['objective_id'];
-                $hunt_session_data['teams'][$_GET['team_id']]['objectives'][$objective_id] = array('type' => 'photo', "completed" => true, "objectiveId" => $_GET['objective_id'], "path" => $path, "score" => 0);
+                $hunt_session_data['teams']['test']['objectives'][$objective_id] = array('type' => 'photo', "completed" => true, "objectiveId" => $_GET['objective_id'], "path" => $path, "score" => 0);
                 $json_data = json_encode($hunt_session_data);
-                file_put_contents('hunt_sessions/' . $_GET['game_pin'] . '.json', $json_data);
+                file_put_contents('hunt_sessions/' . 'C0A3' . '.json', $json_data);
             }
             else{
                 echo "Unsupported file format";
@@ -58,11 +58,25 @@
                     <h2>Submit photo</h2>
                 </div>
                 <div class="content">
-                    <form method="post" enctype="multipart/form-data">
-                        Select image to upload:<br>
-                        <input type="file" name="image" /><br>
-                        <input type="submit" value="submit" name="submit">
-                    </form>
+                    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+                    <div id="objectives">
+                        <?php
+                        if(isset($_GET['objective'])){
+                            echo '<img v-if="(objectives[\'objective1\'][\'completed\'])" v-bind:src="(objectives[\'objective1\'][\'path\'])">';
+                            echo '<form method="post" action="/new_submit_photo.php?objective_id='.$_GET['objective'].'" enctype="multipart/form-data">';
+                            echo '    Select image to upload:<br>';
+                            echo '<input type="file" name="image" /><br>';
+                            echo '<input type="submit" value="submit" name="submit">';
+                            echo '</form>';
+                            echo '<script src="js/uploadphoto.js"></script>';
+
+                        }
+                        else{
+                            echo '<li v-for="(info, objective) in objectives" v-if="(info[\'type\']===\'photo\')"><a v-bind:href="\'new_submit_photo.php?objective=\'+objective">{{ objective }}</a></li>';
+                            echo '<script src="js/listphotos.js"></script>';
+                        }
+                        ?>
+                    </div>
                 </div>
             </div>
         </section>

@@ -1,7 +1,7 @@
 #leaderboard{
 	float: right;
 	width: 45%;
-	height: 500px;
+	min-height: 500px;
 	border: solid;
 }
 #submissions{
@@ -9,4 +9,24 @@
 	float: left;
 	width: 45%;
 	border: solid;
+}
+#leaderboard li:nth-child(even){
+	background-color: lightgreen;
+	color: black;
+}
+#leaderboard li:nth-child(odd){
+	background-color: lightgray;
+	color: black;
+}
+
+#leaderboard li{
+	list-style-type: none;
+}
+
+#submissions img{
+	max-width: 100%;
+}
+
+h2,h3{
+	color:magenta;
 }

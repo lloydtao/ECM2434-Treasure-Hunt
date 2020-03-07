@@ -1,5 +1,5 @@
 <html>
-  <head>
+<head>
     <meta name="author" content = "Marek Tancak">
       <meta name="contributors" content = "Jakub Kwak">
     <title>Host - CampusTreks</title>
@@ -17,8 +17,8 @@
     if(isset($_GET['sessionID'])){
         $huntSessionID = $_GET['sessionID'];
         $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
-        $hunt_session_data = json_decode($json_data, true);
-        if ($hunt_session_data["gameinfo"]["master"] != $_SESSION["username"]) {
+        $huntSessionData = json_decode($json_data, true);
+        if ($huntSessionData["gameinfo"]["master"] != $_SESSION["username"]) {
             header('Location: /host.php');
             die();
         }
@@ -31,41 +31,30 @@
     <!-- Header -->
     <?php include('templates/header.php'); ?>
     <!-- Content -->
-    <main class="page host-page">
-        <section class="portfolio-block project-no-images">
-            <div class="container">
-                <div class="heading">
-                    <h2>Game Pin</h2>
-                    <h3><?php echo $hunt_session_data['gameinfo']['gamePin']; ?></h3>
-                </div>
-                <div class="content">
-                    <div id="submissions"></div>
-                        <?php
-                            if(isset($_GET['sessionID'])){
-                                $huntSessionID = $_GET['sessionID'];
-                                $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
-                                $hunt_session_data = json_decode($json_data, true);
-                            }
-                            $teams = array_values($hunt_session_data['teams']);
-                            for ($i=1; $i<count($teams); $i++){
-                                $submissions = $teams[$i]['objectives'];
-                                for ($j=1; $j<count($submissions)+1; $j++){
-                                    if ($submissions[$j]["type"]=="photo"){
-                                        echo '<img src="'.$submissions[$i]["path"].'">';
-                                        echo '<br>';
-                                    }
-                                } 
-                            }
-                        ?>
-                    <div id="leaderboard">
-                        <?php include('templates/leaderboard.php');?>
+    <div id="host">
+        <main class="page host-page">
+            <section class="portfolio-block project-no-images">
+                <div class="container">
+                    <div class="heading">
+                        <h2>Game Pin</h2>
+                        <h3><div id="pin"><?php echo $huntSessionData['gameinfo']['gamePin']; ?></div></h3>
                     </div>
-                    <button>End Game</button>
+                    
+                    <submissions-leaderboard></submissions-leaderboard>
+                
+                    
+                    <button class="btn btn-primary" type="button">Refresh</button>
+                    <button class="btn btn-primary" type="button">End Game</button>
                 </div>
-            </div>
-        </section>
-    </main>
+            </section>
+        </main>
+    </div>
     <!-- Footer -->
     <?php include('templates/footer.php'); ?>
-  </body>
+
+</body>
+
 </html>
+
+<script src="https://unpkg.com/vue"></script>
+<script src="js/host.js"></script>

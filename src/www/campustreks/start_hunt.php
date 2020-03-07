@@ -24,7 +24,7 @@
 	$huntID = $_GET['huntID'];
 	$gamePIN = generateGamePin();
 	$huntSession = array('gameinfo'=> array('gamePin' => $gamePIN, 'huntID'=>$huntID, 'master'=>$user),
-		'teams'=>array('' => array('teamInfo' => array(), 'players' => array(), 'objectives' => json_decode ("{}"))));
+		'teams'=>array('' => array('teaminfo' => array(), 'players' => array(), 'objectives' => json_decode ("{}"))));
 	$json_data = json_encode($huntSession);
 	file_put_contents('hunt_sessions/' . $gamePIN . '.json', $json_data);
 
