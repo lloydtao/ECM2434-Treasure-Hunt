@@ -50,6 +50,7 @@
                     <label for="password">Password</label>
                     <input class="form-control item" type="password" name="password" id="password">
                 </div>
+                <a href="request_reset.php">Forgot Password</a>
                 <p id="login-error" class="form-group" style="display: none">Username or password incorrect</p>
                 <button class="btn btn-primary btn-block btn-lg" type="submit">Log In</button>
                 <br>
