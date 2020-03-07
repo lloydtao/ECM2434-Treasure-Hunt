@@ -13,9 +13,10 @@
     ?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="js/nbp/nbp_es6.js"></script>
+    <script src="js/testPassword.js"></script>
     <script>
         $(document).ready(function () {
-            //initalise NBP with password list
+            //initialise NBP with password list
             NBP.init("mostcommon_100000", "collections/", true);
             $("#register-form").submit(function (e) {
                 e.preventDefault();
@@ -24,8 +25,8 @@
                 $("#password-error").css("display", "none");
                 $("#password-match-error").css("display", "none");
                 $("#form-error").css("display", "none");
-                //check password against top 1000000 common passwords
-                if (NBP.isCommonPassword($('input[name=password]').val())) {
+                //run password check
+                if (!testPassword($('input[name=password]').val())) {
                     $("#password-error").css("display", "block");
                 } else {
                     $.ajax({
