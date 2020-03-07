@@ -57,23 +57,19 @@
                 $locationObjectives++;
         }
 
-        if($locationObjectives == 0){
-            echo "<script type='text/javascript'>document.getElementById(error).innerHTML += 
-            \"At least one Location objective needed\" <br>;</script>";
-        }
-
+        
         // Check the hunt title and description have been set
         if (!$title || !$description) {
             if (!$title)
                 $titleErr = "Required field";
             if (!$description)
                 $descriptionErr = "Required field";
-            if ($objectives == 1)
-                echo "<script type='text/javascript'>alert('At least one objective is needed');</script>";
+            if($locationObjectives == 0)
+                echo "<script type='text/javascript'>alert(\"At least one Location objective needed\");</script>";
         } else {
-            if ($objectives == 1) {
-                echo "<script type='text/javascript'>alert('At least one objective is needed');</script>";
-            } else {
+            if($locationObjectives == 0)
+                echo "<script type='text/javascript'>alert(\"At least one Location objective needed\");</script>";
+            else {
 
                 $locations = 0;
                 $logitude = $latitude = $question = $answer = $photoDescription = "";
@@ -156,7 +152,6 @@
 
           <form id="create-form" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                 <p><span class="error">* required field</span></p>
-                <p id=error></p>
                 <div class="form-group">
                     <label for="title">Title</label><span class="error">*<?php echo $titleErr; ?></span><br>
                     <input class="form-control" type="text" name="title" value= <?php echo $title; ?>>
