@@ -15,7 +15,6 @@ function checkHunts($user) {
     $hunts = scandir("hunt_sessions/");
     foreach($hunts as $hunt) {
         if ($hunt != "." && $hunt != "..") {
-            echo $hunt;
             $jsonData = json_decode(file_get_contents("hunt_sessions/".$hunt), true);
             if ($jsonData["gameinfo"]["master"] == $user) {
                 return $jsonData["gameinfo"]["gamePin"];
