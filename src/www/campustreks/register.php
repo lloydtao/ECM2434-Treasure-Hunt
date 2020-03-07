@@ -15,7 +15,7 @@
     <script src="js/nbp/nbp_es6.js"></script>
     <script>
         $(document).ready(function () {
-            //initalise NBP
+            //initalise NBP with password list
             NBP.init("mostcommon_100000", "collections/", true);
             $("#register-form").submit(function (e) {
                 e.preventDefault();
