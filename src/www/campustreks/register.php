@@ -12,41 +12,32 @@
     }
     ?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="js/nbp/nbp_es6.js"></script>
     <script>
         $(document).ready(function () {
-            //initalise NBP
-            NBP.init("mostcommon_100000", "collections/", true);
             $("#register-form").submit(function (e) {
                 e.preventDefault();
                 $("#username-error").css("display", "none");
                 $("#email-error").css("display", "none");
-                $("#password-error").css("display", "none");
                 $("#password-match-error").css("display", "none");
                 $("#form-error").css("display", "none");
-                //check password against top 1000000 common passwords
-                if (NBP.isCommonPassword($('input[name=password]').val())) {
-                    $("#password-error").css("display", "block");
-                } else {
-                    $.ajax({
-                        type: "POST",
-                        url: "registerhandler.php",
-                        data: $(this).serialize(),
-                        success: function (data) {
-                            if (data == "register-success") {
-                                window.location = "login.php";
-                            } else if (data == "username-fail") {
-                                $("#username-error").css("display", "block");
-                            } else if (data == "email-fail") {
-                                $("#email-error").css("display", "block");
-                            } else if (data == "password-confirm-fail") {
-                                $("#password-confirm-error").css("display", "block");
-                            } else if (data == "fields-fail") {
-                                $("#form-error").css("display", "block");
-                            }
+                $.ajax({
+                    type: "POST",
+                    url: "registerhandler.php",
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        if (data == "register-success") {
+                            window.location = "login.php";
+                        } else if (data == "username-fail") {
+                            $("#username-error").css("display", "block");
+                        } else if (data == "email-fail") {
+                            $("#email-error").css("display", "block");
+                        } else if (data == "password-confirm-fail") {
+                            $("#password-confirm-error").css("display", "block");
+                        } else if (data == "fields-fail") {
+                            $("#form-error").css("display", "block");
                         }
-                    });
-                }
+                    }
+                });
             });
         });
     </script>
@@ -70,8 +61,7 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input class="form-control item" type="password" name="password" id="password" minlength="8">
-                    <p id="password-error" class="form-group" style="display: none">Password is not secure</p>
+                    <input class="form-control item" type="password" name="password" id="password" minlength="4">
                 </div>
                 <div class="form-group">
                     <label for="confirm_password">Confirm Password</label>
