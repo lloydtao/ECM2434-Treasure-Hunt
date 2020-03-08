@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta name="author" content = "Marek Tancak">
     <title>Submit Photo - CampusTreks</title>
-  </head>
-  <body>
+</head>
+<body>
     <!-- Header -->
     <?php include('templates/header_mobile.php'); ?>
     <!-- Content -->
@@ -16,30 +16,20 @@
                 </div>
                 <div class="content">
                     <div id="objectives">
-                        <?php
-                        /*
-                        if(isset($_GET['objective'])){
-                            echo '<img width=500px v-if="(objectives[\'objective1\'][\'completed\'])" v-bind:src="(objectives[\'objective1\'][\'path\'])">';
-                            echo '<form method="post" action="/new_submit_photo.php?objective_id='.$_GET['objective'].'" enctype="multipart/form-data">';
-                            echo '    Select image to upload:<br>';
-                            echo '<input type="file" name="image" /><br>';
-                            echo '<input type="submit" value="submit" name="submit">';
-                            echo '</form>';
-                            echo '<script src="js/uploadphoto.js"></script>';
-
-                        }
-                        else{
-                            echo '<li v-for="(info, objective) in objectives" v-if="(info[\'type\']===\'gps\')"><a v-bind:href="\'new_submit_photo.php?objective=\'+objective">{{ objective }}</a></li>';
-                            echo '<script src="js/listphotos.js"></script>';
-                        }
-                        */
-                        ?>
+                        {{ currentObjectiveKey }}
+                        <button type="button" v-on:click="submit">Submit Location</button><br>
+                        <div v-show="show">
+                            <br>
+                            {{ q }}<br>
+                            <input id='answer'> <br>
+                            <button v-on:click=checkQuestion>Submit Answer</button>
+                        </div>
                     </div>
-                    <script src="js/location-vue.js"/>
-                    <script src="https://cdn.jsdelivr.net/npm/vue"/>
+                    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+                    <script src="js/location-vue.js"></script>
                 </div>
             </div>
         </section>
     </main>
-  </body>
+</body>
 </html>

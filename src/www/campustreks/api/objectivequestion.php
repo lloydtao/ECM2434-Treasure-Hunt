@@ -26,9 +26,8 @@ function makeSafe($data, $conn)
  * @param $objectiveID
  * @author Jakub Kwak
  */
-function getQuestion($objectiveID)
+function getQuestion($objectiveID, $conn)
 {
-    $conn = openCon();
     $result = $conn->query("SELECT `Question` FROM `location` WHERE `ObjectiveID` ='$objectiveID'");
 
     if ($result->num_rows > 0) {
@@ -39,6 +38,8 @@ function getQuestion($objectiveID)
     }
 }
 
-if (isset($_POST["objectiveID"])) {
-    getQuestion(makeSafe($_POST["objectiveID"], $conn));
+if (isset($_GET["objectiveID"])) {
+
+    $conn = openCon();
+    getQuestion(makeSafe($_GET["objectiveID"], $conn), $conn);
 }
