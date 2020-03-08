@@ -12,6 +12,7 @@
                     <li class="nav-item" role="presentation"><a class="nav-link" href="login.php">Log In</a></li>
                 <?php else: ?>
                     <li class="nav-item" role="presentation"><a class="nav-link" href="logout.php">Log Out</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="account.php"><?php echo $_SESSION["username"]?></a></li>
                 <?php endif ?>
             </ul>
         </div>
