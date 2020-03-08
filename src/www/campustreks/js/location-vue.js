@@ -1,6 +1,6 @@
 // hard code
-var teamName = "test team 1";
-var gameID = "3Z0X";
+var teamName = "team";
+var gameID = "PP2A";
 
 var objective = new Vue({
 	el: '#objectives',
@@ -9,8 +9,11 @@ var objective = new Vue({
 		objectivelist: {},
 		currentObjective: "",
 		currentObjectiveKey: "",
-		q: "test",
-		show: false
+		q: "",
+		show: false,
+		complete: false,
+		direction: "",
+		alert: "",
 	},
 	methods: {
 		 /**Attempt to get the user's location and compare it with objLoc
@@ -79,6 +82,8 @@ var objective = new Vue({
 		 		this.getQuestionFromDb()
 		 	}
 		 	else{
+		 		this.alert = "fuck you jakub, YOU ARE TOO FAR FROM THE OBJECTIVE"
+				setTimeout(function(){ objective.alert = "" }, 1500);
 		 		console.log(false);
 		 	}
 		 },
@@ -89,16 +94,22 @@ var objective = new Vue({
 		 	.then(data => {
 		 		if(data == "correct"){
 		 			this.show = false
-		 			alert("correct answer")
+		 			this.teamData = {}
+		 			this.objectivelist = []
+		 			this.currentObjective = []
+		 			this.currentObjectiveKey = ""
+		 			this.alert = "correct answer"
+		 			setTimeout(function(){ objective.alert = "" }, 1500);
 		 			this.fetchJSON()
 		 		}
 		 		else if (data == "incorrect"){
-		 			alert("wrong answer")
+		 			this.alert = "wrong answer"
+		 			setTimeout(function(){ objective.alert = "" }, 1500	);
 		 		}
 		 	})
 		 },
 		 getQuestionFromDb(){
-		 	fetch("api/objectivequestion?objectiveID="+"2")
+		 	fetch("api/objectivequestion?objectiveID="+this.currentObjective["objectiveId"])
 		 	.then(response => response.text())
 		 	.then(data => {
 		 		this.q = data
@@ -128,26 +139,32 @@ var objective = new Vue({
 		    return R * c;
 		},
 		fetchJSON(){
-			fetch("hunt_sessions/3Z0X.json")
+			fetch("hunt_sessions/"+gameID+".json")
 			.then(response => response.json())
 			.then(data => {
 				var teamlist = data["teams"]
-				this.teamData = teamlist["test team 1"]
+				this.teamData = teamlist[teamName]
 				this.objectivelist = this.teamData["objectives"]["gps"]
+
 				this.getNextObjective()
 			})    
 		},
 		getNextObjective(){
 			for (let objective in this.objectivelist) {
 				if (this.objectivelist[objective]["completed"] === false) {
+					this.completed = false
 					this.currentObjectiveKey = objective
 					this.currentObjective = this.objectivelist[objective]
+					fetch("api/locationdescription.php?objectiveID="+this.currentObjective["objectiveId"])
+					.then(response => response.text())
+					.then(data => this.direction = data)
 					break
 				}
-				alert("location objectives complete");
+				this.completed = true
 			}    
 		},
 		submit(){
+			this.alert = ""
 			fetch("getobjectivelocation.php?ID="+this.currentObjective["objectiveId"])
 			.then(response => response.json())
 			.then(data => {this.compareLocation(data)})
