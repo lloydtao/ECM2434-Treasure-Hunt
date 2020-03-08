@@ -82,7 +82,7 @@ var objective = new Vue({
 		 		this.getQuestionFromDb()
 		 	}
 		 	else{
-		 		this.alert = "fuck you jakub, YOU ARE TOO FAR FROM THE OBJECTIVE"
+		 		this.alert = "you are too far from the objective"
 				setTimeout(function(){ objective.alert = "" }, 1500);
 		 		console.log(false);
 		 	}

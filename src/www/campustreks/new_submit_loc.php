@@ -129,7 +129,7 @@ background-size: 1800% 1800%;
                             <button v-on:click=checkQuestion>Submit Answer</button>
                         </div>
                     </div>
-                    <div id="alert">{{ alert }}</div>
+                    <div id="alert" v-show="!(alert=='')">{{ alert }}</div>
                     </div>
                     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
                     <script src="js/location-vue.js"></script>
