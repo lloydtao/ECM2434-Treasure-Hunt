@@ -6,4 +6,7 @@
 	$hunt_data["teams"][$_POST["team"]]["teaminfo"]["score"]+=$_POST["score"];
 	$json_data = json_encode($hunt_data);
 	file_put_contents('hunt_sessions/' . $_POST["pin"] . '.json', $json_data);
+
+	echo "update-score-success";
+	return;
 ?>

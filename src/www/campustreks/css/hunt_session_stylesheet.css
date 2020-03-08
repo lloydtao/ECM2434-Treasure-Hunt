@@ -44,11 +44,7 @@
 	max-width: 100%;
 }
 
-body{
-	/*background-image: linear-gradient(to right, green , brown);*/
-}
-
-h2,h3{/*
+h2,h3{
 	color:magenta;
 	animation:change 10s infinite;*/
 }

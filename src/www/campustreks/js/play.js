@@ -72,7 +72,8 @@ Vue.component('game-start', {
             newteam: null,
             inteam: false,
             maketeam: false,
-            jsondata: []
+            jsondata: [],
+            gameInterval: null
         }
     },
     mounted() {
@@ -85,15 +86,14 @@ Vue.component('game-start', {
          */
         fetchJson() {
             reqjson = this.pin
-            safejson = './hunt_sessions/' + encodeURI(reqjson) + '.json'
-            console.log(safejson)
+            randomString =  Math.random().toString(18).substring(2, 15)
+            safejson = './hunt_sessions/' + encodeURI(reqjson) + '.json?' + randomString
             fetch(safejson)
             .then(response => response.json())
             .then(data => {
                 this.jsondata = data
-                console.log(data)
                 this.alertSession()
-            })            
+            })   
         },
         /** 
          * Sends an ajax request to join a Game 
@@ -112,7 +112,8 @@ Vue.component('game-start', {
                 },
                 success: (data) => {
                     if (data === "join-success") {
-                        this.fetchJson()
+                        this.checkGame()
+                        this.gameInterval = setInterval(this.checkGame, 1000)
                     } else if (data === "pin-error") {
                         $("#pin-error").css("display", "block")
                     } else if (data === "name-error") {
@@ -128,14 +129,12 @@ Vue.component('game-start', {
          * @author James Caddock
          */
         alertSession() {
-            if (this.jsondata != [] && this.nickname != null) {
+            if (this.pin != null && this.nickname != null) {
                 this.$emit('has-session')
             } else {
                 this.$emit('no-session')
-            } if (this.newteam != null) {
-                this.maketeam = false
             }
-        },
+        }, 
         /**
          * Adds the user to the chosenteam
          * @author James Caddock
@@ -148,9 +147,8 @@ Vue.component('game-start', {
                 data: {chosenteam: chosenteam},
                 success: (data) => {
                     if (data === "join-team-success") {
-                        console.log(data)
                         this.checkGame()
-                    } else { console.log(data) }
+                    }
                 }
             });
         },
@@ -167,20 +165,15 @@ Vue.component('game-start', {
                 data: {newteam: this.newteam},
                 success: (data) => {
                     if (data === "create-team-success") {
-                        console.log(data);
+                        this.maketeam = false;
                         this.checkGame();
                     } 
                     else if (data === "team-error") {
                         $("#team-error").css("display", "block");
-                        console.log(data);
                     } 
                     else if (data === "team-form-error") {
                         $("#team-form-error").css("display", "block");
-                        console.log(data);
-                    } 
-                    else if (data === "session-error") {
-                        console.log(data)
-                    } console.log(data)
+                    }
                 }
             });
         },
@@ -195,10 +188,10 @@ Vue.component('game-start', {
                 dataType: "json",
                 success: (data) => {
                     if (data["status"] === "fail") {
-                        console.log(data)
+                        this.$emit('no-session')
                         this.endSession()
+                        clearInterval(this.gameInterval)
                     } else if (data["status"] === "success") {
-                        console.log(data)
                         this.pin = data["gameID"]
                         this.nickname = data["nickname"]
                         this.fetchJson()
