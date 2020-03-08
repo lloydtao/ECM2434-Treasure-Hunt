@@ -1,37 +1,26 @@
-Vue.component('submissions-leaderboard', {
+Vue.component('submissions', {
     template: `
-        <div>
-            <div class="form-group" id="submissions">
+        <div class="content">
+            <div id="submissions">
                 <div v-for="photo in photosubmission">
                     <h4>{{ photo[0] }}</h4>
-                    <img class="img-fluid" :src='photo[1]' height="150" width="150">
-                    <form @submit.prevent="submitScore(photo[0], photo[2])" style="width:50%; height:10%; margin-right:50px; margin-top:-90px">
-                        <input type="number" v-model="newscore" :name="newscore" required style="width:40%;">
+                    <img class="img-fluid" :src='photo[1]'>
+                    <form @submit.prevent="submitScore(photo[0], photo[2], photo[3])">
+                        <input type="number" name="p" value="">
                         <button type="submit" class='btn btn-outline-primary'>Submit</button>
                     </form>
                 </div>
-            </div>
-
-            <div id="leaderboard" content="no-cache">
-                <li v-for="team in teamscores">
-                    {{ team[0] }}<br>
-                    {{ team[1] }}
-                </li>
             </div>
         </div>
     `,
     data() {
         return {
             photosubmission: [],
-            jsondata: [],
-            teamscores: [],
-            newscore: null,
-            gameID: null
+            jsondata: []
         }
     },
     mounted() {
         this.fetchJson()
-        setInterval(this.updateLeaderboard, 1000)
     },
     methods: {
         /**
@@ -39,76 +28,99 @@ Vue.component('submissions-leaderboard', {
          * @author James Caddock
          */
         fetchJson() {
-            if (this.gameID === null) {
-                url_string = window.location.href
-                url = new URL(url_string)
-                this.gameID = url.searchParams.get("sessionID")
-            }
-            safejson = './hunt_sessions/'+this.gameID+'.json'
+            safejson = './hunt_sessions/LVTY.json'
             console.log(safejson)
             fetch(safejson)
             .then(response => response.json())
             .then(data => {
-                var teamlist = data["teams"]                
-                var newphotosubmission = []
-
+                var teamlist = data["teams"]
+                this.jsondata = data
+                this.photosubmission = []
+                console.log(teamlist)
                 for (let team in teamlist) {
+                    console.log(teamlist[team])
+                    console.log(team)
                     var objectivelist = teamlist[team]["objectives"]["photo"]
                     for (let objective in objectivelist) {
-                        console.log(objectivelist[objective])
+                        console.log(objective)
                         if (objectivelist[objective]["completed"] === true) {
-                            newphotosubmission.push([team, objectivelist[objective]["path"], objective])
+                            this.photosubmission.push([team, objectivelist[objective]["path"], objective, objectivelist[objective]["score"]])
+                        }
+                    }
+                }      
+                console.log(this.photosubmission[0])
+            })            
+        },
+        submitScore(team, objective, score) {
+            var xhttp = new XMLHttpRequest();
+            params = "pin="+this.jsondata["gameinfo"]["gamePin"]+"&team="+team+"&submission="+objective+"&score="+score
+            xhttp.open('POST', 'update_score.php', true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState === XMLHttpRequest.DONE) {
+                    if (xhttp.status === 200) {
+                        var response = xhttp.response;
+                        console.log(response);
+                    } else { console.log(params) }
+                } else {
+                    console.log(params)
+                }
+            };
+            xhttp.send(params);
+        },
+        refresh() {
+            document.getElementById("submissions").innerHTML = "";
+            var pin = document.getElementById("pin").innerHTML;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var json = this.responseText;
+                    var huntSessionData = JSON.parse(json);
+                    var teams = Object.keys(huntSessionData["teams"]);
+                    for (var team of teams) {
+                        objectives = Object.keys(huntSessionData["teams"][team]["objectives"]);
+                        for (var objective of objectives) {
+                            objective_data = huntSessionData["teams"][team]["objectives"][objective];
+                            if (objective_data["type"] == "photo" && objective_data["completed"] == true){
+                                var submission = document.createElement("div");
+                                submission.id = objective;
+                                submission.className = "submission";
+
+                                var teamName = document.createElement("h4");
+                                teamName.innerHTML = team;
+                                submission.appendChild(teamName);
+
+                                var submissionImage = document.createElement("img")
+                                submissionImage.src = objective_data["path"];
+                                submission.appendChild(submissionImage);
+
+                                var score = document.createElement("input");
+                                score.type = "number";
+                                score.value = objective_data["score"];
+                                submission.appendChild(score);
+
+                                var submit = document.createElement("button");
+                                submit.type = "button";
+                                submit.innerHTML = "Submit"
+                                submit.onclick = submitScore;
+                                submission.appendChild(submit);
+
+                                document.getElementById("submissions").appendChild(submission);
+                            }
                         }
                     }
                 }
-                this.photosubmission = newphotosubmission 
-                this.jsondata = data     
-            })            
-        },
-        submitScore(team, objective) {
-            if (this.newscore != null) {
-                var xhttp = new XMLHttpRequest()
-                params = "pin="+this.jsondata["gameinfo"]["gamePin"]+"&team="+team+"&submission="+objective+"&score="+this.newscore
-                this.newscore = null
-                xhttp.open('POST', 'update_score.php', true)
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-                xhttp.onreadystatechange = function() {
-                    if (xhttp.readyState === XMLHttpRequest.DONE) {
-                        if (xhttp.status === 200) {
-                            var response = xhttp.response
-                            console.log(response)
-                        } else { console.log(params) }
-                    } else {
-                        console.log(params)
-                    }
-                };
-                xhttp.send(params)
-            }
-        },
-        sortScores(a, b) {
-            if (a[1] === b[1]) {
-                return 0;
-            }
-            else {
-                return (a[1] > b[1]) ? -1 : 1;
-            }
-        },
-        updateLeaderboard(){
-            this.fetchJson()
-
-            var newscores = []
-            var teamlist = this.jsondata["teams"]
-            for (let team in teamlist) {
-                if (teamlist[team] != "") {
-                    newscores.push([team, teamlist[team]["teaminfo"]["score"]])
-                }
-            }
-
-            newscores.sort(this.sortScores)
-            this.teamscores = newscores
+            };
+            xhttp.open("GET", "hunt_sessions/"+pin+".json", true);
+            xhttp.setRequestHeader('pragma', 'no-cache');
+            xhttp.setRequestHeader('cache-control', 'no-cache');
+            xhttp.send();
         }
     }
 })
+
+
+
 
 
 

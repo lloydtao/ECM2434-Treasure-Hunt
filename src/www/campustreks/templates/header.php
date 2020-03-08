@@ -7,7 +7,6 @@
                 <li class="nav-item" role="presentation"><a class="nav-link" href="create.php">Create</a></li>
                 <li class="nav-item" role="presentation"><a class="nav-link" href="host.php">Host</a></li>
                 <?php
-                if (session_status() == PHP_SESSION_NONE) session_start();
                 if (!isset($_SESSION['isLoggedIn']) || $_SESSION['isLoggedIn'] == false) :?>
                     <li class="nav-item" role="presentation"><a class="nav-link" href="login.php">Log In</a></li>
                 <?php else: ?>
