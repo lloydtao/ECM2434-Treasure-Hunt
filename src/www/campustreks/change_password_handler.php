@@ -45,12 +45,15 @@ function registerUser($conn)
         //Checks the user typed the passwords correctly
         if ($password == $cPassword) {
             //Selects all user data from the database
-            $sql = "SELECT Password FROM users WHERE Username='$username'";
-            $dbUser = mysqli_query($conn, $sql);
+            $sql = "SELECT Password FROM users WHERE Username=?";
+            $stmt = mysqli_stmt_init($conn);
 
-            if (mysqli_num_rows($dbUser) > 0) {
+            if(mysqli_stmt_prepare($stmt, $sql)){
+                mysqli_stmt_bind_param($stmt, "s", $username);
+                mysqli_stmt_execute($stmt);
+                $dbUser = mysqli_stmt_get_result($stmt);
+
                 while ($row = mysqli_fetch_assoc($dbUser)) {
-
 
                     $dbPass = $row['Password'];
 
@@ -60,13 +63,13 @@ function registerUser($conn)
                         return;
                     }
                 }
-
             }
-            //Hashes password and inputs user data to database
+            mysqli_stmt_close($stmt);
 
-            $insert = "UPDATE Users SET Password=? WHERE Username='$username'";
+            //Hashes password and inputs user data to database
+            $insert = "UPDATE Users SET Password=? WHERE Username=?";
             if($stmt = mysqli_prepare($conn, $insert)){
-                mysqli_stmt_bind_param($stmt, "s", $pass);
+                mysqli_stmt_bind_param($stmt, "ss", $pass, $username);
                 $pass = password_hash($password, PASSWORD_DEFAULT);
                 mysqli_stmt_execute($stmt);
 

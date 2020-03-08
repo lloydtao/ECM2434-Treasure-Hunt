@@ -15,7 +15,7 @@
         $conn = openCon();
 
         /**
-         *Displays the username, email and verification status of the logged in the user
+         *Displays the username, email, verification status and created hunts of the logged in the user
          * @param mysqli $conn
          */
         function displayInfo($conn){
@@ -23,15 +23,20 @@
             $username = $_SESSION["username"];
 
             //Retrieves information of the user from the database
-            $sql = "SELECT * FROM Users WHERE Username='$username'";
-            $data = mysqli_query($conn, $sql);
+            $sql = "SELECT * FROM Users WHERE Username=?";
+            $stmt = mysqli_stmt_init($conn);
+            if(mysqli_stmt_prepare($stmt, $sql)){
+                mysqli_stmt_bind_param($stmt, "s", $username);
+                mysqli_stmt_execute($stmt);
+                $data = mysqli_stmt_get_result($stmt);
 
-            if (mysqli_num_rows($data) > 0){
-              while($row = mysqli_fetch_assoc($data)){
-                  $email = $row['Email'];
-                  $verified = $row['Verified'];
-              }
-          }
+                while ($row = mysqli_fetch_assoc($data)) {
+
+                    $email = $row['Email'];
+                    $verified = $row['Verified'];
+                }
+            }
+            mysqli_stmt_close($stmt);
 
           //Displays information of the user
           echo "Username: ". $username . "<br>";
@@ -42,24 +47,30 @@
               echo "Not verified <br>";
           }
 
-          $huntSQL = "SELECT Name, Description, BestTeam, HighScore FROM hunt WHERE Username='$username'";
-          $huntData = mysqli_query($conn, $huntSQL);
+          //Displays hunts created by the user in a table
+          $huntSQL = "SELECT Name, Description, BestTeam, HighScore FROM hunt WHERE Username=?";
+          $stmt = mysqli_stmt_init($conn);
 
-          //create a table row for every row of data that matches
-          if (mysqli_num_rows($huntData) > 0){
+          if(mysqli_stmt_prepare($stmt, $huntSQL)){
+              mysqli_stmt_bind_param($stmt, "s", $username);
+              mysqli_stmt_execute($stmt);
+              $huntData = mysqli_stmt_get_result($stmt);
+
               echo "<table class='huntTable'>";
               echo "<tr><th>Name</th><th>Description</th><th>Best Team</th><th>High Score</th></tr>";
-            while($row = mysqli_fetch_assoc($huntData)){
 
-              $name = $row['Name'];
-              $description = $row['Description'];
-              $bestTeam = $row['BestTeam'];
-              $highScore = $row['HighScore'];
+              while ($row = mysqli_fetch_assoc($huntData)) {
 
-              echo "<tr><td>".$name."<td>".$description."</td><td>".$bestTeam."</td><td>".$highScore."</tr>";
-            }
-            echo "</table>";
+                  $name = $row['Name'];
+                  $description = $row['Description'];
+                  $bestTeam = $row['BestTeam'];
+                  $highScore = $row['HighScore'];
+
+                  echo "<tr><td>".$name."<td>".$description."</td><td>".$bestTeam."</td><td>".$highScore."</tr>";
+              }
+              echo "</table>";
           }
+          mysqli_stmt_close($stmt);
 
         }
         ?>
@@ -69,7 +80,7 @@
                 $("#register-form").submit(function (e) {
                     e.preventDefault();
                     $("#current-error").css("display", "none");
-                    $("#password-match-error").css("display", "none");
+                    $("#password-confirm-error").css("display", "none");
                     $("#form-error").css("display", "none");
                     $("#change-display").css("display", "none");
                     $.ajax({
