@@ -51,8 +51,8 @@ $sql .= "CREATE TABLE Hunt (
     FOREIGN KEY (Username) REFERENCES Users(Username),
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );";
-	
-	
+
+
 $sql .= "CREATE TABLE Objectives (
     ObjectiveID INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     HuntID INT(6) UNSIGNED NOT NULL,
@@ -61,14 +61,14 @@ $sql .= "CREATE TABLE Objectives (
     );";
 
 $sql .= "CREATE TABLE PhotoOps (
-    ObjectiveID INT(6) UNSIGNED NOT NULL,
+    ObjectiveID INT(6) UNSIGNED NOT NULL UNIQUE,
     Specification TEXT NOT NULL,
     FOREIGN KEY (ObjectiveID) REFERENCES Objectives(ObjectiveID),
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );";
 
 $sql .= "CREATE TABLE Location (
-    ObjectiveID INT(6) UNSIGNED NOT NULL,
+    ObjectiveID INT(6) UNSIGNED NOT NULL UNIQUE,
     HuntOrder INT(6) NOT NULL,
     Longitude FLOAT(20) NOT NULL,
     Latitude FLOAT(20) NOT NULL,

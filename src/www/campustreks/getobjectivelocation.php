@@ -12,7 +12,8 @@ function getNextLoc($conn, $id){
     
 }
         
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-    getNextLoc(opencon(), $_POST["ID"]);
+if($_SERVER["REQUEST_METHOD"] == "GET"){
+    getNextLoc(opencon(), $_GET["ID"]);
 }
 
+?>

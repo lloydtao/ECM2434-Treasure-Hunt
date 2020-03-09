@@ -1,6 +1,7 @@
 <?php session_start();?>
 
 <!DOCTYPE html>
+<html lang="en" dir="ltr">
   <head>
   <meta name="author" content = "James Caddock">
 	<meta name="contributors" content="Jakub Kwak, Joseph Lintern">

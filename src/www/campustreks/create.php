@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr">
 <head>
     <meta name="author" content="Michael Freeman">
     <meta name="contributors" content="Jakub Kwak">
