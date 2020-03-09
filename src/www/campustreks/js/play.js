@@ -189,7 +189,8 @@ Vue.component('create-team', {
 Vue.component('photo-submit', {
     props: {
         currentteam: String,
-        pin: String
+        pin: String,
+        huntsessiondata: Object
     },
     template: `
     <div>
@@ -197,9 +198,8 @@ Vue.component('photo-submit', {
             <h2>Submit photo</h2>
         </div>
         <div v-if="showUpload">
-            <img width="500px" v-if="objectives[currentObjective]['completed']"
-                v-bind:src="imgPath">
             <form id="uploadForm" v-on:submit.prevent enctype="multipart/form-data">
+                <img width="500px" @error="imgPath=null" v-if="imgPath!=null" v-bind:src="imgPath">
                 <p>Select image to upload:</p><br>
                 <input type="file" name="image" /><br>
                 <button class='btn btn-outline-primary' v-on:click="submitForm()">Upload</button>
@@ -232,78 +232,68 @@ Vue.component('photo-submit', {
          * Gets photo objectives from JSON and their descriptions from DB
          */
         getObjectives() {
-            //get Json data
-            fetch("hunt_sessions/" + this.pin + ".json")
-                .then(response => response.text())
-                .then((response) => {
-                    var json = response;
-                    if (json !== '') {
-                        var huntSessionData = JSON.parse(json);
-                    }
-                    //save objective data to vue component
-                    this.objectives = huntSessionData["teams"][this.currentteam]["objectives"]['photo'];
-                    var objectiveIDs = [];
-                    //create array of objective IDs
-                    for (var objective in this.objectives) {
+            //save objective data to vue component
+            this.objectives = this.huntsessiondata["teams"][this.currentteam]["objectives"]['photo'];
+            var objectiveIDs = [];
+            //create array of objective IDs
+            for (var objective in this.objectives) {
+                if (this.objectives.hasOwnProperty(objective)) {
+                    objectiveIDs.push(this.objectives[objective]["objectiveId"]);
+                }
+            }
+            //get objective descriptions from DB
+            fetch("api/objectivedescription.php?objectiveIDs=" + objectiveIDs)
+                .then(response => response.json())
+                .then(response => {
+                    let index = 0;
+                    //add objective descriptions to vue component
+                    for (let objective in this.objectives) {
                         if (this.objectives.hasOwnProperty(objective)) {
-                            objectiveIDs.push(this.objectives[objective]["objectiveId"]);
+                            Vue.set(this.objectives[objective], "description", response[index]);
                         }
+                        index++;
                     }
-                    //get objective descriptions from DB
-                    fetch("api/objectivedescription.php?objectiveIDs=" + objectiveIDs)
-                        .then(response => response.json())
-                        .then(response => {
-                            let index = 0;
-                            //add objective descriptions to vue component
-                            for (let objective in this.objectives) {
-                                if (this.objectives.hasOwnProperty(objective)) {
-                                    Vue.set(this.objectives[objective], "description", response[index]);
-                                }
-                                index++;
-                            }
-                        });
                 });
         },
         submitForm() {
-            $(function () {
-                var formData = new FormData($('#uploadForm')[0]);
-                formData.append("objective_id", photoSubmit.currentObjective);
-                $.ajax({
-                    type: "POST",
-                    url: "/api/upload_photo.php",
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (response) {
-                        response = $.parseJSON(response);
-                        if (response['status'] === 'ok') {
-                            photoSubmit.showUpload = false;
-                            photoSubmit.currentObjective = null;
-                            photoSubmit.getObjectives();
-                        } else if (response['status'] === 'error' ) {
-                            alert(response['message']);
-                            //@TODO consider using custom error box
-                        }
-                    },
-                    error: function (response) {
-                        console.log(response);
+            var formData = new FormData($('#uploadForm')[0]);
+            formData.append("objective_id", this.currentObjective);
+            $.ajax({
+                type: "POST",
+                url: "api/upload_photo.php",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: (response) => {
+                    response = $.parseJSON(response);
+                    if (response['status'] === 'ok') {
+                        this.showUpload = false;
+                        this.currentObjective = null;
+                        this.getObjectives();
+                    } else if (response['status'] === 'error' ) {
+                        alert(response['message']);
+                        //@TODO consider using custom error box
                     }
+                },
+                error: (response) => {
+                    console.log(response);
+                }
 
-                });
-            });
-
-            return false;
+            })
         },
         showUploadForm(index) {
             this.currentObjective = index;
             //used to prevent image caching
-            var date = new Date;
-            this.imgPath = this.objectives[this.currentObjective]['path'] + "?" + date.getSeconds();
+            var randomString =  Math.random().toString(18).substring(2, 15)
+            this.imgPath = "image_uploads/" + this.pin + this.currentteam + "-" 
+                            + this.currentObjective + ".jpg?" + randomString
+                            
             this.showUpload = true;
         },
         hideUploadForm(){
             this.currentObjective = null;
+            this.imgPath = null;
             this.showUpload = false;
         }
     }

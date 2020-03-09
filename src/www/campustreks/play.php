@@ -33,6 +33,7 @@
             <photo-submit
             :currentteam="currentteam"
             :pin="pin"
+            :huntsessiondata="jsondata"
             @return-table="togglecomponent=1">
             </photo-submit>
           </div>
