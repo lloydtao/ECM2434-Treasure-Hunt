@@ -47,8 +47,8 @@ $sql .= "CREATE TABLE Hunt (
     Description TEXT NOT NULL,
     BestTeam VARCHAR(50),
     Highscore INT(6),
-    Email VARCHAR(50) NOT NULL,
-    FOREIGN KEY (Email) REFERENCES Users(Email),
+    Username VARCHAR(50) NOT NULL,
+    FOREIGN KEY (Username) REFERENCES Users(Username),
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );";
 	

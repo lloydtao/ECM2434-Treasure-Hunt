@@ -27,7 +27,7 @@
     $user = $_SESSION["username"];
 
     $titleErr = $descriptionErr = "";
-    $validObjectives = 0;
+    $locationObjectives = 0;
     $objectives = 1;
     $sql = "";
     $title = $description = "";
@@ -52,22 +52,25 @@
         $description = makeSafe($_POST["description"]);
         // Count how many objectives have been added
         while (array_key_exists("objective{$objectives}Directions", $_POST) || array_key_exists("objective{$objectives}Description", $_POST)) {
-            $validObjectives++;
+            if(array_key_exists("objective{$objectives}Directions", $_POST))
+                $locationObjectives++;
             $objectives++;
+            
         }
 
+        
         // Check the hunt title and description have been set
         if (!$title || !$description) {
             if (!$title)
                 $titleErr = "Required field";
             if (!$description)
                 $descriptionErr = "Required field";
-            if ($objectives == 1)
-                echo "<script type='text/javascript'>alert('At least one objective is needed');</script>";
+            if($locationObjectives == 0)
+                echo "<script type='text/javascript'>alert(\"At least one Location objective needed\");</script>";
         } else {
-            if ($objectives == 1) {
-                echo "<script type='text/javascript'>alert('At least one objective is needed');</script>";
-            } else {
+            if($locationObjectives == 0)
+                echo "<script type='text/javascript'>alert(\"At least one Location objective needed\");</script>";
+            else {
 
                 $locations = 0;
                 $logitude = $latitude = $question = $answer = $photoDescription = "";
@@ -76,35 +79,35 @@
                 $sql = "INSERT INTO Hunt (Name, Description, Username)
 				VALUES('$title', '$description', '$user');";
 
-        if ($conn->query($sql) === TRUE) {
-            $hunt_id = $conn->insert_id;
-        } else {
-            echo "<script type='text/javascript'>alert('" . $conn->error . "');</script>";
-        }
-
-        for ($x = 1; $x < $objectives; $x++) {
-            // Add new objective to database
-            if ($conn->query("INSERT INTO objectives (HuntID) Values('$hunt_id')") === TRUE) {
-                $last_id = $conn->insert_id;
-            } else {
-                echo "<script type='text/javascript'>alert('" . $conn->error . "');</script>";
-                break;
-            }
-
-            // Check which type each objective is and add a SQL statement to add to the correct table
-            if (array_key_exists("objective{$x}Longitude", $_POST)) {
-                // Make the attributes database safe
-                $longitude = (string)$_POST["objective{$x}Longitude"];
-                $latitude = (string)$_POST["objective{$x}Latitude"];
-                $question = makeSafe($_POST["objective{$x}Question"]);
-                $answer = makeSafe($_POST["objective{$x}Answer"]);
-                $directions = makeSafe($_POST["objective{$x}Directions"]);
-
-                if ($logitude != "" && $latitude != "" && $question != "" && $answer != "" && $directions != "") {
-                    continue;
+                if ($conn->query($sql) === TRUE) {
+                    $hunt_id = $conn->insert_id;
+                } else {
+                    echo "<script type='text/javascript'>alert('" . $conn->error . "');</script>";
                 }
-                // Add Location to database
-            $sql = "INSERT INTO location (ObjectiveID, HuntOrder, Longitude, Latitude, Question, Answer, Direction
+
+                for ($x = 1; $x < $objectives; $x++) {
+                    // Add new objective to database
+                    if ($conn->query("INSERT INTO objectives (HuntID) Values('$hunt_id')") === TRUE) {
+                        $last_id = $conn->insert_id;
+                    } else {
+                        echo "<script type='text/javascript'>alert('" . $conn->error . "');</script>";
+                        break;
+                    }
+
+                    // Check which type each objective is and add a SQL statement to add to the correct table
+                    if (array_key_exists("objective{$x}Longitude", $_POST)) {
+                        // Make the attributes database safe
+                        $longitude = (string)$_POST["objective{$x}Longitude"];
+                        $latitude = (string)$_POST["objective{$x}Latitude"];
+                        $question = makeSafe($_POST["objective{$x}Question"]);
+                        $answer = makeSafe($_POST["objective{$x}Answer"]);
+                        $directions = makeSafe($_POST["objective{$x}Directions"]);
+
+                        if ($logitude != "" && $latitude != "" && $question != "" && $answer != "" && $directions != "") {
+                            continue;
+                        }
+                        // Add Location to database
+                        $sql = "INSERT INTO location (ObjectiveID, HuntOrder, Longitude, Latitude, Question, Answer, Direction)
 						VALUES('$last_id', '$locations', '$longitude', '$latitude', '$question', '$answer', '$directions');";
 
                         if ($conn->query($sql) === TRUE)
@@ -248,8 +251,8 @@
      * @author Jakub Kwak
      */
     function submitMap() {
-        var lat = Math.round((marker.getPosition().lat() + Number.EPSILON) * 100000) / 1000000;
-        var lng = Math.round((marker.getPosition().lng() + Number.EPSILON) * 100000) / 1000000;
+        var lat = Math.round((marker.getPosition().lat() + Number.EPSILON) * 100000) / 100000;
+        var lng = Math.round((marker.getPosition().lng() + Number.EPSILON) * 100000) / 100000;
 
         document.getElementById("map-window").style.display = "none";
         document.getElementById("create-form").style.display = "block";
