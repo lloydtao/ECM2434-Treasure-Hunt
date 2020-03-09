@@ -81,8 +81,10 @@ function updateHighscore($huntID, $highscore, $teamName, $conn)
     $sql = $conn->prepare("UPDATE `Hunt` SET `Highscore` = ?, `BestTeam` = ? WHERE `HuntID` = ?");
     $sql->bind_param('isi', $highscore, $teamName, $huntID);
     if ($sql->execute()) {
+        $conn->close;
         successResponse('Highscore updated');
     } else {
+        $conn->close;
         errorResponse('Update unsuccessful');
     }
 }
