@@ -33,20 +33,26 @@ function checkGame()
         if (findGame($gameID)) {
             if (isset($_SESSION['teamName'])) {
                 $teamName = $_SESSION['teamName'];
-                echo json_encode(array("status" => "success", "gameID" => $gameID, "nickname" => $nickname, "teamName" => $teamName));
+
+                if (isset($_SESSION['ingame'])) {
+                    echo json_encode(array("status" => "success", "gameID" => $gameID, "nickname" => $nickname, "teamName" => $teamName, "ingame" => true));
+                }
+                else {
+                    echo json_encode(array("status" => "success", "gameID" => $gameID, "nickname" => $nickname, "teamName" => $teamName, "ingame" => false));
+                }
                 return;
             } else {
-                echo json_encode(array("status" => "success", "gameID" => $gameID, "nickname" => $nickname, "teamName" => null));
+                echo json_encode(array("status" => "success", "gameID" => $gameID, "nickname" => $nickname, "teamName" => null, "ingame" => false));
                 return;
             }
         }
         unset($_SESSION['gameID']);
         unset($_SESSION['nickname']);
         unset($_SESSION['teamName']);
-        echo json_encode(array("status" => "fail", "gameID" => null, "nickname" => null, "teamName" => null));
+        echo json_encode(array("status" => "fail", "gameID" => null, "nickname" => null, "teamName" => null, "ingame" => false));
         return;
     }
-    echo json_encode(array("status" => "fail", "gameID" => null, "nickname" => null, "teamName" => null));
+    echo json_encode(array("status" => "fail", "gameID" => null, "nickname" => null, "teamName" => null, "ingame" => false));
 }
 
 

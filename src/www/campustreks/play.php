@@ -28,10 +28,10 @@
                 </div>
                 <div v-else-if="togglecomponent==3"> 
                     <location @photo-submit="togglecomponent=4" :jsondata="jsondata"
-                        :currentteam="currentteam" :pin="pin">
+                    :currentteam="currentteam">
                     </location>
                 </div>
-                <div v-else>
+                <div v-else-if="togglecomponent==4">
                     <photo-submit :currentteam="currentteam" :pin="pin" :huntsessiondata="jsondata"
                         @return-table="togglecomponent=3">
                     </photo-submit>

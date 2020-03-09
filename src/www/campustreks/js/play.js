@@ -187,9 +187,14 @@ Vue.component('create-team', {
 
 Vue.component('location', {
     props: {
-        jsondata: Object,
-        currentteam: String,
-        pin: String
+        jsondata: {
+            type: Object,
+            required: true
+        },
+        currentteam: {
+            type: String,
+            required: true
+        }
     },
     template: `
     <div class="container">
@@ -198,19 +203,19 @@ Vue.component('location', {
         </div>
         <div class="content">
             <div>
-                <div v-show="!complete">
-                    <div v-show="!show">
-                        {{ direction }}
-                        <button type="button" v-on:click="submit">Submit Location</button><br>
+                <div v-if="alert != 'All location objectives completes!'">
+                    <div v-if="question == null">
+                        <p>{{ direction }}</p>
+                        <button class='btn btn-outline-primary' type="button" v-on:click="submit">Submit Location</button><br>
                     </div>
-                    <div v-show="show">
+                    <div v-else>
                         <br>
                         {{ question }}<br>
                         <input v-model='answer' name='answer'> <br>
-                        <button v-on:click=checkQuestion>Submit Answer</button>
+                        <button class='btn btn-outline-primary' v-on:click="checkQuestion">Submit Answer</button>
                     </div>
                 </div>
-                <div id="alert" v-show="!(alert=='')">{{ alert }}</div>
+                <div id="alert" v-show="!(alert==null)">{{ alert }}</div>
             </div>
         </div>
         <button type="button" class='btn btn-outline-primary' @click='$emit("photo-submit")'>Submit Photo</button>
@@ -219,20 +224,20 @@ Vue.component('location', {
     data() {
         return {
             objectivelist: {},
-            currentObjective: "",
-            currentObjectiveKey: "",
-            question: "",
+            currentObjectiveKey: null,
+            question: null,
             answer: null,
-            show: false,
-            complete: false,
-            direction: "",
-            alert: "",
-            timeout: "",
+            direction: null,
+            alert: null,
+            timeout: null,
             objLoc: null
         }
     },
+    updated(){
+        this.objectivelist = this.jsondata["teams"][this.currentteam]["objectives"]["gps"]
+    },
 	mounted(){
-		this.getNextObjective()
+        setTimeout(this.getNextObjective, 100)
 	},
 	methods: {
 		 /**Attempt to get the user's location and compare it with objLoc
@@ -247,7 +252,7 @@ Vue.component('location', {
 		 	{
 		        // Attempt to get GPS loc timed out after 5 seconds, 
 		        // try low accuracy location
-		        navigator.geolocation.getCurrentPosition(this.position, 
+		        navigator.geolocation.getCurrentPosition(this.getLocationSuccess, 
 		        this.errorCallback_lowAccuracy,
                 {maximumAge:600000, timeout:10000, enableHighAccuracy: false});
 		        return;
@@ -289,40 +294,49 @@ Vue.component('location', {
              console.log(this.objLoc)
 		 	if (a < 10){
 		 		console.log(true);
-		 		this.show = true
 		 		this.getQuestionFromDb()
 		 	}
 		 	else{
 		 		clearTimeout(this.timeout)
 		 		this.alert = "you are too far from the objective"
-				setTimeout(function(){ this.alert = "" }, 1500);
+				setTimeout(this.alertFade, 1500);
 		 		console.log(false);
 		 	}
 		 },
 		 checkQuestion(){
-		 	fetch("api/check_question.php?objectiveID="+this.currentObjective["objectiveId"]+"&answer="+this.answer+
-		 		"&teamName="+this.currentteam+"&gameID="+this.pin+"&objectiveKey="+this.currentObjectiveKey)
-		 	.then(response => response.text())
-		 	.then(data => {
-		 		clearTimeout(this.timeout)
-		 		if(data == "correct"){
-		 			this.show = false
-		 			this.objectivelist = []
-		 			this.currentObjective = []
-		 			this.currentObjectiveKey = ""
-		 			this.alert = "correct answer"
-		 			this.timeout = setTimeout(function(){ 
-                         if(!(this.alert === "All location objectives completes!")){this.alert = ""} }, 1500);
-		 			this.getNextObjective()
-		 		}
-		 		else if (data == "incorrect"){
-		 			this.alert = "wrong answer"
-		 			this.timeout = setTimeout(function(){ this.alert = "" }, 1500	);
-		 		}
-		 	})
-		 },
+             $.ajax({
+                type: "POST",
+                url: "api/check_question.php",
+                data: {
+                    objectiveID: this.objectivelist[this.currentObjectiveKey]["objectiveId"],
+                    answer: this.answer, 
+                    objectiveKey: this.currentObjectiveKey
+                },
+                success: (data) => {
+                    if (data === "correct") {
+                        this.objLoc = null
+                        this.question = null
+                        this.direction = null
+                        Vue.set(this.objectivelist[this.currentObjectiveKey], "completed", true)
+                        this.alert = "correct answer"
+                        this.timeout = setTimeout(this.alertFade, 1500)     
+                        this.getNextObjective()
+
+                    } 
+                    else if (data === "incorrect") {
+                        this.alert = "wrong answer"
+                        this.timeout = setTimeout(this.alertFade, 1500	)
+                    }
+                }
+            });
+         },
+         alertFade() {
+            if(!(this.alert === "All location objectives completes!")){
+                this.alert = null
+            }
+         },
 		 getQuestionFromDb(){
-		 	fetch("api/objectivequestion?objectiveID="+this.currentObjective["objectiveId"])
+		 	fetch("api/objectivequestion?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
 		 	.then(response => response.text())
 		 	.then(data => {
 		 		this.question = data
@@ -353,25 +367,23 @@ Vue.component('location', {
 		},
 		getNextObjective(){
             this.objectivelist = this.jsondata["teams"][this.currentteam]["objectives"]["gps"]
+            console.log(this.objectivelist)
 
 			for (let objective in this.objectivelist) {
 				if (this.objectivelist[objective]["completed"] === false) {
-					this.complete = false
 					this.currentObjectiveKey = objective
-					this.currentObjective = this.objectivelist[objective]
-					fetch("api/locationdescription.php?objectiveID="+this.currentObjective["objectiveId"])
+					fetch("api/locationdescription.php?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
 					.then(response => response.text())
 					.then(data => this.direction = data)
 					return
 				}
 			}    
-				this.complete = true
 				clearTimeout(this.timeout)
 				this.alert = "All location objectives completes!"
 		},
 		submit(){
 			this.alert = ""
-			fetch("getobjectivelocation.php?ID="+this.currentObjective["objectiveId"])
+			fetch("getobjectivelocation.php?ID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
 			.then(response => response.json())
 			.then(data => {
                 this.objLoc = data
@@ -511,7 +523,7 @@ var play = new Vue({
         currentteam: "",
         gameInterval: null
     },
-    mounted() {
+    beforeMount() {
         this.startGame()
     },
     methods: {
@@ -548,9 +560,14 @@ var play = new Vue({
                 dataType: "json",
                 success: (data) => {
                     if (data["status"] === "fail") {
-                        this.togglecomponent = 0
-                        this.currentteam = ""
-                        this.pin = null
+                        if(data["ingame"] != true) {
+                            this.togglecomponent = 0
+                            this.currentteam = ""
+                            this.pin = null
+                        } else {
+                            this.togglecomponent = 5
+                        }
+
                         clearInterval(this.gameInterval)
                     } else if (data["status"] === "success") {
                         if (this.togglecomponent == 0) {
@@ -561,10 +578,16 @@ var play = new Vue({
                         
                         if (data["teamName"] != "" && data["teamName"] != null) {
                             this.currentteam = data["teamName"]
+
+                            if (data["ingame"] == true && this.togglecomponent != 4) {
+                                this.togglecomponent = 3
+                            }
+
+
                         } else {
                             this.currentteam = ""
                         }
-                    }
+                    } console.log(data)
                     this.fetchJson()
                 }
             });
