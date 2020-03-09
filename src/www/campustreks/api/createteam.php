@@ -1,5 +1,4 @@
 <?php 
-require("createteamobjectives.php");
 /**
  * Script for handling team creation form
  * @author James Caddock
@@ -79,7 +78,7 @@ function createTeam()
             $counter += 1;
         }
     }
-    
+    require("createteamobjectives.php");
     $parsedJson = addTeamObjectives($parsedJson, $team);
 
     //update json file

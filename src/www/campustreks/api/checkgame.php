@@ -17,6 +17,7 @@ function findGame($pin)
     }
 }
 
+
 /**
  * Check if the game in session still exists, and echo it back if it does
  *
@@ -25,6 +26,7 @@ function findGame($pin)
 function checkGame()
 {
     session_start();
+    
     if (isset($_SESSION['gameID']) && isset($_SESSION['nickname'])) {
         $gameID = $_SESSION['gameID'];
         $nickname = $_SESSION['nickname'];
@@ -46,6 +48,7 @@ function checkGame()
     }
     echo json_encode(array("status" => "fail", "gameID" => null, "nickname" => null, "teamName" => null));
 }
+
 
 checkGame();
 

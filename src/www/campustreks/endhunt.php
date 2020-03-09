@@ -11,6 +11,8 @@
 	    } else {
 	        echo "error uploading json: " . $conn->error . "<br>";
 	    }
+
 		$conn->close();
 	}
+
 ?>

@@ -1,126 +1,175 @@
-Vue.component('submissions', {
+Vue.component('submissions-leaderboard', {
     template: `
-        <div class="content">
-            <div id="submissions">
-                <div v-for="photo in photosubmission">
-                    <h4>{{ photo[0] }}</h4>
-                    <img class="img-fluid" :src='photo[1]'>
-                    <form @submit.prevent="submitScore(photo[0], photo[2], photo[3])">
-                        <input type="number" name="p" value="">
-                        <button type="submit" class='btn btn-outline-primary'>Submit</button>
-                    </form>
+        <div>
+            <div class="form-group" id="submissions">
+                <div v-for="photo in photosubmission" v-if="currentPhoto == photo.photoID">
+                    <h4>{{ photo.team }}</h4>
+                    <img class="img-fluid" :src='photo.image'>
+
+                    <div>
+                        <form @submit.prevent="submitScore(photo.photoID, photo.team, photo.objective)" style="margin-left: -40px">
+                            <button type="button" class='btn btn-outline-primary' @click="switchCurrentPhoto('prev')">Previous</button>
+                            <input type="number" v-model.number="newscore" :name="newscore" required style="width:40%;">
+                            <button type="submit" class='btn btn-outline-primary'>Submit</button>
+                            <button type="button" class='btn btn-outline-primary' @click="switchCurrentPhoto('next')">Next</button>
+                        </form>
+                    </div>
                 </div>
+            </div>
+
+            <div id="leaderboard" content="no-cache">
+                <li v-for="team in teamscores">
+                    {{ team[0] }}<br>
+                    {{ team[1] }}
+                </li>
             </div>
         </div>
     `,
     data() {
         return {
             photosubmission: [],
-            jsondata: []
+            currentPhoto: 0,
+            jsondata: [],
+            teamscores: [],
+            newscore: null,
+            gameID: null,
+            updateTimeout: null
         }
     },
-    mounted() {
-        this.fetchJson()
+    beforeMount() {
+        this.updateLeaderboard()
     },
     methods: {
-        /**
-         * Fetches the json data
-         * @author James Caddock
-         */
-        fetchJson() {
-            safejson = './hunt_sessions/LVTY.json'
-            console.log(safejson)
-            fetch(safejson)
-            .then(response => response.json())
-            .then(data => {
-                var teamlist = data["teams"]
-                this.jsondata = data
-                this.photosubmission = []
-                console.log(teamlist)
-                for (let team in teamlist) {
-                    console.log(teamlist[team])
-                    console.log(team)
-                    var objectivelist = teamlist[team]["objectives"]["photo"]
-                    for (let objective in objectivelist) {
-                        console.log(objective)
-                        if (objectivelist[objective]["completed"] === true) {
-                            this.photosubmission.push([team, objectivelist[objective]["path"], objective, objectivelist[objective]["score"]])
-                        }
+        teamUpdate(photoID, team) {
+            if (this.teamscores.length != 0) {
+
+                var newtscores = this.teamscores
+                var nscore = this.newscore
+                var oldscore = this.photosubmission[photoID]["score"]
+                for (t in newtscores) {
+                    if (newtscores[t][0] == team) {
+                        newtscores[t][1] -= oldscore
+                        this.photosubmission[photoID]["score"] = nscore
+                        newtscores[t][1] += nscore
                     }
-                }      
-                console.log(this.photosubmission[0])
-            })            
+                }
+
+                this.teamscores = newtscores
+                this.teamscores.sort(this.sortScores)
+            
+            } else { 
+                this.updateLeaderboard()
+            }
         },
-        submitScore(team, objective, score) {
-            var xhttp = new XMLHttpRequest();
-            params = "pin="+this.jsondata["gameinfo"]["gamePin"]+"&team="+team+"&submission="+objective+"&score="+score
-            xhttp.open('POST', 'update_score.php', true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        switchCurrentPhoto(dir) {
+            if (this.photosubmission.length > 1) {
+                var newPhoto = this.currentPhoto;
+                var counter = -1
+                for (let photo in this.photosubmission) {
+                    if (dir == "next" && this.currentPhoto == (photo[0]-1)) {
+                        newPhoto = photo[0]
+                    } else if (dir == "prev" && this.currentPhoto == (photo[0]+1)) {
+                        newPhoto = photo[0]
+                    }
+                    counter++
+                }
+                if (dir =="next" && newPhoto == this.currentPhoto) {
+                    if (this.currentPhoto == 0) {
+                        this.currentPhoto += 1
+                    } else {
+                        this.currentPhoto = 0
+                    }
+                } else if (dir == "prev" && newPhoto == this.currentPhoto) {
+                    if (this.currentPhoto == counter) {
+                        this.currentPhoto -= 1
+                    } else {
+                        this.currentPhoto = counter
+                    }
+                } else {
+                    this.currentPhoto = newPhoto
+                }
+            }
+        },
+        submitScore(photoID, team, objective) {
+            clearTimeout(this.updateTimeout)
+
+            this.switchCurrentPhoto('next')
+            this.teamUpdate(photoID, team)
+
+            var xhttp = new XMLHttpRequest()
+            params = "pin="+this.jsondata["gameinfo"]["gamePin"]+"&team="+team+"&submission="+objective+"&score="+this.newscore
+            this.newscore = null
+            xhttp.open('POST', 'update_score.php', true)
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
             xhttp.onreadystatechange = function() {
                 if (xhttp.readyState === XMLHttpRequest.DONE) {
                     if (xhttp.status === 200) {
-                        var response = xhttp.response;
-                        console.log(response);
-                    } else { console.log(params) }
+                    } else { //console.log(params) 
+                    }
                 } else {
-                    console.log(params)
+                    //console.log(params)
                 }
             };
-            xhttp.send(params);
+            xhttp.send(params)
+            
+            this.updateTimeout = setTimeout(this.updateLeaderboard, 10000)
         },
-        refresh() {
-            document.getElementById("submissions").innerHTML = "";
-            var pin = document.getElementById("pin").innerHTML;
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    var json = this.responseText;
-                    var huntSessionData = JSON.parse(json);
-                    var teams = Object.keys(huntSessionData["teams"]);
-                    for (var team of teams) {
-                        objectives = Object.keys(huntSessionData["teams"][team]["objectives"]);
-                        for (var objective of objectives) {
-                            objective_data = huntSessionData["teams"][team]["objectives"][objective];
-                            if (objective_data["type"] == "photo" && objective_data["completed"] == true){
-                                var submission = document.createElement("div");
-                                submission.id = objective;
-                                submission.className = "submission";
+        sortScores(a, b) {
+            if (a[1] === b[1]) {
+                return 0;
+            }
+            else {
+                return (a[1] > b[1]) ? -1 : 1;
+            }
+        },
+        updateLeaderboard(){
+            if (this.gameID === null) {
+                url_string = window.location.href
+                url = new URL(url_string)
+                this.gameID = url.searchParams.get("sessionID")
+            }
 
-                                var teamName = document.createElement("h4");
-                                teamName.innerHTML = team;
-                                submission.appendChild(teamName);
+            randomString =  Math.random().toString(18).substring(2, 15)
+            safejson = './hunt_sessions/'+this.gameID+'.json?' + randomString
 
-                                var submissionImage = document.createElement("img")
-                                submissionImage.src = objective_data["path"];
-                                submission.appendChild(submissionImage);
+            fetch(safejson)
+            .then(response => response.json())
+            .then(data => {
+                var teamlist = data["teams"]                
+                var newphotosubmission = []
+                var counter = 0
 
-                                var score = document.createElement("input");
-                                score.type = "number";
-                                score.value = objective_data["score"];
-                                submission.appendChild(score);
-
-                                var submit = document.createElement("button");
-                                submit.type = "button";
-                                submit.innerHTML = "Submit"
-                                submit.onclick = submitScore;
-                                submission.appendChild(submit);
-
-                                document.getElementById("submissions").appendChild(submission);
+                for (let team in teamlist) {
+                    if (teamlist[team] != "") {
+                        var objectivelist = teamlist[team]["objectives"]["photo"]
+                        for (let objective in objectivelist) {
+                            if (objectivelist[objective]["completed"] === true) {
+                                newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"], 
+                                                        "objective": objective, "score": objectivelist[objective]["score"]})
+                                counter++
                             }
                         }
                     }
                 }
-            };
-            xhttp.open("GET", "hunt_sessions/"+pin+".json", true);
-            xhttp.setRequestHeader('pragma', 'no-cache');
-            xhttp.setRequestHeader('cache-control', 'no-cache');
-            xhttp.send();
+                this.photosubmission = newphotosubmission 
+                this.jsondata = data
+            })   
+
+            var newtscores = []
+            var teamlist = this.jsondata["teams"]
+            for (let team in teamlist) {
+                if (team != "") {
+                    newtscores.push([team, teamlist[team]["teaminfo"]["score"]])
+                }
+            }
+
+            newtscores.sort(this.sortScores)
+            this.teamscores = newtscores
+            
+            this.updateTimeout = setTimeout(this.updateLeaderboard, 1000)  
         }
     }
 })
-
-
-
 
 
 

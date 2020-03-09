@@ -1,17 +1,27 @@
 <html>
 <head>
     <meta name="author" content = "Marek Tancak">
+      <meta name="contributors" content = "Jakub Kwak">
     <title>Host - CampusTreks</title>
     <link rel="stylesheet" href="css/hunt_session_stylesheet.css">
     <?php include('templates/head.php'); ?>
-</head>
-<body>
-    <?php 
+  </head>
+  <body>
+    <?php
+    include "checklogin.php";
+    if (!CheckLogin()) {
+        header("location:login.php");
+    }
+
+
     if(isset($_GET['sessionID'])){
         $huntSessionID = $_GET['sessionID'];
         $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
         $huntSessionData = json_decode($json_data, true);
-        print_r($huntSessionData);
+        if ($huntSessionData["gameinfo"]["master"] != $_SESSION["username"]) {
+            header('Location: /host.php');
+            die();
+        }
     }
     else{
         header('Location: /host.php');
@@ -39,12 +49,12 @@
             </section>
         </main>
     </div>
-
     <!-- Footer -->
     <?php include('templates/footer.php'); ?>
-</body>
-</html>
 
+</body>
+
+</html>
 
 <script src="https://unpkg.com/vue"></script>
 <script src="js/host.js"></script>

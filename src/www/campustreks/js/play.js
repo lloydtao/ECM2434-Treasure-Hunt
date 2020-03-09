@@ -78,6 +78,7 @@ Vue.component('game-start', {
     },
     mounted() {
         this.checkGame()
+        this.gameInterval = setInterval(this.checkGame, 1000)
     },
     methods: {
         /**
@@ -195,8 +196,8 @@ Vue.component('game-start', {
                         this.pin = data["gameID"]
                         this.nickname = data["nickname"]
                         this.fetchJson()
-                        if (data["teamName"] != "") {
-                            this.maketeam = false
+                        
+                        if (data["teamName"] != "" && data["teamName"] != null) {
                             this.inteam = true
                         } else {
                             this.inteam = false
