@@ -18,7 +18,7 @@ Vue.component('start-hunt', {
             </div>
         }
         } else {
-            echo 'No hunts found. Click <a href="/create.php">here</a> to create a new hunt.<br>';
+            <p>No hunts found. Click <a href="/create.php">here</a> to create a new hunt.</p><br>
         }
         </div>
     </div>
@@ -28,7 +28,25 @@ Vue.component('start-hunt', {
             hunts: {}
         }
     },
-
+    mounted() {
+        this.getHunts()
+    },
+    methods: {
+        getHunts() {
+            $.ajax({
+                type: "POST",
+                url: "api/queryhunts.php",
+                dataType: "json",
+                success: (data) => {
+                    if (data["status"] === "fail") {
+                        console.log(data)
+                    } else if (data["status"] === "success") {
+                        console.log(data)
+                    }
+                }
+            });
+        }
+    }
 })
 
 
@@ -211,6 +229,9 @@ Vue.component('submissions-leaderboard', {
 
 var host = new Vue({
     el: "#host",
+    data: {
+        togglecomponent: 0
+    },
     methods: {
 
     }
