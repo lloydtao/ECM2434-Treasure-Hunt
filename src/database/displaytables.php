@@ -32,7 +32,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         echo "HuntID: " . $row["HuntID"]. " - Name: " . $row["Name"].
         " - Description: " . $row["Description"] ." - BestTeam: " . $row["BestTeam"] .
-        " - Highscore: " . $row["Highscore"] ." - Email: " . $row["Email"] . "<br>";
+        " - Highscore: " . $row["Highscore"] ." - Username: " . $row["Username"] . "<br>";
     }
 } else {
     echo "0 results <br>";

@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
 <head>
     <meta name="author" content="Jakub Kwak">
     <title>Login - CampusTreks</title>
