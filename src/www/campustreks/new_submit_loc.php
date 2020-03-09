@@ -119,10 +119,12 @@ background-size: 1800% 1800%;
                 </div>
                 <div class="content">
                     <div id="objectives">
-                        <div id="rest">
+                        <div id="rest" v-show="!complete">
+                        <div v-show="!show">
                         {{ direction }}
-                        <button type="button" v-show="!show && !complete" v-on:click="submit">Submit Location</button><br>
-                        <div v-show="show && !complete">
+                        <button type="button" v-on:click="submit">Submit Location</button><br>
+                    </div>
+                        <div v-show="show">
                             <br>
                             {{ q }}<br>
                             <input id='answer'> <br>

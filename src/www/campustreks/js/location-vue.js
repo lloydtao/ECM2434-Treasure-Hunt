@@ -145,22 +145,23 @@ var objective = new Vue({
 				var teamlist = data["teams"]
 				this.teamData = teamlist[teamName]
 				this.objectivelist = this.teamData["objectives"]["gps"]
-
 				this.getNextObjective()
-			})    
+			})
 		},
 		getNextObjective(){
 			for (let objective in this.objectivelist) {
 				if (this.objectivelist[objective]["completed"] === false) {
+					this.complete = false
 					this.completed = false
 					this.currentObjectiveKey = objective
 					this.currentObjective = this.objectivelist[objective]
 					fetch("api/locationdescription.php?objectiveID="+this.currentObjective["objectiveId"])
 					.then(response => response.text())
 					.then(data => this.direction = data)
-					break
+					return
 				}
-				this.completed = true
+				this.complete = true
+				this.alert = "Done!"
 			}    
 		},
 		submit(){

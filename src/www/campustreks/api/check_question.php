@@ -60,6 +60,7 @@ function updateObjective()
 
     //update objective
     $parsedJson["teams"][$teamName]["objectives"]["gps"][$objID]["completed"] = true;
+    $parsedJson["teams"][$teamName]["teaminfo"]["score"] += 100;
 
     //update json file
     $newJson = json_encode($parsedJson);
