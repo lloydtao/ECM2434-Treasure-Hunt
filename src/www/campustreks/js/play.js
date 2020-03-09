@@ -1,13 +1,7 @@
 Vue.component('game-start', {
-    props: {
-        insession: {
-            type: Boolean,
-            required: true
-        }
-    },
-    template:  `
-    <div content="no-cache" id="game-join">
-        <form @submit.prevent="joinGame()" v-if="!insession">
+    template: `
+    <div>
+        <form @submit.prevent="joinGame()">
             <div class='container'>
                 <div class='form-group'>
                     <input class="form-control" type='text' v-model='pin' name='pin' maxlength='4' size='12' placeholder='Pin'>
@@ -21,81 +15,15 @@ Vue.component('game-start', {
                 <p id="form-error" style="display: none">Please fill in all fields</p>
             </div>
         </form>
-
-        <div id='team-table' class='form-group' v-else-if="!maketeam">
-            <table id='tableData'>
-                <tr>
-                <th>Team Name</th>
-                <th>No. Players</th>
-                <th>Players</th>
-                <th>Join</th>
-                </tr>
-
-
-                <tr v-for="(data, key) in jsondata.teams" v-if='key!=""'>
-                    <td>{{ key }}</td>
-                    <td>{{ data.players.length }}</td>
-                    <td v-for="player in data.players">{{ player }}</td>
-                    <td><input type="submit" @click="joinTeam(key)" class="btn btn-outline-primary" value="Join"></td>
-                </tr>
-
-
-            </table>
-            <div>
-                <input type="button" class='btn btn-outline-primary' @click="maketeam = true" value="Create Team">
-                <input type="button" class='btn btn-outline-primary' @click="fetchJson()" value="Refresh">
-                <input type="button" class='btn btn-outline-primary' @click="endSession()" value="Quit">
-            </div>
-
-            <div id='currentTeam' class='form-group' v-if="inteam">
-                <p id="team"></p>
-                <button type="button" class='btn btn-outline-primary' @click='joinTeam("")'>Leave team</button>
-                <button type="button" class='btn btn-outline-primary'>Play game</button>
-            </div>
-        </div>
-
-        <form class='form-group' @submit.prevent="createTeam()" v-else>
-            <div class="container">
-                <input class="form-control" type="text" v-model="newteam" name="newteam" maxlength='15' minlength='2' placeholder='Team Name'>
-                <p id="team-error" style="display: none">Team name taken</p>
-                <p id="team-form-error" style="display: none">Invalid Team name</p>
-                <input type="submit" class='btn btn-outline-primary' value="Create">
-                <input type="button" class='btn btn-outline-primary' @click="maketeam = false" value="Back">
-            </div>
-        </form>
     </div>
     `,
     data() {
         return {
             pin: null,
-            nickname: null,
-            newteam: null,
-            inteam: false,
-            maketeam: false,
-            jsondata: [],
-            gameInterval: null
+            nickname: null
         }
     },
-    mounted() {
-        this.checkGame()
-        this.gameInterval = setInterval(this.checkGame, 1000)
-    },
     methods: {
-        /**
-         * Fetches the json data
-         * @author James Caddock
-         */
-        fetchJson() {
-            reqjson = this.pin
-            randomString =  Math.random().toString(18).substring(2, 15)
-            safejson = './hunt_sessions/' + encodeURI(reqjson) + '.json?' + randomString
-            fetch(safejson)
-            .then(response => response.json())
-            .then(data => {
-                this.jsondata = data
-                this.alertSession()
-            })   
-        },
         /** 
          * Sends an ajax request to join a Game 
          * @author Jakub Kwak
@@ -113,8 +41,7 @@ Vue.component('game-start', {
                 },
                 success: (data) => {
                     if (data === "join-success") {
-                        this.checkGame()
-                        this.gameInterval = setInterval(this.checkGame, 1000)
+                        this.$emit("start-game")
                     } else if (data === "pin-error") {
                         $("#pin-error").css("display", "block")
                     } else if (data === "name-error") {
@@ -124,18 +51,52 @@ Vue.component('game-start', {
                     }
                 }
             });
-        },
-        /**
-         * Lets vue know there's a session
-         * @author James Caddock
-         */
-        alertSession() {
-            if (this.pin != null && this.nickname != null) {
-                this.$emit('has-session')
-            } else {
-                this.$emit('no-session')
-            }
-        }, 
+        }
+    }
+})
+
+
+Vue.component('team-table', {
+    props: {
+        'jsondata' : Object,
+        'currentteam' : String
+    },
+    template: `
+    <div class='form-group'>
+        <table id='tableData'>
+            <tr>
+            <th>Team Name</th>
+            <th>No. Players</th>
+            <th>Players</th>
+            <th>Join</th>
+            </tr>
+
+
+            <tr v-for="(data, team) in jsondata.teams" :key="data.id">
+                <div  v-if='team!=""'>
+                    <td>{{ team }}</td>
+                    <td>{{ data.players.length }}</td>
+                    <td v-for="player in data.players" :key="player.id">{{ player }}</td>
+                    <td><input type="submit" @click="joinTeam(team)" :disabled="currentteam==team" class="btn btn-outline-primary" value="Join"></td>
+                </div>
+            </tr>
+
+
+        </table>
+        <div>
+            <input type="button" class='btn btn-outline-primary' @click="$emit('team-create')" value="Create Team">
+            <input type="button" class='btn btn-outline-primary' @click="$emit('fetch-json')" value="Refresh">
+            <input type="button" class='btn btn-outline-primary' @click="quitGame()" value="Quit">
+        </div>
+
+        <div id='currentTeam' class='form-group' v-if='currentteam!=""'>
+            <p id="team"></p>
+            <button type="button" class='btn btn-outline-primary' @click='joinTeam("")'>Leave team</button>
+            <button type="button" class='btn btn-outline-primary'>Play game</button>
+        </div>
+    </div>
+    `,
+    methods: {
         /**
          * Adds the user to the chosenteam
          * @author James Caddock
@@ -148,60 +109,11 @@ Vue.component('game-start', {
                 data: {chosenteam: chosenteam},
                 success: (data) => {
                     if (data === "join-team-success") {
-                        this.checkGame()
-                    }
-                }
-            });
-        },
-        /**
-         * Posts the new team data to add to the json
-         * @author James Caddock
-         */
-        createTeam() {
-            $("#team-error").css("display", "none");
-            $("#team-form-error").css("display", "none");
-            $.ajax({
-                type: "POST",
-                url: "api/createteam.php",
-                data: {newteam: this.newteam},
-                success: (data) => {
-                    if (data === "create-team-success") {
-                        this.maketeam = false;
-                        this.checkGame();
-                    } 
-                    else if (data === "team-error") {
-                        $("#team-error").css("display", "block");
-                    } 
-                    else if (data === "team-form-error") {
-                        $("#team-form-error").css("display", "block");
-                    }
-                }
-            });
-        },
-        /**
-         * Checks PHP session data with json data
-         * @author Jakub Kwak
-         */
-        checkGame() {
-            $.ajax({
-                type: "POST",
-                url: "api/checkgame.php",
-                dataType: "json",
-                success: (data) => {
-                    if (data["status"] === "fail") {
-                        this.$emit('no-session')
-                        this.endSession()
-                        clearInterval(this.gameInterval)
-                    } else if (data["status"] === "success") {
-                        this.pin = data["gameID"]
-                        this.nickname = data["nickname"]
-                        this.fetchJson()
-                        
-                        if (data["teamName"] != "" && data["teamName"] != null) {
-                            this.inteam = true
+                        if (chosenteam == "") {
+                            this.$emit('in-team', chosenteam)
                         } else {
-                            this.inteam = false
-                        }
+                            this.$emit('in-team', chosenteam)
+                        } 
                     }
                 }
             });
@@ -210,13 +122,61 @@ Vue.component('game-start', {
          * Sends an ajax request to end the current session
          * @author James Caddock
          */
-        endSession() {
+        quitGame() {
             $.ajax({
                 type: "POST",
-                url: "api/endsession.php",
+                url: "api/quitgame.php",
                 success: (data) => {
-                    if (data === "session-ended") {
-                        this.$emit('no-session')
+                    if (data === "game-ended") {
+                        this.$emit('quit-game')
+                    }
+                }
+            });
+        }
+    }
+})
+
+
+Vue.component('create-team', {
+    template: `
+    <form class='form-group' @submit.prevent="createTeam()">
+        <div class="container">
+            <input class="form-control" type="text" v-model="newteam" name="newteam" maxlength='15' minlength='2' placeholder='Team Name'>
+            <p id="team-error" style="display: none">Team name taken</p>
+            <p id="team-form-error" style="display: none">Invalid Team name</p>
+            <input type="submit" class='btn btn-outline-primary' value="Create">
+            <input type="button" class='btn btn-outline-primary' @click="$emit('team-exit')" value="Back">
+        </div>
+    </form>
+    `,
+    data() {
+        return {
+            newteam: null
+        }
+    },
+    methods: {
+        /**
+         * Posts the new team data to add to the json
+         * @author James Caddock
+         */
+        createTeam() {
+            $("#team-error").css("display", "none");
+            $("#team-form-error").css("display", "none")
+            $.ajax({
+                type: "POST",
+                url: "api/createteam.php",
+                data: {newteam: this.newteam},
+                success: (data) => {
+                    if (data === "create-team-success") {
+                        this.$emit("team-made", this.newteam)
+                        this.$emit("team-exit")
+                        this.newteam = null
+                    } 
+                    else if (data === "team-error") {
+                        $("#team-error").css("display", "block")
+                    } 
+                    else if (data === "team-form-error") {
+                        $("#team-form-error").css("display", "block")
                     }
                 }
             });
@@ -229,14 +189,69 @@ Vue.component('game-start', {
 var play = new Vue({
     el: "#play",
     data: {
-        insession: false
+        togglecomponent: 0,
+        pin: null,
+        jsondata: {},
+        currentteam: "",
+        gameInterval: null
+    },
+    mounted() {
+        this.startGame()
     },
     methods: {
-        hasSession() {
-            this.insession = true
+        startGame() {
+            this.checkGame()
+            this.gameInterval = setInterval(this.checkGame, 1000)
         },
-        noSession() {
-            this.insession = false
+        /**
+         * Fetches the json data
+         * @author James Caddock
+         */
+        fetchJson() {
+            if (this.pin != null) {
+                var reqjson = this.pin
+                var randomString =  Math.random().toString(18).substring(2, 15)
+                var safejson = '../hunt_sessions/' + encodeURI(reqjson) + '.json?' + randomString
+                fetch(safejson)
+                .then(response => response.json())
+                .then(data => {
+                    this.jsondata = data
+                })   
+            } else {
+                this.jsondata = {};
+            }
+        },
+        /**
+         * Checks PHP session data with json data
+         * @author Jakub Kwak
+         */
+        checkGame() {
+            $.ajax({
+                type: "POST",
+                url: "api/checkgame.php",
+                dataType: "json",
+                success: (data) => {
+                    if (data["status"] === "fail") {
+                        this.togglecomponent = 0
+                        this.currentteam = ""
+                        this.pin = null
+                        clearInterval(this.gameInterval)
+                    } else if (data["status"] === "success") {
+                        if (this.togglecomponent == 0) {
+                            this.togglecomponent = 1
+                        }
+                       
+                        this.pin = data["gameID"]
+                        
+                        if (data["teamName"] != "" && data["teamName"] != null) {
+                            this.currentteam = data["teamName"]
+                        } else {
+                            this.currentteam = ""
+                        }
+                    }
+                    this.fetchJson()
+                }
+            });
         }
     }
 })

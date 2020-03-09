@@ -4,7 +4,7 @@
  * 
  * @author James Caddock
  */
-function endSession() 
+function quitGame() 
 {
     session_start();
 
@@ -34,22 +34,28 @@ function endSession()
             }
         }
 
+        //check if team is left empty and should be deleted
+        if (count($parsedJson["teams"][$oldteam]["players"]) == 0 && $oldteam != "") {
+            unset($parsedJson["teams"][$oldteam]);
+        }
+
+
         //update json file
         $newJson = json_encode($parsedJson);
         file_put_contents($filename, $newJson);
     }
     
     unset($_SESSION['nickname']);
+    unset($_SESSION['gameID']);
     unset($_SESSION['teamName']);
-    session_destroy();
 
-    echo "session-ended";
+    echo "game-ended";
 }
 
 
 //if form was submitted, try to join game
 if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] == "POST" ) {
-    endSession();
+    quitGame();
 } else {
     echo "form-error";
 }
