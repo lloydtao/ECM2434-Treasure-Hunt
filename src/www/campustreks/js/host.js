@@ -1,3 +1,38 @@
+Vue.component('start-hunt', {
+    template: `
+    <div class="container">
+        <div class="heading">
+            <h2>Host a Hunt</h2>
+        </div>
+        <div class="row" v-for="hunt in hunts" :key="hunt.HuntID">
+            <div class="col-md-6 col-lg-4">
+                <div class="project-card-no-image">
+                    <h3>hunt.name</h3>
+                    <h4>Author: hunt.username
+                    <img v-if="hunt.verified" src="img/exeter-logo.png" height="14px" width="14px">
+                    </h4>
+                    <h4>hunt.description</h4>
+                    <a class="btn btn-outline-primary btn-sm" role="button" href="#" @click=startHunt(hunt.HuntID)>Host</a>
+                    <div class="tags">High Score: hunt.highscore</div>
+                </div>
+            </div>
+        }
+        } else {
+            echo 'No hunts found. Click <a href="/create.php">here</a> to create a new hunt.<br>';
+        }
+        </div>
+    </div>
+    `,
+    data() {
+        return {
+            hunts: {}
+        }
+    },
+
+})
+
+
+
 Vue.component('submissions-leaderboard', {
     template: `
         <div>
