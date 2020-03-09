@@ -29,7 +29,6 @@
     $titleErr = $descriptionErr = "";
     $locationObjectives = 0;
     $objectives = 1;
-    $sql = "";
     $title = $description = "";
 
     /**
