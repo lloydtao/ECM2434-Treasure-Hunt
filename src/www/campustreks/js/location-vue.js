@@ -160,9 +160,10 @@ var objective = new Vue({
 					.then(data => this.direction = data)
 					return
 				}
+			}    
+			
 				this.complete = true
 				this.alert = "Done!"
-			}    
 		},
 		submit(){
 			this.alert = ""

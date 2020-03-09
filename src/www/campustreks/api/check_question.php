@@ -25,7 +25,7 @@ function makeSafe($data, $conn)
  */
 function checkQuestion($objectiveID, $answer) {
     $conn = openCon();
-    $stmt = $conn->prepare("SELECT `Answer` FROM `location` WHERE `ObjectiveID` ='?'");
+    $stmt = $conn->prepare("SELECT `Answer` FROM `location` WHERE `ObjectiveID` =?");
     $stmt->bind_param("i", $objectiveID);
     $stmt->execute();
     $result = $stmt->get_result();
