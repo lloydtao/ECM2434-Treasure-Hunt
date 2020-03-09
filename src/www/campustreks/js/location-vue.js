@@ -14,6 +14,7 @@ var objective = new Vue({
 		complete: false,
 		direction: "",
 		alert: "",
+		timeout: ""
 	},
 	methods: {
 		 /**Attempt to get the user's location and compare it with objLoc
@@ -92,6 +93,7 @@ var objective = new Vue({
 		 		"&teamName="+teamName+"&gameID="+gameID+"&objectiveKey="+this.currentObjectiveKey)
 		 	.then(response => response.text())
 		 	.then(data => {
+		 		clearTimeout(this.timeout)
 		 		if(data == "correct"){
 		 			this.show = false
 		 			this.teamData = {}
@@ -99,12 +101,12 @@ var objective = new Vue({
 		 			this.currentObjective = []
 		 			this.currentObjectiveKey = ""
 		 			this.alert = "correct answer"
-		 			setTimeout(function(){ if(!(objective.alert === "done")){objective.alert = ""} }, 1500);
+		 			this.timeout = setTimeout(function(){ if(!(objective.alert === "Done!")){objective.alert = ""} }, 1500);
 		 			this.fetchJSON()
 		 		}
 		 		else if (data == "incorrect"){
 		 			this.alert = "wrong answer"
-		 			setTimeout(function(){ objective.alert = "" }, 1500	);
+		 			this.timeout = setTimeout(function(){ objective.alert = "" }, 1500	);
 		 		}
 		 	})
 		 },
@@ -163,6 +165,7 @@ var objective = new Vue({
 			}    
 
 				this.complete = true
+				clearTimeout(this.timeout)
 				this.alert = "Done!"
 		},
 		submit(){
