@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html>
 <head>
     <meta name="author" content="Marek Tancak">
     <meta name="contributors" content="Jakub Kwak">
