@@ -58,6 +58,19 @@ function successResponse(string $message = null)
     exit;
 }
 
+/**
+ * Sanitises data
+ * @param $data
+ * @return string
+ */
+function makeSafe($data)
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
 if (isset($_FILES['image'])) {
     $errors = array();
     $name = $_FILES['image']['name'];
@@ -77,7 +90,7 @@ if (isset($_FILES['image'])) {
 
         $json_data = file_get_contents('../hunt_sessions/' . $huntSessionID . '.json');
         $hunt_session_data = json_decode($json_data, true);
-        $objective_id = $_REQUEST['objective_id'];
+        $objective_id = makeSafe($_REQUEST['objective_id']);
         $hunt_session_data['teams'][$teamName]['objectives']['photo'][$objective_id]['completed'] = true;
         $hunt_session_data['teams'][$teamName]['objectives']['photo'][$objective_id]['path'] = $path;
 
