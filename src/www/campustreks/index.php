@@ -10,7 +10,7 @@
 	<!-- Content -->
     <main class="page home-page">
         <section class="portfolio-block block-intro">
-            <div class="container"><img class="img-fluid" src="img/Logo_Campus_Treks_360.jpg">
+            <div class="container"><img class="img-fluid" src="img/logo/Logo-375x-Res.jpg">
 				<br><br>
                 <div class="about-me">
                     <p>
