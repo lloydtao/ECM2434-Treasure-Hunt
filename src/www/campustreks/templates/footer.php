@@ -3,6 +3,8 @@
         <div class="links">
 			<a href="about_us.php">About Us</a>
 			<a href="privacy_policy.php">Privacy Policy</a>
+            <a href="faq.php">FAQs</a>
+
 		</div>
         <div class="social-icons">
 			<a href="https://twitter.com/Campus_treks"><i class="fab fa-twitter"></i></a>
