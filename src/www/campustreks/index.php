@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
   <head>
     <title>Home - CampusTreks</title>
 	<?php include('templates/head.php'); ?>
