@@ -83,6 +83,7 @@ var objective = new Vue({
 		 		this.getQuestionFromDb()
 		 	}
 		 	else{
+		 		clearTimeout(this.timeout)
 		 		this.alert = "you are too far from the objective"
 				setTimeout(function(){ objective.alert = "" }, 1500);
 		 		console.log(false);
@@ -101,7 +102,7 @@ var objective = new Vue({
 		 			this.currentObjective = []
 		 			this.currentObjectiveKey = ""
 		 			this.alert = "correct answer"
-		 			this.timeout = setTimeout(function(){ if(!(objective.alert === "Done!")){objective.alert = ""} }, 1500);
+		 			this.timeout = setTimeout(function(){ if(!(objective.alert === "All location objectives completes!")){objective.alert = ""} }, 1500);
 		 			this.fetchJSON()
 		 		}
 		 		else if (data == "incorrect"){
@@ -166,7 +167,7 @@ var objective = new Vue({
 
 				this.complete = true
 				clearTimeout(this.timeout)
-				this.alert = "Done!"
+				this.alert = "All location objectives completes!"
 		},
 		submit(){
 			this.alert = ""
