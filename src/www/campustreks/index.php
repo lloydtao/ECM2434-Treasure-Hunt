@@ -26,13 +26,13 @@
         <section class="portfolio-block photography">
             <div class="container">
                 <div class="row no-gutters">
-                    <div class="col-md-6 col-lg-4 item zoom-on-hover">
+                    <div class="col-md-4">
 						<img class="img-fluid" src="img/Forum_Back.jpg">
 					</div>
-                    <div class="col-md-6 col-lg-4 item zoom-on-hover">
+                    <div class="col-md-4">
 						<img class="img-fluid" src="img/Students_on_Campus.jpg">
 					</div>
-                    <div class="col-md-6 col-lg-4 item zoom-on-hover">
+                    <div class="col-md-4">
 						<img class="img-fluid" src="img/Forum_Overhead.jpg">
 					</div>
                 </div>
