@@ -202,6 +202,7 @@ Vue.component('location', {
             <h2>Submit location</h2>
         </div>
         <div class="content">
+	    <h4>Current Score: {{ score }}</h4>
             <div>
                 <div v-if="alert != 'All location objectives completes!'">
                     <div v-if="question == null">
@@ -230,11 +231,13 @@ Vue.component('location', {
             direction: null,
             alert: null,
             timeout: null,
-            objLoc: null
+            objLoc: null,
+	    score: 0
         }
     },
     updated(){
         this.objectivelist = this.jsondata["teams"][this.currentteam]["objectives"]["gps"]
+	this.score = this.jsondata["teams"][this.currentteam]["teaminfo"]["score"]
     },
 	mounted(){
         setTimeout(this.getNextObjective, 100)
