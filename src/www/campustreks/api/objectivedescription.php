@@ -1,14 +1,31 @@
 <?php
 include "../utils/connection.php";
 
-function getDescription($huntID){
-	$conn = opencon();
-	$sql = "SELECT `Description` FROM `hunt` WHERE `HuntID` = ".$huntID;	
-	$result = $conn->query($sql);
+/**
+ * Get all descriptions for a set of photo objectives
+ * @param $objectiveIDs
+ * @return false|string
+ *
+ * @author Marek Tancak
+ * @contributor Jakub Kwak
+ */
+function getDescription($objectiveIDs) {
+	$conn = openCon();
+	$descriptions = [];
+	foreach ($objectiveIDs as $objectiveID) {
+        $sql = $conn->prepare("SELECT `Specification` FROM `photoops` WHERE `ObjectiveID` = ?");
+        $sql->bind_param("i", $objectiveID);
+        $sql->execute();
 
-	if ($result->num_rows > 0) {
-		return(($result->fetch_assoc())["Description"]);
-	}
+        $result = $sql->get_result();
+
+        if ($result->num_rows > 0) {
+            $descriptions[] = ($result->fetch_assoc())["Specification"];
+        }
+    }
+	return json_encode($descriptions);
 }
-echo getDescription($_GET['huntID']);
+if (isset($_GET['objectiveIDs'])) {
+    echo getDescription(explode(",",$_GET['objectiveIDs']));
+}
 ?>
