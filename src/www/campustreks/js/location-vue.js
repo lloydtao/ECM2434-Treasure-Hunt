@@ -99,7 +99,7 @@ var objective = new Vue({
 		 			this.currentObjective = []
 		 			this.currentObjectiveKey = ""
 		 			this.alert = "correct answer"
-		 			setTimeout(function(){ objective.alert = "" }, 1500);
+		 			setTimeout(function(){ if(!(objective.alert === "done")){objective.alert = ""} }, 1500);
 		 			this.fetchJSON()
 		 		}
 		 		else if (data == "incorrect"){
@@ -161,7 +161,7 @@ var objective = new Vue({
 					return
 				}
 			}    
-			
+
 				this.complete = true
 				this.alert = "Done!"
 		},
