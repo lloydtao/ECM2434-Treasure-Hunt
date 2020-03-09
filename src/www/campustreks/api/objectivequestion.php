@@ -28,7 +28,10 @@ function makeSafe($data, $conn)
  */
 function getQuestion($objectiveID, $conn)
 {
-    $result = $conn->query("SELECT `Question` FROM `location` WHERE `ObjectiveID` ='$objectiveID'");
+    $stmt = $conn->prepare("SELECT `Question` FROM `location` WHERE `ObjectiveID` =?");
+    $stmt->bind_param('i', $objectiveID);
+    $stmt->execute();
+    $result=$stmt->get_result();
 
     if ($result->num_rows > 0) {
         $question = $result->fetch_row()[0];

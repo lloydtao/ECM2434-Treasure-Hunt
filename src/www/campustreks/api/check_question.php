@@ -25,11 +25,14 @@ function makeSafe($data, $conn)
  */
 function checkQuestion($objectiveID, $answer) {
     $conn = openCon();
-    $result = $conn->query("SELECT `Answer` FROM `location` WHERE `ObjectiveID` ='$objectiveID'");
+    $stmt = $conn->prepare("SELECT `Answer` FROM `location` WHERE `ObjectiveID` ='?'");
+    $stmt->bind_param("i", $objectiveID);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         $actualAnswer = $result->fetch_row()[0];
-        if ($answer == $actualAnswer) {
+        if (strtolower($answer) == strtolower($actualAnswer)) {
             updateObjective();
             echo "correct";
         }
@@ -37,6 +40,7 @@ function checkQuestion($objectiveID, $answer) {
             echo "incorrect";
         }
     } 
+    $stmt->close();
 }
 
 if (isset($_GET["objectiveKey"]) && isset($_GET["objectiveID"]) && isset($_GET["answer"]) && isset($_GET["teamName"]) && isset($_GET["gameID"])) {

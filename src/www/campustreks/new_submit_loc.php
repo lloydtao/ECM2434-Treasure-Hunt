@@ -60,14 +60,16 @@ background-size: 1800% 1800%;
   right: 0;
   top: 10%;
   bottom: 0;
+  border-radius: 100%;
+  text-align: center;
   position: absolute;
 background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
 background-size: 1800% 1800%;
 
--webkit-animation: rainbow 0.1s ease infinite;
--z-animation: rainbow 0.5s ease infinite;
--o-animation: rainbow 0.5s ease infinite;
-  animation: rainbow 0.5s ease infinite;}
+-webkit-animation: rainbow 0.3s ease infinite;
+-z-animation: rainbow 0.3s ease infinite;
+-o-animation: rainbow 0.3s ease infinite;
+  animation: rainbow 0.3s ease infinite;}
 
   .test { 
   height: 10%;
