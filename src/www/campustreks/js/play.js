@@ -84,7 +84,7 @@ Vue.component('team-table', {
 
         </table>
         <div>
-            <input type="button" class='btn btn-outline-primary' @click="$emit('team-create')" value="Create Team">
+            <input type="button" class='btn btn-outline-primary' @click="$emit('toggle-component', 2)" value="Create Team">
             <input type="button" class='btn btn-outline-primary' @click="$emit('fetch-json')" value="Refresh">
             <input type="button" class='btn btn-outline-primary' @click="quitGame()" value="Quit">
         </div>
@@ -92,6 +92,7 @@ Vue.component('team-table', {
         <div id='currentTeam' class='form-group' v-if='currentteam!=""'>
             <p id="team"></p>
             <button type="button" class='btn btn-outline-primary' @click='joinTeam("")'>Leave team</button>
+            <button type="button" class='btn btn-outline-primary' @click='$emit("toggle-component", 3)'>Submit Photo</button>
             <button type="button" class='btn btn-outline-primary'>Play game</button>
         </div>
     </div>
@@ -128,7 +129,7 @@ Vue.component('team-table', {
                 url: "api/quitgame.php",
                 success: (data) => {
                     if (data === "game-ended") {
-                        this.$emit('quit-game')
+                        this.$emit('toggle-component', 0)
                     }
                 }
             });
@@ -183,6 +184,131 @@ Vue.component('create-team', {
         }
     }
 })
+
+
+Vue.component('photo-submit', {
+    props: {
+        currentteam: String,
+        pin: String
+    },
+    template: `
+    <div>
+        <div class="heading">
+            <h2>Submit photo</h2>
+        </div>
+        <div v-if="showUpload">
+            <img width="500px" v-if="objectives[currentObjective]['completed']"
+                v-bind:src="imgPath">
+            <form id="uploadForm" v-on:submit.prevent enctype="multipart/form-data">
+                <p>Select image to upload:</p><br>
+                <input type="file" name="image" /><br>
+                <button class='btn btn-outline-primary' v-on:click="submitForm()">Upload</button>
+                <button class='btn btn-outline-primary' v-on:click="hideUploadForm()">Back</button>
+            </form>
+        </div>
+        <div v-else>
+            <li v-for="(objective, index) in objectives">
+                <button class='btn btn-outline-primary' v-on:click="showUploadForm(index)">{{ objective["description"] }}</button>
+            </li>
+
+            <button class='btn btn-outline-primary' v-on:click="$emit('return-table')">Back</button>
+        </div>
+    </div>
+    `,
+    data() {
+        return {
+            objectives: {},
+            showUpload: false,
+            currentObjective: null,
+            imgPath: null
+        }
+    },
+    mounted() {
+        this.getObjectives();
+        this.currentObjective = null;
+    },
+    methods: {
+        /**
+         * Gets photo objectives from JSON and their descriptions from DB
+         */
+        getObjectives() {
+            //get Json data
+            fetch("hunt_sessions/" + this.pin + ".json")
+                .then(response => response.text())
+                .then((response) => {
+                    var json = response;
+                    if (json !== '') {
+                        var huntSessionData = JSON.parse(json);
+                    }
+                    //save objective data to vue component
+                    this.objectives = huntSessionData["teams"][this.currentteam]["objectives"]['photo'];
+                    var objectiveIDs = [];
+                    //create array of objective IDs
+                    for (var objective in this.objectives) {
+                        if (this.objectives.hasOwnProperty(objective)) {
+                            objectiveIDs.push(this.objectives[objective]["objectiveId"]);
+                        }
+                    }
+                    //get objective descriptions from DB
+                    fetch("api/objectivedescription.php?objectiveIDs=" + objectiveIDs)
+                        .then(response => response.json())
+                        .then(response => {
+                            let index = 0;
+                            //add objective descriptions to vue component
+                            for (let objective in this.objectives) {
+                                if (this.objectives.hasOwnProperty(objective)) {
+                                    Vue.set(this.objectives[objective], "description", response[index]);
+                                }
+                                index++;
+                            }
+                        });
+                });
+        },
+        submitForm() {
+            $(function () {
+                var formData = new FormData($('#uploadForm')[0]);
+                formData.append("objective_id", photoSubmit.currentObjective);
+                $.ajax({
+                    type: "POST",
+                    url: "/api/upload_photo.php",
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        response = $.parseJSON(response);
+                        if (response['status'] === 'ok') {
+                            photoSubmit.showUpload = false;
+                            photoSubmit.currentObjective = null;
+                            photoSubmit.getObjectives();
+                        } else if (response['status'] === 'error' ) {
+                            alert(response['message']);
+                            //@TODO consider using custom error box
+                        }
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+
+                });
+            });
+
+            return false;
+        },
+        showUploadForm(index) {
+            this.currentObjective = index;
+            //used to prevent image caching
+            var date = new Date;
+            this.imgPath = this.objectives[this.currentObjective]['path'] + "?" + date.getSeconds();
+            this.showUpload = true;
+        },
+        hideUploadForm(){
+            this.currentObjective = null;
+            this.showUpload = false;
+        }
+    }
+})
+
 
 
 

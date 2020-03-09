@@ -12,23 +12,29 @@
       <section class="portfolio-block hire-me">
         <div id="play"> 
           <div v-if="togglecomponent==0">
-              <game-start @start-game="startGame()"></game-start>
+            <game-start @start-game="startGame()"></game-start>
           </div>
           <div v-else-if="togglecomponent==1">
-              <team-table 
-              @fetch-json="fetchJson()" 
-              :jsondata="jsondata" 
-              @team-create="togglecomponent=2" 
-              @in-team="currentteam = $event" 
-              :currentteam="currentteam" 
-              @quit-game="togglecomponent=0">
-              </team-table>
+            <team-table 
+            @fetch-json="fetchJson()" 
+            :jsondata="jsondata" 
+            @toggle-component="togglecomponent = $event" 
+            @in-team="currentteam = $event" 
+            :currentteam="currentteam"> 
+            </team-table>
+          </div>
+          <div v-else-if="togglecomponent==2">
+            <create-team 
+            @team-exit="togglecomponent=1"
+            @team-made="currentteam = $event">
+            </create-team>
           </div>
           <div v-else>
-              <create-team 
-              @team-exit="togglecomponent=1"
-              @team-made="currentteam = $event">
-              </create-team>
+            <photo-submit
+            :currentteam="currentteam"
+            :pin="pin"
+            @return-table="togglecomponent=1">
+            </photo-submit>
           </div>
         </div>
       </section>

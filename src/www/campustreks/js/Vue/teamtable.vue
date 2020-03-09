@@ -14,7 +14,7 @@ export <template>
                     <td>{{ team }}</td>
                     <td>{{ data.players.length }}</td>
                     <td v-for="player in data.players" :key="player.id">{{ player }}</td>
-                    <td><input type="submit" @click="joinTeam(team)" class="btn btn-outline-primary" value="Join"></td>
+                    <td><input type="submit" @click="joinTeam(team)" :disabled="currentteam==team" class="btn btn-outline-primary" value="Join"></td>
                 </div>
             </tr>
 
@@ -23,10 +23,10 @@ export <template>
         <div>
             <input type="button" class='btn btn-outline-primary' @click="$emit('team-create')" value="Create Team">
             <input type="button" class='btn btn-outline-primary' @click="$emit('fetch-json')" value="Refresh">
-            <input type="button" class='btn btn-outline-primary' @click="endSession()" value="Quit">
+            <input type="button" class='btn btn-outline-primary' @click="quitGame()" value="Quit">
         </div>
 
-        <div id='currentTeam' class='form-group' v-if="inteam">
+        <div id='currentTeam' class='form-group' v-if='currentteam!=""'>
             <p id="team"></p>
             <button type="button" class='btn btn-outline-primary' @click='joinTeam("")'>Leave team</button>
             <button type="button" class='btn btn-outline-primary'>Play game</button>
@@ -39,8 +39,7 @@ export default {
     name: "teamtable",
     props: {
         'jsondata' : Object,
-        'inteam' : Boolean,
-        required: true
+        'currentteam' : String
     },
     methods: {
         /**
@@ -51,15 +50,15 @@ export default {
         joinTeam(chosenteam) {
             $.ajax({
                 type: "POST",
-                url: "../api/jointeam.php",
+                url: "api/jointeam.php",
                 data: {chosenteam: chosenteam},
                 success: (data) => {
                     if (data === "join-team-success") {
                         if (chosenteam == "") {
-                            this.$emit('inteam', false)
+                            this.$emit('in-team', chosenteam)
                         } else {
-                            this.$emit('inteam', true)
-                        }
+                            this.$emit('in-team', chosenteam)
+                        } 
                     }
                 }
             });
@@ -68,13 +67,13 @@ export default {
          * Sends an ajax request to end the current session
          * @author James Caddock
          */
-        endSession() {
+        quitGame() {
             $.ajax({
                 type: "POST",
-                url: "../api/endsession.php",
+                url: "api/quitgame.php",
                 success: (data) => {
-                    if (data === "session-ended") {
-                        
+                    if (data === "game-ended") {
+                        this.$emit('quit-game')
                     }
                 }
             });
