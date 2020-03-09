@@ -66,12 +66,12 @@ function registerUser($conn)
             $pass = password_hash($password, PASSWORD_DEFAULT);
 
             $insert = $conn->prepare("INSERT INTO users (Email, Username, Password, Verified) 
-            VALUES (?, ?, ?, false)";
+            VALUES (?, ?, ?, 'False');");
             $insert->bind_param("sss", $email, $username, $pass);
-            if($insert->execute()){
-                echo "register-success";
-            }else{
+            if(!$insert->execute()){
                 echo "register-fail";
+            }else{
+                echo "register-success";
             }
         } else {
             echo "password-confirm-fail";
