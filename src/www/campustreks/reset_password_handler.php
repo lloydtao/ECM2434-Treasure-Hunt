@@ -53,14 +53,22 @@ function resetPassword($email, $password) {
     $conn = openCon();
     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-    $query = "SELECT * FROM `users` WHERE `Email` ='$email'";
-    $result = $conn->query($query);
+
+    $sql = $conn->prepare("SELECT * FROM `users` WHERE `Email` = ?");
+    $sql->bind_param("s", $email);
+    $sql->execute();
+    $result = $sql->get_result();
+
     if ($result->num_rows == 0) {
         echo "reset-error";
     }
 
-    $query = "UPDATE `users` SET `Password` = '$passwordHash' WHERE `Email` = '$email'";
-    if ($conn->query($query)) {
+    $sql = $conn->prepare("UPDATE `users` SET `Password` = ? WHERE `Email` = ?");
+    $sql->bind_param("ss", $passwordHash, $email);
+    $sql->execute();
+    $result = $sql->get_result();
+
+    if ($result) {
         echo "success";
     } else {
         echo "reset-error";

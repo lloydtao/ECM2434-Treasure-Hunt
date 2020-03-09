@@ -30,7 +30,11 @@ function sendMail($email) {
 function checkEmail($email) {
     $conn = openCon();
 
-    $result = $conn->query("SELECT * FROM `users` WHERE `Email` = '$email'");
+    $sql = $conn->prepare("SELECT * FROM `users` WHERE `Email` = ?");
+    $sql->bind_param("s", $email);
+    $sql->execute();
+    $result = $sql->get_result();
+    
     if ($result->num_rows > 0) {
         return true;
     }
