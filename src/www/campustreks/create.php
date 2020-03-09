@@ -182,6 +182,7 @@
                 <div id="map"></div>
                 <br>
                 <button class="btn btn-primary" type="button" onclick=submitMap()>Confirm Location</button>
+                <button class="btn btn-primary" type="button" onclick=hideMap()>Back</button>
             </form>
         </div>
     </section>
@@ -253,11 +254,20 @@
         var lat = Math.round((marker.getPosition().lat() + Number.EPSILON) * 100000) / 100000;
         var lng = Math.round((marker.getPosition().lng() + Number.EPSILON) * 100000) / 100000;
 
-        document.getElementById("map-window").style.display = "none";
-        document.getElementById("create-form").style.display = "block";
-
         document.getElementById("objective" + currentObjective + "Latitude").value = lat;
         document.getElementById("objective" + currentObjective + "Longitude").value = lng;
+
+        hideMap();
+    }
+
+    /**
+     * Hides the map window
+     *
+     * @author Jakub Kwak
+     */
+    function hideMap() {
+        document.getElementById("map-window").style.display = "none";
+        document.getElementById("create-form").style.display = "block";
     }
 
     /**
