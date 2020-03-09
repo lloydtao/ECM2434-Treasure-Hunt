@@ -17,7 +17,7 @@
     <script>
         $(document).ready(function () {
             //initialise NBP with password list
-            NBP.init("mostcommon_100000", "collections/", true);
+            NBP.init("mostcommon_1000000", "collections/", true);
             $("#register-form").submit(function (e) {
                 e.preventDefault();
                 $("#username-error").css("display", "none");
