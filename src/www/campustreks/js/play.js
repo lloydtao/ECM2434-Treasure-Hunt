@@ -2,17 +2,26 @@ Vue.component('game-start', {
     template: `
     <div>
         <form @submit.prevent="joinGame()">
-            <div class='container'>
-                <div class='form-group'>
-                    <input class="form-control" type='text' v-model='pin' name='pin' maxlength='4' size='12' placeholder='Pin'>
-                    <p id='pin-error' style="display: none">Game not found</p>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Join Hunt</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class='form-group'>
+                                <input class="form-control" type='text' v-model='pin' name='pin' maxlength='4' size='12' placeholder='Pin'>
+                                <p id='pin-error' style="display: none">Game not found</p>
+                            </div>
+                            <div class='form-group'>
+                                <input class="form-control" type='text' v-model='nickname' name='nickname' maxlength='15' minlength='2' size='18' placeholder='Nickname'>
+                                <p id="name-error" style="display: none">Nickname taken</p>
+                            </div>
+                            <button class='btn btn-outline-primary' type='submit'>Play</button>
+                            <p id="form-error" style="display: none">Please fill in all fields</p>
+                        </div>
+                    </div>
                 </div>
-                <div class='form-group'>
-                    <input class="form-control" type='text' v-model='nickname' name='nickname' maxlength='15' minlength='2' size='18' placeholder='Nickname'>
-                    <p id="name-error" style="display: none">Nickname taken</p>
-                </div>
-                <button class='btn btn-outline-primary' type='submit'>Play</button>
-                <p id="form-error" style="display: none">Please fill in all fields</p>
             </div>
         </form>
     </div>
@@ -62,37 +71,44 @@ Vue.component('team-table', {
         'currentteam' : String
     },
     template: `
-    <div class='form-group'>
-        <table id='tableData'>
-            <tr>
-            <th>Team Name</th>
-            <th>No. Players</th>
-            <th>Players</th>
-            <th>Join</th>
-            </tr>
-
-
-            <tr v-for="(data, team) in jsondata.teams" :key="data.id">
-                <div  v-if='team!=""'>
-                    <td>{{ team }}</td>
-                    <td>{{ data.players.length }}</td>
-                    <td v-for="player in data.players" :key="player.id">{{ player }}</td>
-                    <td><input type="submit" @click="joinTeam(team)" :disabled="currentteam==team" class="btn btn-outline-primary" value="Join"></td>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Select Team</h5>
                 </div>
-            </tr>
-
-
-        </table>
-        <div>
-            <input type="button" class='btn btn-outline-primary' @click="$emit('toggle-component', 2)" value="Create Team">
-            <input type="button" class='btn btn-outline-primary' @click="$emit('fetch-json')" value="Refresh">
-            <input type="button" class='btn btn-outline-primary' @click="quitGame()" value="Quit">
-        </div>
-
-        <div id='currentTeam' class='form-group' v-if='currentteam!=""'>
-            <p id="team"></p>
-            <button type="button" class='btn btn-outline-primary' @click='joinTeam("")'>Leave team</button>
-            <button type="button" class='btn btn-outline-primary' @click='$emit("toggle-component", 3)'>Play game</button>
+                <div>
+                    <table id='tableData' class="table table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Team</th>
+                                <th>Players</th>
+                                <th>Join</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(data, team) in jsondata.teams" v-if='team!=""' :key="data.id">
+                                    <td>{{ team }}</td>
+                                    <td>{{ data.players.join(', ') }} ({{ data.players.length }})</td>
+                                    <td><input type="submit" @click="joinTeam(team)" :disabled="currentteam==team" class="btn btn-outline-primary" value="Join"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-body">
+                    <div class='form-group'>
+                        <div id='currentTeam' class="btn-group" role="group" v-if='currentteam==""'>
+                            <button type="button" class='btn btn-outline-primary' @click="$emit('toggle-component', 2)" value="Create Team">New Team</button>
+                            <button type="button" class='btn btn-outline-primary' @click="$emit('fetch-json')" value="Refresh">Refresh</button>
+                            <button type="button" class='btn btn-outline-primary' @click="quitGame()" value="Quit">Leave</button>
+                        </div>
+                        <div id='currentTeam' class='btn-group' role="group" v-if='currentteam!=""'>
+                            <button type="button" class='btn btn-outline-primary' @click='joinTeam("")'>Leave team</button>
+                            <button type="button" class='btn btn-outline-primary' @click='$emit("toggle-component", 3)'>Play game</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     `,
