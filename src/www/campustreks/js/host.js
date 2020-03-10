@@ -10,7 +10,7 @@ Vue.component('submissions-leaderboard', {
                             </div>
                             <div class="card-body align-items-center">
                                 <h5>Team: {{ photo.team }}</h5>
-                                <p>Objective: {{ photo.objective }}</p>
+                                <p>Objective: {{ photo.description }}</p>
                                 <div class="card-img">
                                     <img class="img-fluid shadow" :src='photo.image'>
                                 </div>
@@ -20,7 +20,7 @@ Vue.component('submissions-leaderboard', {
                                 <p>Current Score: {{ photo.score }}</p>
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <button type="button" class='btn btn-secondary' @click="switchCurrentPhoto('prev')">&lt;</button>
-                                        <input type="number" class="input-group" placeholder="Score" v-model.number="newscore" :name="newscore">
+                                        <input type="number" min="0" max="100" class="input-group" placeholder="Score" v-model.number="newscore" :name="newscore">
                                         <button type="submit" class='btn btn-outline-primary'>Send</button>
                                         <button type="button" class='btn btn-secondary' @click="switchCurrentPhoto('next')">&gt;</button>
                                     </div>
@@ -146,7 +146,7 @@ Vue.component('submissions-leaderboard', {
             };
             xhttp.send(params)
             
-            this.updateTimeout = setTimeout(this.updateLeaderboard, 10000)
+            this.updateTimeout = setTimeout(this.updateLeaderboard, 1000)
         },
         sortScores(a, b) {
             if (a[1] === b[1]) {
@@ -161,6 +161,7 @@ Vue.component('submissions-leaderboard', {
                 url_string = window.location.href
                 url = new URL(url_string)
                 this.gameID = url.searchParams.get("sessionID")
+                gameID = this.gameID
             }
 
             randomString =  Math.random().toString(18).substring(2, 15)
@@ -172,14 +173,15 @@ Vue.component('submissions-leaderboard', {
                 var teamlist = data["teams"]                
                 var newphotosubmission = []
                 var counter = 0
+                var date = new Date();
 
                 for (let team in teamlist) {
                     if (teamlist[team] != "") {
                         var objectivelist = teamlist[team]["objectives"]["photo"]
                         for (let objective in objectivelist) {
                             if (objectivelist[objective]["completed"] === true) {
-                                newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"], 
-                                                        "objective": objective, "score": objectivelist[objective]["score"]})
+                                newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"] + "?" + date.getSeconds(),
+                                                        "objective": objective,"description":objectivelist[objective]["description"], "score": objectivelist[objective]["score"]})
                                 counter++
                             }
                         }
@@ -200,7 +202,13 @@ Vue.component('submissions-leaderboard', {
             newtscores.sort(this.sortScores)
             this.teamscores = newtscores
             
-            this.updateTimeout = setTimeout(this.updateLeaderboard, 1000)  
+            this.updateTimeout = setTimeout(this.updateLeaderboard, 1000)
+
+            //store highscore data globally for end hunt button
+            if (typeof this.teamscores[0] != "undefined") {
+                bestTeam = this.teamscores[0][0]
+                highscore = this.teamscores[0][1]
+            }
         }
     }
 })

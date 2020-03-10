@@ -77,7 +77,7 @@ var objective = new Vue({
 		 */
 		 getLocationSuccess(objLoc, pos){
 		 	var a =Math.abs(this.distance(objLoc, pos));
-		 	if (a < 10){
+		 	if (a < 100){
 		 		console.log(true);
 		 		this.show = true
 		 		this.getQuestionFromDb()
