@@ -172,13 +172,14 @@ Vue.component('submissions-leaderboard', {
                 var teamlist = data["teams"]                
                 var newphotosubmission = []
                 var counter = 0
+                var date = new Date();
 
                 for (let team in teamlist) {
                     if (teamlist[team] != "") {
                         var objectivelist = teamlist[team]["objectives"]["photo"]
                         for (let objective in objectivelist) {
                             if (objectivelist[objective]["completed"] === true) {
-                                newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"], 
+                                newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"] + "?" + date.getSeconds(),
                                                         "objective": objective,"description":objectivelist[objective]["description"], "score": objectivelist[objective]["score"]})
                                 counter++
                             }
