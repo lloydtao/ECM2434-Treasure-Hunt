@@ -374,10 +374,6 @@ Vue.component('location', {
 
 			for (let objective in this.objectivelist) {
 				if (this.objectivelist[objective]["completed"] === false) {
-                    if (this.currentObjectiveKey != objective) {
-                        clearInterval(this.interval)
-                    }
-
 					this.currentObjectiveKey = objective
 					fetch("api/locationdescription.php?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
 					.then(response => response.text())
