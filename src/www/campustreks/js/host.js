@@ -1,27 +1,60 @@
 Vue.component('submissions-leaderboard', {
     template: `
-        <div>
-            <div class="form-group" id="submissions">
-                <div v-for="photo in photosubmission" v-if="currentPhoto == photo.photoID">
-                    <h4>{{ photo.team }}</h4>
-                    <img class="img-fluid" :src='photo.image'>
-
-                    <div>
-                        <form @submit.prevent="submitScore(photo.photoID, photo.team, photo.objective)" style="margin-left: -40px">
-                            <button type="button" class='btn btn-outline-primary' @click="switchCurrentPhoto('prev')">Previous</button>
-                            <input type="number" v-model.number="newscore" :name="newscore" required style="width:40%;">
-                            <button type="submit" class='btn btn-outline-primary'>Submit</button>
-                            <button type="button" class='btn btn-outline-primary' @click="switchCurrentPhoto('next')">Next</button>
-                        </form>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group" id="submissions">
+                    <div v-for="photo in photosubmission" v-if="currentPhoto == photo.photoID">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Photo Submissions</h5>
+                            </div>
+                            <div class="card-body align-items-center">
+                                <h5>Team: {{ photo.team }}</h5>
+                                <p>Objective: {{ photo.description }}</p>
+                                <div class="card-img">
+                                    <img class="img-fluid shadow" :src='photo.image'>
+                                </div>
+                            </div>
+                            <div>
+                                <form @submit.prevent="submitScore(photo.photoID, photo.team, photo.objective)">
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" class='btn btn-secondary' @click="switchCurrentPhoto('prev')">&lt;</button>
+                                        <input type="number" class="input-group" placeholder="Score" v-model.number="newscore" :name="newscore">
+                                        <button type="submit" class='btn btn-outline-primary'>Send</button>
+                                        <button type="button" class='btn btn-secondary' @click="switchCurrentPhoto('next')">&gt;</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div id="leaderboard" content="no-cache">
-                <li v-for="team in teamscores">
-                    {{ team[0] }}<br>
-                    {{ team[1] }}
-                </li>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                         <h5>Leaderboard</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="leaderboard" content="no-cache">
+                            <table class="table table-striped">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">Rank</th>
+                                        <th scope="col">Team</th>
+                                        <th scope="col">Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(team, index) in teamscores">
+                                        <td>{{ index + 1 }}</td>
+                                        <td>{{ team[0] }}</td>
+                                        <td>{{ team[1] }}</td>
+                                    </tr>
+                                 </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     `,
@@ -145,7 +178,7 @@ Vue.component('submissions-leaderboard', {
                         for (let objective in objectivelist) {
                             if (objectivelist[objective]["completed"] === true) {
                                 newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"], 
-                                                        "objective": objective, "score": objectivelist[objective]["score"]})
+                                                        "objective": objective,"description":objectivelist[objective]["description"], "score": objectivelist[objective]["score"]})
                                 counter++
                             }
                         }
