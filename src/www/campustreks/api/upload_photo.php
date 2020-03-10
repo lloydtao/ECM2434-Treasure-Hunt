@@ -79,9 +79,9 @@ if (isset($_FILES['image'])) {
     $ext = strtolower(end($nameExp));
     $allowedExt = array('jpg', 'jpeg', 'png');
 
-    //@TODO hardcoded for now, change to get from session!
-    $huntSessionID = 'NOU1';
-    $teamName = 'yeet';
+    session_start();
+    $huntSessionID = $_SESSION['gameID'];
+    $teamName = $_SESSION['teamName'];
 
     if (in_array($ext, $allowedExt)) {
         $path = "../image_uploads/" . $huntSessionID . $teamName . '-' . $_REQUEST['objective_id'] . '.jpg';

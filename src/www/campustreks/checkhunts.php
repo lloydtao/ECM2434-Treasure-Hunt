@@ -12,14 +12,16 @@
  * @return string
  */
 function checkHunts($user) {
-    $hunts = scandir("hunt_sessions/");
-    foreach($hunts as $hunt) {
-        if ($hunt != "." && $hunt != "..") {
-            $jsonData = json_decode(file_get_contents("hunt_sessions/".$hunt), true);
-            if ($jsonData["gameinfo"]["master"] == $user) {
-                return $jsonData["gameinfo"]["gamePin"];
-            }
-        }
-    }
+	if (is_dir("hunt_sessions/")) {
+		$hunts = scandir("hunt_sessions/");
+		foreach($hunts as $hunt) {
+			if ($hunt != "." && $hunt != "..") {
+				$jsonData = json_decode(file_get_contents("hunt_sessions/".$hunt), true);
+				if ($jsonData["gameinfo"]["master"] == $user) {
+					return $jsonData["gameinfo"]["gamePin"];
+				}
+			}
+		}
+	}
     return null;
 }

@@ -1,26 +1,49 @@
 <?php session_start();?>
 
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-  <meta name="author" content = "James Caddock">
-	<meta name="contributors" content="Jakub Kwak, Joseph Lintern">
+<html>
+
+<head>
+    <meta name="author" content="James Caddock">
+    <meta name="contributors" content="Jakub Kwak, Joseph Lintern">
     <?php include('templates/head.php'); ?>
-  </head>
+</head>
 
-  <body>
+<body>
     <main class="page">
-      <section class="portfolio-block hire-me">
-        <div id="play">
-          <game-start :insession="insession" @has-session="hasSession" @no-session="noSession"></game-start>
-        </div>
-      </div>
-    </section>
+        <section class="portfolio-block hire-me">
+            <div id="play">
+                <div v-if="togglecomponent==0">
+                    <game-start @start-game="startGame()"></game-start>
+                </div>
+                <div v-else-if="togglecomponent==1">
+                    <team-table @fetch-json="fetchJson()" :jsondata="jsondata"
+                        @toggle-component="togglecomponent = $event" @in-team="currentteam = $event"
+                        :currentteam="currentteam">
+                    </team-table>
+                </div>
+                <div v-else-if="togglecomponent==2">
+                    <create-team @team-exit="togglecomponent=1" @team-made="currentteam = $event">
+                    </create-team>
+                </div>
+                <div v-else-if="togglecomponent==3"> 
+                    <location @photo-submit="togglecomponent=4" :jsondata="jsondata"
+                    :currentteam="currentteam">
+                    </location>
+                </div>
+                <div v-else-if="togglecomponent==4">
+                    <photo-submit :currentteam="currentteam" :pin="pin" :huntsessiondata="jsondata"
+                        @return-table="togglecomponent=3">
+                    </photo-submit>
+                </div>
+            </div>
+        </section>
     </main>
-  </body>
-</html>
-
+</body>
 
 <script src="js/jquery-3.4.1.min.js"></script>
-<script src="https://unpkg.com/vue"></script>
-<script src="js/play.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!--<script src="../js/vue.min.js"></script>-->
+<script type="module" src="js/play.js"></script>
+
+</html>
