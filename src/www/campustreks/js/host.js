@@ -8,11 +8,11 @@ Vue.component('submissions-leaderboard', {
                             <div class="card-header">
                                 <h5>Photo Submissions</h5>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body align-items-center">
                                 <h5>Team: {{ photo.team }}</h5>
                                 <p>Objective: {{ photo.objective }}</p>
                                 <div class="card-img">
-                                    <img class="img-fluid shadow" style="max-height: 300px" :src='photo.image'>
+                                    <img class="img-fluid shadow" :src='photo.image'>
                                 </div>
                             </div>
                             <div>
@@ -36,10 +36,22 @@ Vue.component('submissions-leaderboard', {
                     </div>
                     <div class="card-body">
                         <div id="leaderboard" content="no-cache">
-                            <div v-for="team in teamscores">
-                                {{ team[0] }}
-                                {{ team[1] }}
-                            </div>
+                            <table class="table table-striped">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">Rank</th>
+                                        <th scope="col">Team</th>
+                                        <th scope="col">Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(team, index) in teamscores">
+                                        <td>{{ index + 1 }}</td>
+                                        <td>{{ team[0] }}</td>
+                                        <td>{{ team[1] }}</td>
+                                    </tr>
+                                 </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
