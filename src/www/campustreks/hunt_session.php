@@ -12,9 +12,24 @@
             var highscore;
 
             function endHunt() {
-                console.log(gameID);
-                console.log(bestTeam);
-                console.log(highscore);
+                $.ajax({
+                    type: "POST",
+                    url: "api/end_hunt.php",
+                    data: {
+                        gameID : gameID,
+                        teamName : bestTeam,
+                        highscore : highscore
+                    },
+                    success: function (response) {
+                        response = $.parseJSON(response);
+                        if (response['status'] === 'ok') {
+                            window.location.href = 'host.php'
+                        } else if (response['status'] === 'error' ) {
+                            alert(response['message']);
+                            //@TODO consider using custom error box
+                        }
+                    }
+                });
             }
         </script>
     </head>
