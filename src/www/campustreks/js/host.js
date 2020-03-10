@@ -45,15 +45,22 @@ Vue.component('start-hunt', {
                     }
                 }
             });
+        },
+        startHunt(huntID) {
+
         }
     }
 })
 
 
 
-Vue.component('submissions-leaderboard', {
+Vue.component('hunt-session', {
     template: `
         <div>
+            <div class="heading">
+                <h2>Game Pin</h2>
+                <h3>{{ gameID }}</h3>
+            </div>
             <div class="form-group" id="submissions">
                 <div v-for="photo in photosubmission" v-if="currentPhoto == photo.photoID">
                     <h4>{{ photo.team }}</h4>
@@ -75,6 +82,10 @@ Vue.component('submissions-leaderboard', {
                     {{ team[0] }}<br>
                     {{ team[1] }}
                 </li>
+            </div>
+
+            <div>
+                <button class="btn btn-primary" type="button">End Game</button>
             </div>
         </div>
     `,

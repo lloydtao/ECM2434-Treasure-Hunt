@@ -36,16 +36,16 @@
         <main class="page host-page">
             <section class="portfolio-block project-no-images">
                 <div class="container">
-                    <div class="heading">
-                        <h2>Game Pin</h2>
-                        <h3><div id="pin"><?php echo $huntSessionData['gameinfo']['gamePin']; ?></div></h3>
-                    </div>
                     
-                    <submissions-leaderboard></submissions-leaderboard>
+                    <div v-if="!huntstarted">
+                    <start-hunt></start-hunt>
+                    </div>
+                    <div v-else>
+                    <hunt-session></hunt-session>
+                    </div>
                 
                     
-                    <button class="btn btn-primary" type="button">Refresh</button>
-                    <button class="btn btn-primary" type="button">End Game</button>
+
                 </div>
             </section>
         </main>

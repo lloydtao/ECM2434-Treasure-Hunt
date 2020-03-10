@@ -15,26 +15,6 @@
           header("Location: /hunt_session.php?sessionID=".$pin);
       }
   }
-
-  include "checklogin.php";
-  if (!CheckLogin()) {
-      header("location:login.php");
-  }
-
-
-  if(isset($_GET['sessionID'])){
-      $huntSessionID = $_GET['sessionID'];
-      $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
-      $huntSessionData = json_decode($json_data, true);
-      if ($huntSessionData["gameinfo"]["master"] != $_SESSION["username"]) {
-          header('Location: /host.php');
-          die();
-      }
-  }
-  else{
-      header('Location: /host.php');
-      die();
-  }
   ?>
   <body>
 	<!-- Header -->
