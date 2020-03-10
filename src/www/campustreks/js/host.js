@@ -4,22 +4,22 @@ Vue.component('start-hunt', {
         <div class="heading">
             <h2>Host a Hunt</h2>
         </div>
-        <div class="row" v-for="hunt in hunts" :key="hunt.HuntID">
+        <div class="row" v-for="hunt in hunts" :key="hunt['huntid']">
             <div class="col-md-6 col-lg-4">
                 <div class="project-card-no-image">
-                    <h3>hunt.name</h3>
-                    <h4>Author: hunt.username
-                    <img v-if="hunt.verified" src="img/exeter-logo.png" height="14px" width="14px">
+                    <h3>{{ hunt['name'] }}</h3>
+                    <h4>Author: {{ hunt['username'] }}
+                    <img v-if="!hunt['verified']" src="img/exeter-logo.png" height="14px" width="14px">
                     </h4>
-                    <h4>hunt.description</h4>
-                    <a class="btn btn-outline-primary btn-sm" role="button" href="#" @click=startHunt(hunt.HuntID)>Host</a>
-                    <div class="tags">High Score: hunt.highscore</div>
+                    <h4>{{ hunt['description'] }}</h4>
+                    <a class="btn btn-outline-primary btn-sm" role="button" href="#" @click="startHunt(hunt['huntid'])">Host</a>
+                    <div class="tags">High Score: {{ hunt['highscore'] }}</div>
                 </div>
             </div>
-        }
-        } else {
-            <p>No hunts found. Click <a href="/create.php">here</a> to create a new hunt.</p><br>
-        }
+        </div>
+        <div v-show="hunts.length==0">
+            <button class='btn btn-outline-primary' @click="getHunts">Refresh</button>
+            <p>No hunts found. Click <a href="/create.php">here</a> to create a new hunt.</p>
         </div>
     </div>
     `,
@@ -39,15 +39,27 @@ Vue.component('start-hunt', {
                 dataType: "json",
                 success: (data) => {
                     if (data["status"] === "fail") {
-                        console.log(data)
+                        //console.log(data)
                     } else if (data["status"] === "success") {
-                        console.log(data)
+                        this.hunts = data["results"]
                     }
+                    
                 }
             });
         },
         startHunt(huntID) {
-
+            $.ajax({
+                type: "POST",
+                url: "api/start_hunt.php",
+                data: { huntID: huntID },
+                dataType: "json",
+                success: (data) => {
+                    if (data["status"] === "success") {
+                        this.$emit("hunt-started")
+                        console.log(data)
+                    }
+                }
+            })
         }
     }
 })
@@ -55,11 +67,16 @@ Vue.component('start-hunt', {
 
 
 Vue.component('hunt-session', {
+    props: {
+        jsondata: Object,
+        gameid: String,
+        username: String
+    },
     template: `
         <div>
             <div class="heading">
                 <h2>Game Pin</h2>
-                <h3>{{ gameID }}</h3>
+                <h3>{{ gameid }}</h3>
             </div>
             <div class="form-group" id="submissions">
                 <div v-for="photo in photosubmission" v-if="currentPhoto == photo.photoID">
@@ -93,15 +110,13 @@ Vue.component('hunt-session', {
         return {
             photosubmission: [],
             currentPhoto: 0,
-            jsondata: [],
             teamscores: [],
             newscore: null,
-            gameID: null,
             updateTimeout: null
         }
     },
-    beforeMount() {
-        this.updateLeaderboard()
+    mounted() {
+        setTimeout(this.updateLeaderboard, 200)
     },
     methods: {
         teamUpdate(photoID, team) {
@@ -187,37 +202,28 @@ Vue.component('hunt-session', {
             }
         },
         updateLeaderboard(){
-            if (this.gameID === null) {
-                url_string = window.location.href
-                url = new URL(url_string)
-                this.gameID = url.searchParams.get("sessionID")
+            if (this.jsondata["gameinfo"]["master"] != this.username) {
+                this.$emit('game-ended')
+                return
             }
 
-            randomString =  Math.random().toString(18).substring(2, 15)
-            safejson = './hunt_sessions/'+this.gameID+'.json?' + randomString
+            var teamlist = this.jsondata["teams"]                
+            var newphotosubmission = []
+            var counter = 0
 
-            fetch(safejson)
-            .then(response => response.json())
-            .then(data => {
-                var teamlist = data["teams"]                
-                var newphotosubmission = []
-                var counter = 0
-
-                for (let team in teamlist) {
-                    if (teamlist[team] != "") {
-                        var objectivelist = teamlist[team]["objectives"]["photo"]
-                        for (let objective in objectivelist) {
-                            if (objectivelist[objective]["completed"] === true) {
-                                newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"], 
-                                                        "objective": objective, "score": objectivelist[objective]["score"]})
-                                counter++
-                            }
+            for (let team in teamlist) {
+                if (teamlist[team] != "") {
+                    var objectivelist = teamlist[team]["objectives"]["photo"]
+                    for (let objective in objectivelist) {
+                        if (objectivelist[objective]["completed"] === true) {
+                            newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"], 
+                                                    "objective": objective, "score": objectivelist[objective]["score"]})
+                            counter++
                         }
                     }
                 }
-                this.photosubmission = newphotosubmission 
-                this.jsondata = data
-            })   
+            }
+            this.photosubmission = newphotosubmission
 
             var newtscores = []
             var teamlist = this.jsondata["teams"]
@@ -241,9 +247,57 @@ Vue.component('hunt-session', {
 var host = new Vue({
     el: "#host",
     data: {
-        togglecomponent: 0
+        huntstarted: false,
+        username: null,
+        gameid: null,
+        jsondata: {},
+        sessionInterval: null
+    },
+    mounted() {
+        this.sessionIntervalStart()
     },
     methods: {
-
+        /**
+         * Fetches the json data
+         * @author James Caddock
+         */
+        fetchJson() {
+            if (this.gameid != null) {
+                var reqjson = this.gameid
+                var randomString =  Math.random().toString(18).substring(2, 15)
+                var safejson = 'hunt_sessions/' + encodeURI(reqjson) + '.json?' + randomString
+                fetch(safejson)
+                .then(response => response.json())
+                .then(data => {
+                    this.jsondata = data
+                    this.huntstarted = true
+                })   
+            } else {
+                this.jsondata = {}
+                this.huntstarted = false
+            }
+        },
+        sessionIntervalStart() {
+            this.checkSession()
+            this.sessionInterval = setInterval(this.checkSession, 1000)
+        },
+        checkSession() {
+            $.ajax({
+                type: "POST",
+                url: "api/checkgame.php",
+                dataType: "json",
+                success: (data) => {
+                    if (data["status"] === "fail") {
+                        this.huntstarted = false
+                        clearInterval(this.sessionInterval)
+                    } else if (data["status"] === "success") {
+                        this.huntstarted = true
+                        this.gameid = data["gameID"]
+                        this.username = data["username"]
+                        this.fetchJson()
+                    } console.log(data)
+                }
+            });
+        }
     }
 })

@@ -1,81 +1,40 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta name="author" content = "Lewis Lloyd">
-    <meta name="Contributors" content = "Marek Tancak, Jakub Kwak">
+<head>
+    <meta name="author" content = "Marek Tancak">
+      <meta name="contributors" content = "Jakub Kwak">
     <title>Host - CampusTreks</title>
-	<?php include('templates/head.php'); ?>
+    <link rel="stylesheet" href="css/hunt_session_stylesheet.css">
+    <?php include('templates/head.php'); ?>
   </head>
-  <?php
-  include "checkhunts.php";
-  session_start();
-  if (isset($_SESSION["username"])) {
-      $pin = checkHunts($_SESSION["username"]);
-      if ($pin != null) {
-          header("Location: /hunt_session.php?sessionID=".$pin);
-      }
-  }
-  ?>
   <body>
-	<!-- Header -->
-	<?php include('templates/header.php'); ?>
-	<!-- Content -->
-    <main class="page host-page">
-        <section class="portfolio-block project-no-images">
-            <div class="container">
-                <div class="heading">
-                    <h2>Host a Hunt</h2>
+    <!-- Header -->
+    <?php include('templates/header.php'); ?>
+    <!-- Content -->
+    <div id="host">
+        <main class="page host-page">
+            <section class="portfolio-block project-no-images">
+                <div class="container">
+                    <div v-if="!huntstarted">
+                        <start-hunt @hunt-started="sessionIntervalStart()"></start-hunt>
+                    </div>
+                    <div v-else>
+                        <hunt-session @hunt-ended="huntstarted=false" :jsondata="jsondata"
+                                        :gameid="gameid" :username="username">
+                        </hunt-session>
+                    </div>
                 </div>
-                <div class="row">
-                    <?php
-                    $ip = "localhost";
-                    $username = "root";
-                    $password = "";
-                    $dbname = "campustreks";
+            </section>
+        </main>
+    </div>
+    <!-- Footer -->
+    <?php include('templates/footer.php'); ?>
 
-                    $conn = new mysqli($ip, $username, $password, $dbname);
-                    if ($conn->connect_error) {
-                        die("Database connection failed - " . $conn->connect_error . "<br>");
-                    }
+</body>
 
-                    $query = "SELECT * FROM Hunt";
-                    $result = $conn->query($query);
-
-                    if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            //check if user is verified
-                            $verified = 0;
-                            $huntUser = $row["Username"];
-                            $queryUser = "SELECT `Verified` FROM `users` WHERE `Username` = '$huntUser'";
-                            $resultUser = $conn->query($queryUser);
-                            if ($resultUser->num_rows > 0) {
-                                $rowUser = $resultUser->fetch_assoc();
-                                $verified = $rowUser["Verified"];
-                            }
-                            echo '<div class="col-md-6 col-lg-4">';
-                            echo '<div class="project-card-no-image">';
-                            echo '<h3>' . $row["Name"] . '</h3>';
-                            echo '<h4>Author: ' . $row["Username"];
-                            if ($verified == 1) {
-                                echo ' <img src="img/exeter-logo.png" height="14px" width="14px"></h4>';
-                            } else {
-                                echo '</h4>';
-                            }
-                            echo '<h4>' . $row["Description"] . '</h4>';
-                            echo '<a class="btn btn-outline-primary btn-sm" role="button" href="#" onclick=startHunt(' . $row["HuntID"] . ')>Host</a>';
-                            echo '<div class="tags">High Score: ' . $row["Highscore"] . '</div>';
-                            echo '</div>';
-                            echo '</div>';
-                        }
-                    } else {
-                        echo 'No hunts found. Click <a href="/create.php">here</a> to create a new hunt.<br>';
-                    }
-                    ?>
-                </div>
-            </div>
-        </section>
-    </main>
-	<!-- Footer -->
-	<?php include('templates/footer.php'); ?>
-  </body>
 </html>
+
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!--<script src="js/vue.min.js"></script>-->
+<script src="js/host.js"></script>

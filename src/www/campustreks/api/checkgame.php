@@ -52,6 +52,12 @@ function checkGame()
         echo json_encode(array("status" => "fail", "gameID" => null, "nickname" => null, "teamName" => null, "ingame" => false));
         return;
     }
+    else if (isset($_SESSION['gameID']) && isset($_SESSION['username'])) {
+        $gameID = $_SESSION['gameID'];
+        $username = $_SESSION['username'];
+        echo json_encode(array("status" => "success", "gameID" => $gameID, "username" => $username));
+        return;
+    }
     echo json_encode(array("status" => "fail", "gameID" => null, "nickname" => null, "teamName" => null, "ingame" => false));
 }
 
