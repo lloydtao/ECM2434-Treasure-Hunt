@@ -5,6 +5,18 @@
             <meta name="contributors" content = "Jakub Kwak">
         <title>Host - CampusTreks</title>
         <?php include('templates/head.php'); ?>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script>
+            var gameID;
+            var bestTeam;
+            var highscore;
+
+            function endHunt() {
+                console.log(gameID);
+                console.log(bestTeam);
+                console.log(highscore);
+            }
+        </script>
     </head>
     <body>
         <?php
@@ -37,8 +49,7 @@
                          <h3>
                             <?php echo "Pin: ", $huntSessionData['gameinfo']['gamePin'];?>
                          </h3>
-                         <button class="btn btn-primary" type="button">Refresh</button>
-                         <button class="btn btn-primary" type="button">End Game</button>
+                         <button class="btn btn-primary" type="button" onclick="endHunt()">End Game</button>
                     </div>
                     <div id="host">
                         <submissions-leaderboard></submissions-leaderboard>
