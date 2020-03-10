@@ -26,7 +26,7 @@
                     <create-team @team-exit="togglecomponent=1" @team-made="currentteam = $event">
                     </create-team>
                 </div>
-                <div v-else-if="togglecomponent==3"> 
+                <div v-else-if="togglecomponent==3">
                     <location @photo-submit="togglecomponent=4" :jsondata="jsondata"
                     :currentteam="currentteam">
                     </location>

@@ -17,6 +17,7 @@ Vue.component('submissions-leaderboard', {
                             </div>
                             <div>
                                 <form @submit.prevent="submitScore(photo.photoID, photo.team, photo.objective)">
+                                <p>Current Score: {{ photo.score }}</p>
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <button type="button" class='btn btn-secondary' @click="switchCurrentPhoto('prev')">&lt;</button>
                                         <input type="number" class="input-group" placeholder="Score" v-model.number="newscore" :name="newscore">
