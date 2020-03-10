@@ -231,16 +231,14 @@ Vue.component('location', {
             direction: null,
             alert: null,
             timeout: null,
+            interval: null,
             objLoc: null,
 	    score: 0
         }
     },
-    updated(){
-        this.objectivelist = this.jsondata["teams"][this.currentteam]["objectives"]["gps"]
-	this.score = this.jsondata["teams"][this.currentteam]["teaminfo"]["score"]
-    },
 	mounted(){
         setTimeout(this.getNextObjective, 100)
+        this.interval = setInterval(this.getNextObjective, 1000)
 	},
 	methods: {
 		 /**Attempt to get the user's location and compare it with objLoc
@@ -320,6 +318,7 @@ Vue.component('location', {
                         this.objLoc = null
                         this.question = null
                         this.direction = null
+                        this.answer = null
                         Vue.set(this.objectivelist[this.currentObjectiveKey], "completed", true)
                         this.alert = "correct answer"
                         this.timeout = setTimeout(this.alertFade, 1500)     
@@ -370,10 +369,15 @@ Vue.component('location', {
 		},
 		getNextObjective(){
             this.objectivelist = this.jsondata["teams"][this.currentteam]["objectives"]["gps"]
+            this.score = this.jsondata["teams"][this.currentteam]["teaminfo"]["score"]
             console.log(this.objectivelist)
 
 			for (let objective in this.objectivelist) {
 				if (this.objectivelist[objective]["completed"] === false) {
+                    if (this.currentObjectiveKey != objective) {
+                        clearInterval(this.interval)
+                    }
+
 					this.currentObjectiveKey = objective
 					fetch("api/locationdescription.php?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
 					.then(response => response.text())

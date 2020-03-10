@@ -63,9 +63,11 @@ function updateObjective()
     $jsonString = file_get_contents($filename);
     $parsedJson = json_decode($jsonString, true);
 
-    //update objective
-    $parsedJson["teams"][$teamName]["objectives"]["gps"][$objID]["completed"] = true;
-    $parsedJson["teams"][$teamName]["teaminfo"]["score"] += 100;
+    //update objective if not already updated
+    if ($parsedJson["teams"][$teamName]["objectives"]["gps"][$objID]["completed"] != true) {
+        $parsedJson["teams"][$teamName]["objectives"]["gps"][$objID]["completed"] = true;
+        $parsedJson["teams"][$teamName]["teaminfo"]["score"] += 100;
+    }
 
     //update json file
     $newJson = json_encode($parsedJson);
