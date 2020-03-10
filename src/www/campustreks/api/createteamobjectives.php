@@ -67,6 +67,7 @@ function addTeamObjectives($parsedJson, $teamName) {
         $jsonData = array(
             "completed" => false,
             "objectiveId" => $photo["ObjectiveID"],
+            "description" => $photo["Specification"],
             "path" => null,
             "score" => 0);
 

@@ -10,7 +10,7 @@ Vue.component('submissions-leaderboard', {
                             </div>
                             <div class="card-body align-items-center">
                                 <h5>Team: {{ photo.team }}</h5>
-                                <p>Objective: {{ photo.objective }}</p>
+                                <p>Objective: {{ photo.description }}</p>
                                 <div class="card-img">
                                     <img class="img-fluid shadow" :src='photo.image'>
                                 </div>
@@ -178,7 +178,7 @@ Vue.component('submissions-leaderboard', {
                         for (let objective in objectivelist) {
                             if (objectivelist[objective]["completed"] === true) {
                                 newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"], 
-                                                        "objective": objective, "score": objectivelist[objective]["score"]})
+                                                        "objective": objective,"description":objectivelist[objective]["description"], "score": objectivelist[objective]["score"]})
                                 counter++
                             }
                         }
