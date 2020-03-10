@@ -1,17 +1,17 @@
 <?php session_start();?>
 
 <!DOCTYPE html>
-<html>
-
-<head>
-    <meta name="author" content="James Caddock">
-    <meta name="contributors" content="Jakub Kwak, Joseph Lintern">
-    <?php include('templates/head.php'); ?>
-</head>
-
-<body>
-    <main class="page">
-        <section class="portfolio-block hire-me">
+<html lang="en" dir="ltr">
+    <head>
+        <meta name="author" content="James Caddock">
+        <meta name="contributors" content="Jakub Kwak, Joseph Lintern">
+        <?php include('templates/head.php'); ?>
+    </head>
+    <body>
+        <!-- Header -->
+        <?php include('templates/header_mobile.php'); ?>
+        <!-- Content -->
+        <main class="page">
             <div id="play">
                 <div v-if="togglecomponent==0">
                     <game-start @start-game="startGame()"></game-start>
@@ -37,9 +37,8 @@
                     </photo-submit>
                 </div>
             </div>
-        </section>
-    </main>
-</body>
+        </main>
+    </body>
 
 <script src="js/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
