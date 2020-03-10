@@ -1,3 +1,3 @@
-<header>	
-    <h1>CampusTreks</h1>
-</header>
+<nav class="navbar fixed-top portfolio-navbar gradient">
+    Campus Treks
+</nav>
