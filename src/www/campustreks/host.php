@@ -51,8 +51,10 @@
                             //check if user is verified
                             $verified = 0;
                             $huntUser = $row["Username"];
-                            $queryUser = "SELECT `Verified` FROM `users` WHERE `Username` = '$huntUser'";
-                            $resultUser = $conn->query($queryUser);
+                            $sql = $conn->prepare("SELECT `Verified` FROM `users` WHERE `Username` = ?");
+                            $sql->bind_param("s", $huntUser);
+                            $sql->execute();
+                            $resultUser = $sql->get_result();
                             if ($resultUser->num_rows > 0) {
                                 $rowUser = $resultUser->fetch_assoc();
                                 $verified = $rowUser["Verified"];
@@ -68,7 +70,7 @@
                             }
                             echo '<h4>' . $row["Description"] . '</h4>';
                             echo '<a class="btn btn-outline-primary btn-sm" role="button" href="#" onclick=startHunt(' . $row["HuntID"] . ')>Host</a>';
-                            echo '<div class="tags">High Score: ' . $row["Highscore"] . '</div>';
+                            echo '<div class="tags">High Score: ' . $row["Highscore"] . ' - ' . $row["BestTeam"] . '</div>';
                             echo '</div>';
                             echo '</div>';
                         }
