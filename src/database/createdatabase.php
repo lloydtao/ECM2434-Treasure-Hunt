@@ -84,7 +84,7 @@ $sql .= "CREATE TABLE HuntData (
     HuntID INT(6) UNSIGNED NOT NULL,
     FOREIGN KEY (HuntID) REFERENCES Hunt(HuntID),
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    json JSON NOT NULL);";
+    json LONGTEXT NOT NULL);";
 
     if ($conn->multi_query($sql) === TRUE) {
         echo "Tables created successfully <br>";
