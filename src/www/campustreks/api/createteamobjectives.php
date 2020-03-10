@@ -32,7 +32,9 @@ function addTeamObjectives($parsedJson, $teamName) {
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
-        $locations[] = $row;
+        if ($row['ObjectiveID'] != null) {
+            $locations[] = $row;
+        }
     }
     //fetch all photo objectives for this hunt from db
     $stmt = $conn->prepare("SELECT * FROM `photoops` WHERE `ObjectiveID` = ?");
@@ -42,7 +44,9 @@ function addTeamObjectives($parsedJson, $teamName) {
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
-        $photos[] = $row;
+        if ($row['ObjectiveID'] != null) {
+            $photos[] = $row;
+        }
     }
 
     $locations = randomStarting($locations);//randomise starting objective
