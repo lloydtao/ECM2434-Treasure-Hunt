@@ -3,7 +3,7 @@ include "utils/connection.php";
 
 function getNextLoc($conn, $id){
     $sql = $conn->prepare("SELECT Longitude, Latitude FROM Location WHERE ObjectiveID = ?;");
-    $sql->bind_param("i", $id)
+    $sql->bind_param("i", $id);
     $sql->execute();
     $row = $sql->get_result()->fetch_assoc();
     $sql->close();
