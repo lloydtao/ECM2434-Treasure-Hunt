@@ -54,10 +54,10 @@
             if(array_key_exists("objective{$objectives}Directions", $_POST))
                 $locationObjectives++;
             $objectives++;
-            
+
         }
 
-        
+
         // Check the hunt title and description have been set
         if (!$title || !$description) {
             if (!$title)
@@ -90,7 +90,7 @@
 
                 $locationSql = $conn->prepare("INSERT INTO location (ObjectiveID, HuntOrder, Longitude,
                 Latitude, Question, Answer, Direction) VALUES(?, ?, ?, ?, ?, ?, ?);");
-                $locationSql->bind_param("iiddsss", $last_id, $locations, $longitude, $latitude, 
+                $locationSql->bind_param("iiddsss", $last_id, $locations, $longitude, $latitude,
                 $question, $answer, $directions);
 
                 $photoSql = $conn->prepare( "INSERT INTO PhotoOps (ObjectiveID, Specification)
@@ -165,13 +165,13 @@
                 <p><span class="error">* required field</span></p>
                 <div class="form-group">
                     <label for="title">Title</label><span class="error">*<?php echo $titleErr; ?></span><br>
-                    <input class="form-control" type="text" name="title" value= <?php echo $title; ?>>
+                    <input class="form-control" type="text" name="title" required value= <?php echo $title; ?>>
                 </div>
                 <div class="form-group">
                     <label for="description">Description</label><span
                             class="error">*<?php echo $descriptionErr; ?></span><br>
                     <textarea class="form-control form-control-lg"
-                              name="description"><?php echo $description; ?></textarea>
+                              name="description" required><?php echo $description; ?></textarea>
                 </div>
                 <div class="form-group">
                     <label for="objectives">Objectives</label><br>
