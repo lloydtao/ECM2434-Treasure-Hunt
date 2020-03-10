@@ -8,11 +8,9 @@ function getNextLoc($conn, $id){
     $row = $sql->get_result()->fetch_assoc();
     $sql->close();
     $conn->close();
-    $json = array("coords"=>array("latitude"=>$row["Latitude"], "longitude"=>$row["Longitude"]));
-    echo json_encode($json);
-    
+    echo json_encode(array("coords"=>array("latitude"=>$row["Latitude"], "longitude"=>$row["Longitude"])));
 }
-        
+
 if($_SERVER["REQUEST_METHOD"] == "GET"){
     getNextLoc(opencon(), $_GET["ID"]);
 }

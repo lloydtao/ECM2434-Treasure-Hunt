@@ -1,6 +1,9 @@
 <?php
 include "../utils/connection.php";
 
+session_start();
+$_SESSION['ingame'] = true;
+
 function getDescription($objectiveID){
 	$conn = opencon();
 	$sql = "SELECT `Direction` FROM `location` WHERE `objectiveID` = ".$objectiveID;
