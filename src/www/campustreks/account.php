@@ -75,30 +75,39 @@
         }
         ?>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="js/nbp/nbp_es6.js"></script>
+        <script src="js/testPassword.js"></script>
         <script>
             $(document).ready(function () {
+                //initialise NBP with password list
+                NBP.init("mostcommon_1000000", "collections/", true);
                 $("#register-form").submit(function (e) {
                     e.preventDefault();
                     $("#current-error").css("display", "none");
                     $("#password-confirm-error").css("display", "none");
                     $("#form-error").css("display", "none");
+                    $("#password-error").css("display", "none");
                     $("#change-display").css("display", "none");
-                    $.ajax({
-                        type: "POST",
-                        url: "change_password_handler.php",
-                        data: $(this).serialize(),
-                        success: function (data) {
-                            if (data == "change-success") {
-                                $("#change-display").css("display", "block");
-                            } else if (data == "current-fail") {
-                                $("#current-error").css("display", "block");
-                            } else if (data == "password-confirm-fail") {
-                                $("#password-confirm-error").css("display", "block");
-                            } else if (data == "fields-fail") {
-                                $("#form-error").css("display", "block");
+                    if (!testPassword($('input[name=password]').val())) {
+                        $("#password-error").css("display", "block");
+                    } else {
+                        $.ajax({
+                            type: "POST",
+                            url: "change_password_handler.php",
+                            data: $(this).serialize(),
+                            success: function (data) {
+                                if (data == "change-success") {
+                                    $("#change-display").css("display", "block");
+                                } else if (data == "current-fail") {
+                                    $("#current-error").css("display", "block");
+                                } else if (data == "password-confirm-fail") {
+                                    $("#password-confirm-error").css("display", "block");
+                                } else if (data == "fields-fail") {
+                                    $("#form-error").css("display", "block");
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 });
             });
         </script>
@@ -125,6 +134,7 @@
                         <div class="form-group">
                             <label for="password">New Password</label>
                             <input class="form-control item" type="password" name="password" id="password" minlength="8">
+                            <p id="password-error" class="form-group" style="display: none">Password is not secure</p>
                         </div>
                         <div class="form-group">
                             <label for="confirm_password">Confirm Password</label>
