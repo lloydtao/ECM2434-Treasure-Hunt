@@ -145,7 +145,7 @@ Vue.component('submissions-leaderboard', {
             };
             xhttp.send(params)
             
-            this.updateTimeout = setTimeout(this.updateLeaderboard, 1000)
+            this.updateTimeout = setTimeout(this.updateLeaderboard, 10000)
         },
         sortScores(a, b) {
             if (a[1] === b[1]) {
@@ -160,7 +160,6 @@ Vue.component('submissions-leaderboard', {
                 url_string = window.location.href
                 url = new URL(url_string)
                 this.gameID = url.searchParams.get("sessionID")
-                gameID = this.gameID
             }
 
             randomString =  Math.random().toString(18).substring(2, 15)
@@ -199,13 +198,8 @@ Vue.component('submissions-leaderboard', {
 
             newtscores.sort(this.sortScores)
             this.teamscores = newtscores
-
-            this.updateTimeout = setTimeout(this.updateLeaderboard, 1000)
-
-            if (typeof this.teamscores[0] !== "undefined") {
-                bestTeam = this.teamscores[0][0]
-                highscore = this.teamscores[0][1]
-            }
+            
+            this.updateTimeout = setTimeout(this.updateLeaderboard, 1000)  
         }
     }
 })
