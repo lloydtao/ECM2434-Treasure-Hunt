@@ -204,7 +204,7 @@ Vue.component('location', {
         <div class="content">
 	    <h4>Current Score: {{ score }}</h4>
             <div>
-                <div v-if="alert != 'All location objectives completes!'">
+                <div v-if="alert != 'All location objectives completed!'">
                     <div v-if="question == null">
                         <p>{{ direction }}</p>
                         <button class='btn btn-outline-primary' type="button" v-on:click="submit">Submit Location</button><br>
@@ -333,7 +333,7 @@ Vue.component('location', {
             });
          },
          alertFade() {
-            if(!(this.alert === "All location objectives completes!")){
+            if(!(this.alert === "All location objectives completed!")){
                 this.alert = null
             }
          },
@@ -382,7 +382,7 @@ Vue.component('location', {
 				}
 			}    
 				clearTimeout(this.timeout)
-				this.alert = "All location objectives completes!"
+				this.alert = "All location objectives completed!"
 		},
 		submit(){
 			this.alert = ""
