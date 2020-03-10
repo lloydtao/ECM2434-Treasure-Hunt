@@ -29,7 +29,6 @@
     $titleErr = $descriptionErr = "";
     $locationObjectives = 0;
     $objectives = 1;
-    $sql = "";
     $title = $description = "";
 
     /**
@@ -76,21 +75,34 @@
                 $logitude = $latitude = $question = $answer = $photoDescription = "";
 
                 // Create the hunt in the database
-                $sql = "INSERT INTO Hunt (Name, Description, Username)
-				VALUES('$title', '$description', '$user');";
+                $sql = $conn->prepare("INSERT INTO Hunt (Name, Description, Username) VALUES(?, ?, ?);");
+                $sql->bind_param("sss", $title, $description, $user);
 
-                if ($conn->query($sql) === TRUE) {
+                if ($sql->execute()) {
                     $hunt_id = $conn->insert_id;
                 } else {
-                    echo "<script type='text/javascript'>alert('" . $conn->error . "');</script>";
+                    echo "<script type='text/javascript'>alert('" . $sql->error . "');</script>";
                 }
+
+                // Prepare sql statements for adding hunt to the database
+                $objectiveSql = $conn->prepare("INSERT INTO objectives (HuntID) Values(?)");
+                $objectiveSql->bind_param("i", $hunt_id);
+
+                $locationSql = $conn->prepare("INSERT INTO location (ObjectiveID, HuntOrder, Longitude,
+                Latitude, Question, Answer, Direction) VALUES(?, ?, ?, ?, ?, ?, ?);");
+                $locationSql->bind_param("iiddsss", $last_id, $locations, $longitude, $latitude, 
+                $question, $answer, $directions);
+
+                $photoSql = $conn->prepare( "INSERT INTO PhotoOps (ObjectiveID, Specification)
+                VALUES(?, ?);");
+                $photoSql->bind_param("is", $last_id, $specification);
 
                 for ($x = 1; $x < $objectives; $x++) {
                     // Add new objective to database
-                    if ($conn->query("INSERT INTO objectives (HuntID) Values('$hunt_id')") === TRUE) {
+                    if ($objectiveSql->execute()) {
                         $last_id = $conn->insert_id;
                     } else {
-                        echo "<script type='text/javascript'>alert('" . $conn->error . "');</script>";
+                        echo "<script type='text/javascript'>alert('" . $objectiveSql->error . "');</script>";
                         break;
                     }
 
@@ -107,31 +119,29 @@
                             continue;
                         }
                         // Add Location to database
-                        $sql = "INSERT INTO location (ObjectiveID, HuntOrder, Longitude, Latitude, Question, Answer, Direction)
-						VALUES('$last_id', '$locations', '$longitude', '$latitude', '$question', '$answer', '$directions');";
-
-                        if ($conn->query($sql) === TRUE)
+                        if ($locationSql->execute())
                             $locations++;
                         else {
-                            echo "<script type='text/javascript'>alert('" . $conn->error . "');</script>";
+                            echo "<script type='text/javascript'>alert('" . $locationSql->error . "');</script>";
                         }
 
                     } else {
 
-                        $photoDescription = makeSafe($_POST["objective{$x}Description"]);
-                        if (!$photoDescription)
+                        $specification = makeSafe($_POST["objective{$x}Description"]);
+                        if (!$specification)
                             continue;
 
                         // Add photo objective to database
-                        $sql = "INSERT INTO PhotoOps (ObjectiveID, Specification)
-						VALUES('$last_id', '$photoDescription');";
-
-                        if ($conn->query($sql) === FALSE)
-                            echo "<script type='text/javascript'>alert('" . $conn->error . "');</script>";
+                        if ($photoSql->execute())
+                            echo "<script type='text/javascript'>alert('" . $photoSql->error . "');</script>";
                     }
 
                 }
 
+                $objectiveSql->close();
+                $sql->close();
+                $photoSql->close();
+                $locationSql->close();
                 $conn->close();
                 header("Location: index.php");
             }
@@ -414,7 +424,7 @@
         var objective = newObjective("PHOTO");
         var content = objective.querySelector("#content");
 
-        //ads description textbox
+        //Adds description textbox
         content.innerHTML += "Description:<br>";
         var txtBoxDesc = document.createElement("input");
         txtBoxDesc.type = "text";
