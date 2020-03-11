@@ -9,6 +9,7 @@
   <?php
   include "checkhunts.php";
   session_start();
+  // If the user already has a hunt session running redirect the user to the hunt session site
   if (isset($_SESSION["username"])) {
       $pin = checkHunts($_SESSION["username"]);
       if ($pin != null) {
@@ -18,6 +19,10 @@
   ?>
   <body>
     <script>
+        /**
+         * Redirect the user to start the hunt
+         * @param string $huntID
+         */
         function startHunt(huntID){
             location.href = '/start_hunt.php?huntID='+huntID;
         }
@@ -59,6 +64,7 @@
                                 $rowUser = $resultUser->fetch_assoc();
                                 $verified = $rowUser["Verified"];
                             }
+                            // Display hunts that are stored in the database
                             echo '<div class="col-md-6 col-lg-4">';
                             echo '<div class="project-card-no-image">';
                             echo '<h3>' . $row["Name"] . '</h3>';
@@ -75,6 +81,7 @@
                             echo '</div>';
                         }
                     } else {
+                        // If there are no hunts tell the user and give them a link to the page to create hunts
                         echo '<p>No hunts found. Click <a href="/create.php">here</a> to create a new hunt.</p><br>';
                     }
                     ?>

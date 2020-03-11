@@ -11,6 +11,9 @@
             var bestTeam;
             var highscore;
 
+            /**
+             * Function to end a hunt session using the end_hunt api
+             */
             function endHunt() {
                 $.ajax({
                     type: "POST",
@@ -40,9 +43,11 @@
             header("location:login.php");
         }
         if(isset($_GET['sessionID'])){
+            // Get the hunt data 
             $huntSessionID = $_GET['sessionID'];
             $json_data = file_get_contents('hunt_sessions/' . $huntSessionID . '.json');
             $huntSessionData = json_decode($json_data, true);
+            // Check if the user is the game master for the session
             if ($huntSessionData["gameinfo"]["master"] != $_SESSION["username"]) {
                 header('Location: /host.php');
                 die();

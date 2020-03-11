@@ -1,5 +1,9 @@
 <meta name="author" content="Marek Tancak">
 <?php
+
+/**
+ * Generate a unique 4 char long pin for the new hunt session
+ */
 function generateGamePin()
 {
     $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -22,6 +26,7 @@ if (!CheckLogin()) {
     header("location:login.php");
 }
 
+// Create the hunt sessions directory if it does not already exist
 if (!is_dir("hunt_sessions/")) {
     mkdir("hunt_sessions");
 }
@@ -29,6 +34,7 @@ if (!is_dir("hunt_sessions/")) {
 $user = $_SESSION["username"];
 $huntID = $_GET['huntID'];
 $gamePIN = generateGamePin();
+// Create the JSON file to store hunt data
 $huntSession = array('gameinfo' => array('gamePin' => $gamePIN, 'huntID' => $huntID, 'master' => $user),
     'teams' => array('' => array('teaminfo' => array(), 'players' => array(), 'objectives' => json_decode("{}"))));
 $json_data = json_encode($huntSession);
