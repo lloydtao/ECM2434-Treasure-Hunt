@@ -33,12 +33,10 @@
                 </div>
                 <div class="row">
                     <?php
-                    $ip = "localhost";
-                    $username = "root";
-                    $password = "";
-                    $dbname = "campustreks";
+                    include "../utils/connection.php";
+                    $conn = opencon();
 
-                    $conn = new mysqli($ip, $username, $password, $dbname);
+
                     if ($conn->connect_error) {
                         die("Database connection failed - " . $conn->connect_error . "<br>");
                     }
