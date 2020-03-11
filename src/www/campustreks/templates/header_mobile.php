@@ -1,3 +1,3 @@
 <nav class="navbar gradient">
-    Campus Treks
+    <a style=color:white; href="index.php">Campus Treks</a>
 </nav>
