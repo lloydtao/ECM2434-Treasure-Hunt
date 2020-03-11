@@ -343,7 +343,7 @@ Vue.component('location', {
              console.log(pos)
              console.log(a)
              console.log(this.objLoc)
-		 	if (a < 10){
+		 	if (a < 50){
 		 		console.log(true);
 		 		this.getQuestionFromDb()
 		 	}
