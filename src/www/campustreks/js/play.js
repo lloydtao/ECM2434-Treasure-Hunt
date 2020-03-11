@@ -573,7 +573,8 @@ var play = new Vue({
         pin: null,
         jsondata: {},
         currentteam: "",
-        gameInterval: null
+        gameInterval: null,
+        endGameMessage: null
     },
     beforeMount() {
         this.startGame()
@@ -588,18 +589,14 @@ var play = new Vue({
          * @author James Caddock
          */
         fetchJson() {
-            if (this.pin != null) {
-                var reqjson = this.pin
-                var randomString =  Math.random().toString(18).substring(2, 15)
-                var safejson = 'hunt_sessions/' + encodeURI(reqjson) + '.json?' + randomString
-                fetch(safejson)
-                    .then(response => response.json())
-                    .then(data => {
-                        this.jsondata = data
-                    })
-            } else {
-                this.jsondata = {};
-            }
+            var reqjson = this.pin
+            var randomString =  Math.random().toString(18).substring(2, 15)
+            var safejson = 'hunt_sessions/' + encodeURI(reqjson) + '.json?' + randomString
+            fetch(safejson)
+                .then(response => response.json())
+                .then(data => {
+                    this.jsondata = data
+                })
         },
         /**
          * Checks PHP session data with json data
@@ -613,11 +610,16 @@ var play = new Vue({
                 data: { type : "play" },
                 success: (data) => {
                     if (data["status"] === "fail") {
-                        if(data["game"] == "inactive") {
+                        if(data["game"] == "inactive" && this.togglecomponent != 1 && this.togglecomponent != 2) {
                             this.togglecomponent = 0
                             this.currentteam = ""
                             this.pin = null
                         } else {
+                            if(data["game"] == "active") {
+                                this.endGameMessage = "Game has Finished"
+                            } else {
+                                this.endGameMessage = "Game has Prematurely Finished"
+                            }
                             this.togglecomponent = 5
                         }
 
