@@ -27,13 +27,13 @@ function checkGame()
 {
     session_start();
     
-    if (isset($_SESSION['hostGameID']) && isset($_SESSION['username'])) {
-        $gameID = $_POST['hostGameID'];
+    if ($_POST['type'] == "host" && isset($_SESSION['hostGameID']) && isset($_SESSION['username'])) {
+        $hostGameID = $_SESSION['hostGameID'];
         $username = $_SESSION['username'];
-        echo json_encode(array("status" => "success", "gameID" => $gameID, "username" => $username));
+        echo json_encode(array("status" => "success", "hostGameID" => $hostGameID, "username" => $username));
         return;
     }
-    else if (isset($_SESSION['gameID']) && isset($_SESSION['nickname'])) {
+    if ($_POST['type'] == "play" && isset($_SESSION['gameID']) && isset($_SESSION['nickname'])) {
         $gameID = $_SESSION['gameID'];
         $nickname = $_SESSION['nickname'];
         if (findGame($gameID)) {

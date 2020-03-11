@@ -99,7 +99,6 @@ Vue.component('team-table', {
                     <div class='form-group'>
                         <div id='currentTeam' class="btn-group" role="group" v-if='currentteam==""'>
                             <button type="button" class='btn btn-outline-primary' @click="$emit('toggle-component', 2)" value="Create Team">New Team</button>
-                            <button type="button" class='btn btn-outline-primary' @click="$emit('fetch-json')" value="Refresh">Refresh</button>
                             <button type="button" class='btn btn-outline-primary' @click="$emit('quit-game')" value="Quit">Leave</button>
                         </div>
                         <div id='currentTeam' class='btn-group' role="group" v-if='currentteam!=""'>
@@ -611,6 +610,7 @@ var play = new Vue({
                 type: "POST",
                 url: "api/check_game.php",
                 dataType: "json",
+                data: { type : "play" },
                 success: (data) => {
                     if (data["status"] === "fail") {
                         if(data["game"] == "inactive") {

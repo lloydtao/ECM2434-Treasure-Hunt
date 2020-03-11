@@ -42,7 +42,7 @@
                     <h5>Game Finished</h5>
                 </div>
                 <div class="card-body">
-                    <button type="button" class='btn btn-outline-primary' @click="togglecomponent=0" >Play Another</button>
+                    <button type="button" class='btn btn-outline-primary' @click="quitGame()" >Play Another</button>
                 </div>
             </div>
         </div>

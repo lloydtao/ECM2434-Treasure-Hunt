@@ -76,15 +76,16 @@ Vue.component('hunt-session', {
                 <div class="heading">
                     <h2>Active Hunt</h2>
                     <h3>Pin: {{ gameid }}</h3>
+                    <button class="btn btn-secondary" type="button" @click="$emit('end-hunt')">End Game</button>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group" id="submissions">
-                            <div v-for="photo in photosubmission" v-if="currentPhoto == photo.photoID">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5>Photo Submissions</h5>
-                                    </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Photo Submissions</h5>
+                                </div>
+                                <div v-for="photo in photosubmission" v-if="currentPhoto == photo.photoID">
                                     <div class="card-body align-items-center">
                                         <h5>Team: {{ photo.team }}</h5>
                                         <p>Objective: {{ photo.description }}</p>
@@ -112,10 +113,10 @@ Vue.component('hunt-session', {
                             <div class="card-header">
                                 <h5>Leaderboard</h5>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body" v-if="teamscores.length != 0">
                                 <div id="leaderboard" content="no-cache">
                                     <table class="table table-striped">
-                                        <thead class="thead-dark">
+                                        <thead class="thead-dark" v-if="teamscores.length != 0">
                                             <tr>
                                                 <th scope="col">Rank</th>
                                                 <th scope="col">Team</th>
@@ -133,10 +134,6 @@ Vue.component('hunt-session', {
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div>
-                        <button class="btn btn-secondary" type="button" @click="$emit('end-hunt')">End Game</button>
                     </div>
                 </div>
             </section>
@@ -239,7 +236,7 @@ Vue.component('hunt-session', {
         },
         updateLeaderboard(){
             if (this.jsondata["gameinfo"]["master"] != this.username) {
-                this.$emit('game-ended')
+                this.$emit('end-hunt')
                 return
             }
 
@@ -328,14 +325,15 @@ var host = new Vue({
                 type: "POST",
                 url: "api/check_game.php",
                 dataType: "json",
+                data: {type: "host"},
                 success: (data) => {
                     if (data["status"] === "fail") {
                         this.huntstarted = false
                         clearInterval(this.sessionInterval)
                     } else if (data["status"] === "success") {
-                        if (data["username"] != null && data["gameID"] != null)
+                        if (data["username"] != null && data["hostGameID"] != null)
                             this.username = data["username"]
-                            this.gameid = data["gameID"]
+                            this.gameid = data["hostGameID"]
                             this.fetchJson()
                             this.huntstarted = true
                         } console.log(data)
