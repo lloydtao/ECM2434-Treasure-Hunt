@@ -20,8 +20,7 @@
     var hunterr = "";
     </script>
 
-    <?php include('templates/head.php'); ?>
-    <?php
+    <?php include('templates/head.php');
     // Redirect to login.php if not already logged in
     include "checklogin.php";
     if (!CheckLogin()) {
