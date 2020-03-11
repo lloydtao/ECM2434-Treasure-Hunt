@@ -18,7 +18,6 @@ function makeSafe($data)
     return $data;
 }
 
-<?php
 /**
  * function for adding objectives to a created team in parsed json
  *
