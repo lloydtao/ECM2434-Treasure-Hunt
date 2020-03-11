@@ -479,7 +479,7 @@ Vue.component('photo-submit', {
                     <div v-if="showUpload">
                         <form id="uploadForm" v-on:submit.prevent enctype="multipart/form-data">
                             <h4> {{objectives[currentObjective]["description"]}} </h4>
-                            <img width="500px" @error="imgPath=null" v-if="imgPath!=null" v-bind:src="imgPath">
+                            <img width="100%" @error="imgPath=null" v-if="imgPath!=null" v-bind:src="imgPath">
                             <p>Select image to upload:</p><br>
                             <input type="file" accept="image/*" capture="camera" name="image" /><br>
                             <button class='btn btn-outline-primary' v-on:click="submitForm()">Upload</button>

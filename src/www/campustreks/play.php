@@ -39,10 +39,10 @@
         <div v-else>
             <div class="card">
                 <div class="card-header">
-                    <h5>Game Finished</h5>
+                    <h5>Game has Ended</h5>
                 </div>
                 <div class="card-body">
-                    <button type="button" class='btn btn-outline-primary' @click="quitGame()" >Play Another</button>
+                    <button type="button" class='btn btn-outline-primary' @click="quitGame()" >Play Another?</button>
                 </div>
             </div>
         </div>
