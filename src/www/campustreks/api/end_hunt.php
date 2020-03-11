@@ -5,16 +5,21 @@
  */
 include "../utils/connection.php";
 
-if (isset($_SESSION['Username']) && isset($_REQUEST['gameID']) && isset($_REQUEST['highscore']) && isset($_REQUEST['teamName']) ) {
+session_start();
+if (isset($_SESSION['username']) && isset($_REQUEST['gameID'])) {
     //get Hunt ID
     $jsonData = file_get_contents('../hunt_sessions/' . $_REQUEST['gameID'] . '.json');
-    if ($_SESSION['Username'] == json_decode($jsonData, true)["gameinfo"]["master"]){
+    if ($_SESSION['username'] == json_decode($jsonData, true)["gameinfo"]["master"]){
         $huntID = json_decode($jsonData, true)["gameinfo"]["huntID"];
 
         //close hunt
         if (endHunt($_REQUEST['gameID'], $huntID)) {
-            //update highscore
-            compareHighscore($huntID, $_REQUEST['highscore'], $_REQUEST['teamName']);
+            if (isset($_REQUEST['highscore']) && isset($_REQUEST['teamName'])) {
+                //update highscore
+                compareHighscore($huntID, $_REQUEST['highscore'], $_REQUEST['teamName']);
+            } else {
+                successResponse('Highscore not updated');
+            }
         } else {
             errorResponse('Could not end hunt');
         }
