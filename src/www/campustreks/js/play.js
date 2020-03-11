@@ -526,11 +526,11 @@ Vue.component('photo-submit', {
                 type: "POST",
                 url: "api/upload_photo.php",
                 data: formData,
+                dataType: "json",
                 cache: false,
                 contentType: false,
                 processData: false,
                 success: (response) => {
-                    response = $.parseJSON(response);
                     if (response['status'] === 'ok') {
                         this.showUpload = false;
                         this.currentObjective = null;

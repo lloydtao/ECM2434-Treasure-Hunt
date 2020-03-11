@@ -84,7 +84,7 @@ if (isset($_FILES['image'])) {
     $teamName = $_SESSION['teamName'];
 
     if (in_array($ext, $allowedExt)) {
-        $path = "../image_uploads/" . $huntSessionID . $teamName . '-' . $_REQUEST['objective_id'] . '.jpg';
+        $path = "../image_uploads/" . $huntSessionID . $teamName . '-' . $_POST['objective_id'] . '.jpg';
         compressImage($tmp, $path, 50);
         //move_uploaded_file($tmp,$path);
 
