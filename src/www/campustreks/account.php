@@ -61,10 +61,10 @@
 
               while ($row = mysqli_fetch_assoc($huntData)) {
 
-                  $name = $row['Name'];
-                  $description = $row['Description'];
-                  $bestTeam = $row['BestTeam'];
-                  $highScore = $row['HighScore'];
+                  $name = htmlspecialchars($row['Name']);
+                  $description = htmlspecialchars($row['Description']);
+                  $bestTeam = htmlspecialchars($row['BestTeam']);
+                  $highScore = htmlspecialchars($row['HighScore']);
 
                   echo "<tr><td>".$name."<td>".$description."</td><td>".$bestTeam."</td><td>".$highScore."</tr>";
               }
