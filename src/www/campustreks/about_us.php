@@ -30,8 +30,8 @@
                         <h2>Get in touch</h2>
 
                         <p>If you want to stay up-to-date with the latest news, give us your feedback or talk about your amazing experiences, come and follow our
-                            <a href="https://twitter.com/Campus_treks">Twitter</a> and
-                            <a href="https://www.instagram.com/campus_treks/?hl=en">Instagram</a> pages. We would love to hear from you!</p>
+                            <a href="https://twitter.com/Campus_treks" target="_blank">Twitter</a> and
+                            <a href="https://www.instagram.com/campus_treks/?hl=en" target="_blank">Instagram</a> pages. We would love to hear from you!</p>
                     </div>
                 </div>
             </section>
