@@ -15,21 +15,33 @@ function addTeamObjectives($parsedJson, $teamName) {
     $conn = openCon();
 
     //fetch all objective IDS for this hunt from db
-    $result = $conn->query("SELECT `ObjectiveID` FROM `objectives` WHERE `HuntID` = '$huntID'");
+    $stmt = $conn->prepare("SELECT `ObjectiveID` FROM `objectives` WHERE `HuntID` = ?");
+    $stmt->bind_param("i", $huntID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
     $objectiveIDs = array();
     while ($row = $result->fetch_row()) {
         $objectiveIDs[] = $row[0];
     }
     //fetch all location objectives for this hunt from db
-    $result = $conn->query("SELECT * FROM `location` WHERE `ObjectiveID` IN (".implode(',',$objectiveIDs).")");
+    $stmt = $conn->prepare("SELECT * FROM `location` WHERE `ObjectiveID` = ?");
+    $stmt->bind_param("i", $objectiveID);
     $locations = array();
-    while ($row = $result->fetch_assoc()) {
+    foreach($objectiveIDs as $objectiveID){
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
         $locations[] = $row;
     }
     //fetch all photo objectives for this hunt from db
-    $result = $conn->query("SELECT * FROM `photoops` WHERE `ObjectiveID` IN (".implode(',',$objectiveIDs).")");
+    $stmt = $conn->prepare("SELECT * FROM `photoops` WHERE `ObjectiveID` = ?");
+    $stmt->bind_param("i", $objectiveID);
     $photos = array();
-    while ($row = $result->fetch_assoc()) {
+    foreach($objectiveIDs as $objectiveID){
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
         $photos[] = $row;
     }
 

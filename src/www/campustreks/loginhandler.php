@@ -37,11 +37,13 @@ function loginUser($conn)
 
     // If input is an email address, check emails, otherwise check usernames
     if (filter_var($user, FILTER_VALIDATE_EMAIL)) {
-        $result = $conn->query("SELECT * FROM `users` WHERE `Email` = '$user'");
+        $stmt = $conn->prepare("SELECT * FROM `users` WHERE `Email` = ?");
     } else {
-        $result = $conn->query("SELECT * FROM `users` WHERE `Username` = '$user'");
+        $stmt = $conn->prepare("SELECT * FROM `users` WHERE `Username` = ?");
     }
-
+    $stmt->bind_param("s", $user);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     $row = $result->fetch_assoc();
     if (password_verify($password, $row["Password"])) {
@@ -54,6 +56,7 @@ function loginUser($conn)
         echo("login-fail");
     }
     // Close connection
+    $stmt->close();
     $conn->close();
 }
 

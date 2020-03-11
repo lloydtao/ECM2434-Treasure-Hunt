@@ -10,7 +10,7 @@
 	<!-- Content -->
     <main class="page home-page">
         <section class="portfolio-block block-intro">
-            <div class="container"><img class="img-fluid" src="img/Logo_Campus_Treks_360.jpg">
+            <div class="container"><img class="img-fluid" src="img/logo/Logo-375x-Res.jpg">
 				<br><br>
                 <div class="about-me">
                     <p>
@@ -26,13 +26,13 @@
         <section class="portfolio-block photography">
             <div class="container">
                 <div class="row no-gutters">
-                    <div class="col-md-6 col-lg-4 item zoom-on-hover">
+                    <div class="col-md-4">
 						<img class="img-fluid" src="img/Forum_Back.jpg">
 					</div>
-                    <div class="col-md-6 col-lg-4 item zoom-on-hover">
+                    <div class="col-md-4">
 						<img class="img-fluid" src="img/Students_on_Campus.jpg">
 					</div>
-                    <div class="col-md-6 col-lg-4 item zoom-on-hover">
+                    <div class="col-md-4">
 						<img class="img-fluid" src="img/Forum_Overhead.jpg">
 					</div>
                 </div>

@@ -1,18 +1,17 @@
 <?php
 include "../utils/connection.php";
 
+$conn = openCon();
+
 $query = "SELECT * FROM Hunt";
 $result = $conn->query($query);
+$json = array(
+    "status" => "fail",
+    "results" => array()
+);
 
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
-        $json->status = "success";
-        $json->name = $row["Name"];
-        $json->username = $row["Username"];
-        $json->description = $row["Description"];
-        $json->huntID = $row["HuntID"];
-        $json->highscore = $row["Highscore"];
-
         //check if user is verified
         $verified = 0;
         $huntUser = $row["Username"];
@@ -20,14 +19,15 @@ if ($result->num_rows > 0) {
         $resultUser = $conn->query($queryUser);
         if ($resultUser->num_rows > 0) {
             $rowUser = $resultUser->fetch_assoc();
-            $json->verified = $rowUser["Verified"];
+            $verified = $rowUser["Verified"];
         }
+
+        $json["results"][] = array("huntid" => $row["HuntID"], "name" => $row["Name"], "username" => $row["Username"], 
+                            "description" => $row["Description"], "highscore" => $row["Highscore"], "verified" => $verified);
     }
-} else {
-    echo json_encode(array("status" => "fail"));
-    return;
 }
 
+$json["status"] = "success";
 echo json_encode($json);
 return;
 ?>
