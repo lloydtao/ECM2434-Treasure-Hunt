@@ -43,7 +43,7 @@ Vue.component('game-start', {
             $("#form-error").css("display", "none")
             $.ajax({
                 type: "POST",
-                url: "api/joingame.php",
+                url: "api/join_game.php",
                 data: {
                     pin: this.pin,
                     nickname: this.nickname
@@ -100,11 +100,11 @@ Vue.component('team-table', {
                         <div id='currentTeam' class="btn-group" role="group" v-if='currentteam==""'>
                             <button type="button" class='btn btn-outline-primary' @click="$emit('toggle-component', 2)" value="Create Team">New Team</button>
                             <button type="button" class='btn btn-outline-primary' @click="$emit('fetch-json')" value="Refresh">Refresh</button>
-                            <button type="button" class='btn btn-outline-primary' @click="quitGame()" value="Quit">Leave</button>
+                            <button type="button" class='btn btn-outline-primary' @click="$emit('quit-game')" value="Quit">Leave</button>
                         </div>
                         <div id='currentTeam' class='btn-group' role="group" v-if='currentteam!=""'>
                             <button type="button" class='btn btn-outline-primary' @click='joinTeam("")'>Leave team</button>
-                            <button type="button" class='btn btn-outline-primary' @click='$emit("toggle-component", 3)'>Play game</button>
+                            <button type="button" class='btn btn-outline-primary' @click='playGame()'>Play game</button>
                         </div>
                     </div>
                 </div>
@@ -121,7 +121,7 @@ Vue.component('team-table', {
         joinTeam(chosenteam) {
             $.ajax({
                 type: "POST",
-                url: "api/jointeam.php",
+                url: "api/join_team.php",
                 data: {chosenteam: chosenteam},
                 success: (data) => {
                     if (data === "join-team-success") {
@@ -134,20 +134,19 @@ Vue.component('team-table', {
                 }
             });
         },
-        /**
-         * Sends an ajax request to end the current session
-         * @author James Caddock
-         */
-        quitGame() {
+        playGame() {
             $.ajax({
                 type: "POST",
-                url: "api/quitgame.php",
+                url: "api/play_game.php",
                 success: (data) => {
-                    if (data === "game-ended") {
-                        this.$emit('toggle-component', 0)
+                    if (data === "play-game-success") {
+                        this.$emit("play-game")
+                    } else if (data === "game-already-started") {
+                        this.$emit('play-game')
                     }
                 }
-            });
+
+            })
         }
     }
 })
@@ -192,7 +191,7 @@ Vue.component('create-team', {
             $("#team-form-error").css("display", "none")
             $.ajax({
                 type: "POST",
-                url: "api/createteam.php",
+                url: "api/create_team.php",
                 data: {newteam: this.newteam},
                 success: (data) => {
                     if (data === "create-team-success") {
@@ -267,6 +266,11 @@ Vue.component('location', {
                 </div>
                 <div class="card-body">
                     <button type="button" class='btn btn-outline-primary' @click='$emit("photo-submit")'>View</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <button type="button" class='btn btn-outline-primary' @click="$emit('quit-game')">Quit Game</button>
                 </div>
             </div>
         </div>
@@ -388,7 +392,7 @@ Vue.component('location', {
             }
          },
 		 getQuestionFromDb(){
-		 	fetch("api/objectivequestion?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
+		 	fetch("api/objective_question?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
 		 	.then(response => response.text())
 		 	.then(data => {
 		 		this.question = data
@@ -418,6 +422,10 @@ Vue.component('location', {
 		    return R * c;
 		},
 		getNextObjective(){
+            if (this.currentteam == "") {
+                clearInterval(this.interval)
+            }
+
             this.objectivelist = this.jsondata["teams"][this.currentteam]["objectives"]["gps"]
             this.score = this.jsondata["teams"][this.currentteam]["teaminfo"]["score"]
             console.log(this.objectivelist)
@@ -425,7 +433,7 @@ Vue.component('location', {
 			for (let objective in this.objectivelist) {
 				if (this.objectivelist[objective]["completed"] === false) {
 					this.currentObjectiveKey = objective
-					fetch("api/locationdescription.php?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
+					fetch("api/location_description.php?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
 					.then(response => response.text())
 					.then(data => this.direction = data)
 					return
@@ -436,7 +444,7 @@ Vue.component('location', {
 		},
 		submit(){
 			this.alert = ""
-			fetch("getobjectivelocation.php?ID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
+			fetch("get_objective_location.php?ID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
 			.then(response => response.json())
 			.then(data => {
                 this.objLoc = data
@@ -492,7 +500,7 @@ Vue.component('photo-submit', {
                                 <td><button class='btn btn-outline-primary' v-on:click="showUploadForm(index)">Submit</button></td>
                             </tr>
                         </tbody>
-			<button class='btn btn-outline-primary' v-on:click="$emit('return-table')">Back</button>
+			            <button class='btn btn-outline-primary' v-on:click="$emit('return-table')">Back</button>
                     </table>
                 </div>
             </div>
@@ -508,37 +516,10 @@ Vue.component('photo-submit', {
         }
     },
     mounted() {
-        this.getObjectives();
+        this.objectives = this.huntsessiondata["teams"][this.currentteam]["objectives"]['photo'];
         this.currentObjective = null;
     },
     methods: {
-        /**
-         * Gets photo objectives from JSON and their descriptions from DB
-         */
-        getObjectives() {
-            //save objective data to vue component
-            this.objectives = this.huntsessiondata["teams"][this.currentteam]["objectives"]['photo'];
-            var objectiveIDs = [];
-            //create array of objective IDs
-            for (var objective in this.objectives) {
-                if (this.objectives.hasOwnProperty(objective)) {
-                    objectiveIDs.push(this.objectives[objective]["objectiveId"]);
-                }
-            }
-            //get objective descriptions from DB
-            fetch("api/objectivedescription.php?objectiveIDs=" + objectiveIDs)
-                .then(response => response.json())
-                .then(response => {
-                    let index = 0;
-                    //add objective descriptions to vue component
-                    for (let objective in this.objectives) {
-                        if (this.objectives.hasOwnProperty(objective)) {
-                            Vue.set(this.objectives[objective], "description", response[index]);
-                        }
-                        index++;
-                    }
-                });
-        },
         submitForm() {
             var formData = new FormData($('#uploadForm')[0]);
             formData.append("objective_id", this.currentObjective);
@@ -554,7 +535,7 @@ Vue.component('photo-submit', {
                     if (response['status'] === 'ok') {
                         this.showUpload = false;
                         this.currentObjective = null;
-                        this.getObjectives();
+                        this.objectives = this.huntsessiondata["teams"][this.currentteam]["objectives"]['photo'];
                     } else if (response['status'] === 'error' ) {
                         alert(response['message']);
                         //@TODO consider using custom error box
@@ -628,11 +609,11 @@ var play = new Vue({
         checkGame() {
             $.ajax({
                 type: "POST",
-                url: "api/checkgame.php",
+                url: "api/check_game.php",
                 dataType: "json",
                 success: (data) => {
                     if (data["status"] === "fail") {
-                        if(data["ingame"] != true) {
+                        if(data["game"] == "inactive") {
                             this.togglecomponent = 0
                             this.currentteam = ""
                             this.pin = null
@@ -651,7 +632,7 @@ var play = new Vue({
                         if (data["teamName"] != "" && data["teamName"] != null) {
                             this.currentteam = data["teamName"]
 
-                            if (data["ingame"] == true && this.togglecomponent != 4) {
+                            if (data["game"] == "active" && this.togglecomponent != 4) {
                                 this.togglecomponent = 3
                             }
 
@@ -661,6 +642,21 @@ var play = new Vue({
                         }
                     } console.log(data)
                     this.fetchJson()
+                }
+            });
+        },
+        /**
+         * Sends an ajax request to end the current session
+         * @author James Caddock
+         */
+        quitGame() {
+            $.ajax({
+                type: "POST",
+                url: "api/quit_game.php",
+                success: (data) => {
+                    if (data === "game-ended") {
+                        this.checkGame()
+                    }
                 }
             });
         }

@@ -45,6 +45,10 @@ function quitGame()
         file_put_contents($filename, $newJson);
     }
     
+    if (isset($_SESSION['game'])) {
+        unset($_SESSION['game']);
+    }
+
     unset($_SESSION['nickname']);
     unset($_SESSION['gameID']);
     unset($_SESSION['teamName']);
