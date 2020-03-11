@@ -1,14 +1,14 @@
 Vue.component('game-start', {
     template: `
     <div>
-        <form @submit.prevent="joinGame()">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Join Hunt</h5>
-                        </div>
-                        <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Join Hunt</h5>
+                    </div>
+                    <div class="card-body">
+                        <form @submit.prevent="joinGame()">
                             <div class='form-group'>
                                 <input class="form-control" type='text' v-model='pin' name='pin' maxlength='4' size='12' placeholder='Pin'>
                                 <p id='pin-error' style="display: none">Game not found</p>
@@ -19,11 +19,11 @@ Vue.component('game-start', {
                             </div>
                             <button class='btn btn-outline-primary' type='submit'>Play</button>
                             <p id="form-error" style="display: none">Please fill in all fields</p>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
     `,
     data() {
@@ -155,15 +155,27 @@ Vue.component('team-table', {
 
 Vue.component('create-team', {
     template: `
-    <form class='form-group' @submit.prevent="createTeam()">
-        <div class="container">
-            <input class="form-control" type="text" v-model="newteam" name="newteam" maxlength='15' minlength='2' placeholder='Team Name'>
-            <p id="team-error" style="display: none">Team name taken</p>
-            <p id="team-form-error" style="display: none">Invalid Team name</p>
-            <input type="submit" class='btn btn-outline-primary' value="Create">
-            <input type="button" class='btn btn-outline-primary' @click="$emit('team-exit')" value="Back">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>New Team</h5>
+                    </div>
+                    <div class="card-body">
+                        <form class='form-group' @submit.prevent="createTeam()">
+                                <input class="form-control" type="text" v-model="newteam" name="newteam" maxlength='15' minlength='2' placeholder='Team Name'>
+                                <br>
+                                <p id="team-error" style="display: none">Team name taken</p>
+                                <p id="team-form-error" style="display: none">Invalid Team name</p>
+                                <div class="btn-group" role="group">
+                                    <input type="submit" class='btn btn-outline-primary' value="Create">
+                                    <input type="button" class='btn btn-outline-primary' @click="$emit('team-exit')" value="Back">
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    </form>
     `,
     data() {
         return {
@@ -213,29 +225,51 @@ Vue.component('location', {
         }
     },
     template: `
-    <div class="container">
-        <div class="heading">
-            <h2>Submit location</h2>
-        </div>
-        <div class="content">
-	    <h4>Current Score: {{ score }}</h4>
-            <div>
-                <div v-if="alert != 'All location objectives completed!'">
-                    <div v-if="question == null">
-                        <p>{{ direction }}</p>
-                        <button class='btn btn-outline-primary' type="button" v-on:click="submit">Submit Location</button><br>
-                    </div>
-                    <div v-else>
-                        <br>
-                        {{ question }}<br>
-                        <input v-model='answer' name='answer'> <br>
-                        <button class='btn btn-outline-primary' v-on:click="checkQuestion">Submit Answer</button>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Your Progress</h5>
+                </div>
+                <div class="card-body">
+	                <p>Team: {{ currentteam }}</p>
+	                <p>Score: {{ score }}</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h5>Current Objective</h5>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div v-if="alert != 'All location objectives completed!'">
+                            <div v-if="question == null">
+                                <h5>Directions: </h5>
+                                <p>{{ direction }}</p>
+                                <button class='btn btn-outline-primary' type="button" v-on:click="submit">Check-in</button><br>
+                            </div>
+                            <div v-else>
+                                <br>
+                                {{ question }}<br>
+                                <input v-model='answer' name='answer'> <br>
+                                <button class='btn btn-outline-primary' v-on:click="checkQuestion">Submit Answer</button>
+                            </div>
+                        </div>
+                        <div id="alert" v-show="!(alert==null)">
+                            {{ alert }}
+                        </div>
                     </div>
                 </div>
-                <div id="alert" v-show="!(alert==null)">{{ alert }}</div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h5>Bonus Objectives</h5>
+                </div>
+                <div class="card-body">
+                    <button type="button" class='btn btn-outline-primary' @click='$emit("photo-submit")'>View</button>
+                </div>
             </div>
         </div>
-        <button type="button" class='btn btn-outline-primary' @click='$emit("photo-submit")'>Submit Photo</button>
     </div>
     `,
     data() {
@@ -424,25 +458,43 @@ Vue.component('photo-submit', {
         huntsessiondata: Object
     },
     template: `
-    <div>
-        <div class="heading">
-            <h2>Submit photo</h2>
-        </div>
-        <div v-if="showUpload">
-            <form id="uploadForm" v-on:submit.prevent enctype="multipart/form-data">
-                <img width="500px" @error="imgPath=null" v-if="imgPath!=null" v-bind:src="imgPath">
-                <p>Select image to upload:</p><br>
-                <input type="file" accept="image/*" capture="camera" name="image" /><br>
-                <button class='btn btn-outline-primary' v-on:click="submitForm()">Upload</button>
-                <button class='btn btn-outline-primary' v-on:click="hideUploadForm()">Back</button>
-            </form>
-        </div>
-        <div v-else>
-            <li v-for="(objective, index) in objectives">
-                <button class='btn btn-outline-primary' v-on:click="showUploadForm(index)">{{ objective["description"] }}</button>
-            </li>
-
-            <button class='btn btn-outline-primary' v-on:click="$emit('return-table')">Back</button>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Photo Objectives</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        Submit photos here.<br>
+                        Teams will receive bonus points for the best pictures!
+                    </p>
+                    <div v-if="showUpload">
+                        <form id="uploadForm" v-on:submit.prevent enctype="multipart/form-data">
+                            <img width="500px" @error="imgPath=null" v-if="imgPath!=null" v-bind:src="imgPath">
+                            <p>Select image to upload:</p><br>
+                            <input type="file" accept="image/*" capture="camera" name="image" /><br>
+                            <button class='btn btn-outline-primary' v-on:click="submitForm()">Upload</button>
+                            <button class='btn btn-outline-primary' v-on:click="hideUploadForm()">Back</button>
+                        </form>
+                    </div>
+                    <table class="table table-striped" v-else>
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Objective</th>
+                                <th scope="col">Submit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(objective, index) in objectives">
+                                <td>{{ objective["description"] }}</td>
+                                <td><button class='btn btn-outline-primary' v-on:click="showUploadForm(index)">Submit</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class='btn btn-outline-primary' v-on:click="$emit('return-table')">Back</button>
+                </div>
+            </div>
         </div>
     </div>
     `,
