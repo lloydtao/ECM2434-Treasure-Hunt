@@ -491,8 +491,8 @@ Vue.component('photo-submit', {
                                 <td><button class='btn btn-outline-primary' v-on:click="showUploadForm(index)">Submit</button></td>
                             </tr>
                         </tbody>
+			<button class='btn btn-outline-primary' v-on:click="$emit('return-table')">Back</button>
                     </table>
-                    <button class='btn btn-outline-primary' v-on:click="$emit('return-table')">Back</button>
                 </div>
             </div>
         </div>

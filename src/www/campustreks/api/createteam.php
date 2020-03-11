@@ -86,6 +86,11 @@ function createTeam()
     }
     require("createteamobjectives.php");
     $parsedJson = addTeamObjectives($parsedJson, $team);
+	
+	//check if team is left empty and should be deleted
+    if (count($parsedJson["teams"][$oldteam]["players"]) == 0 && $oldteam != "") {
+        unset($parsedJson["teams"][$oldteam]);
+    }
 
     //update json file
     $newJson = json_encode($parsedJson);
