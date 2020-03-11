@@ -73,6 +73,7 @@ Vue.component('hunt-session', {
         username: String
     },
     template: `
+<<<<<<< HEAD
         <div>
             <div class="heading">
                 <h2>Game Pin</h2>
@@ -90,15 +91,64 @@ Vue.component('hunt-session', {
                             <button type="submit" class='btn btn-outline-primary'>Submit</button>
                             <button type="button" class='btn btn-outline-primary' @click="switchCurrentPhoto('next')">Next</button>
                         </form>
+=======
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group" id="submissions">
+                    <div v-for="photo in photosubmission" v-if="currentPhoto == photo.photoID">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Photo Submissions</h5>
+                            </div>
+                            <div class="card-body align-items-center">
+                                <h5>Team: {{ photo.team }}</h5>
+                                <p>Objective: {{ photo.description }}</p>
+                                <div class="card-img">
+                                    <img class="img-fluid shadow" :src='photo.image'>
+                                </div>
+                            </div>
+                            <div>
+                                <form @submit.prevent="submitScore(photo.photoID, photo.team, photo.objective)">
+                                <p>Current Score: {{ photo.score }}</p>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" class='btn btn-secondary' @click="switchCurrentPhoto('prev')">&lt;</button>
+                                        <input type="number" min="0" max="100" class="input-group" placeholder="Score" v-model.number="newscore" :name="newscore">
+                                        <button type="submit" class='btn btn-outline-primary'>Send</button>
+                                        <button type="button" class='btn btn-secondary' @click="switchCurrentPhoto('next')">&gt;</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+>>>>>>> origin/master
                     </div>
                 </div>
             </div>
-
-            <div id="leaderboard" content="no-cache">
-                <li v-for="team in teamscores">
-                    {{ team[0] }}<br>
-                    {{ team[1] }}
-                </li>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                         <h5>Leaderboard</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="leaderboard" content="no-cache">
+                            <table class="table table-striped">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">Rank</th>
+                                        <th scope="col">Team</th>
+                                        <th scope="col">Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(team, index) in teamscores">
+                                        <td>{{ index + 1 }}</td>
+                                        <td>{{ team[0] }}</td>
+                                        <td>{{ team[1] }}</td>
+                                    </tr>
+                                 </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div>
@@ -191,7 +241,7 @@ Vue.component('hunt-session', {
             };
             xhttp.send(params)
             
-            this.updateTimeout = setTimeout(this.updateLeaderboard, 10000)
+            this.updateTimeout = setTimeout(this.updateLeaderboard, 1000)
         },
         sortScores(a, b) {
             if (a[1] === b[1]) {
@@ -202,6 +252,7 @@ Vue.component('hunt-session', {
             }
         },
         updateLeaderboard(){
+<<<<<<< HEAD
             if (this.jsondata["gameinfo"]["master"] != this.username) {
                 this.$emit('game-ended')
                 return
@@ -219,6 +270,35 @@ Vue.component('hunt-session', {
                             newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"], 
                                                     "objective": objective, "score": objectivelist[objective]["score"]})
                             counter++
+=======
+            if (this.gameID === null) {
+                url_string = window.location.href
+                url = new URL(url_string)
+                this.gameID = url.searchParams.get("sessionID")
+                gameID = this.gameID
+            }
+
+            randomString =  Math.random().toString(18).substring(2, 15)
+            safejson = './hunt_sessions/'+this.gameID+'.json?' + randomString
+
+            fetch(safejson)
+            .then(response => response.json())
+            .then(data => {
+                var teamlist = data["teams"]                
+                var newphotosubmission = []
+                var counter = 0
+                var date = new Date();
+
+                for (let team in teamlist) {
+                    if (teamlist[team] != "") {
+                        var objectivelist = teamlist[team]["objectives"]["photo"]
+                        for (let objective in objectivelist) {
+                            if (objectivelist[objective]["completed"] === true) {
+                                newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"] + "?" + date.getSeconds(),
+                                                        "objective": objective,"description":objectivelist[objective]["description"], "score": objectivelist[objective]["score"]})
+                                counter++
+                            }
+>>>>>>> origin/master
                         }
                     }
                 }
@@ -236,7 +316,13 @@ Vue.component('hunt-session', {
             newtscores.sort(this.sortScores)
             this.teamscores = newtscores
             
-            this.updateTimeout = setTimeout(this.updateLeaderboard, 1000)  
+            this.updateTimeout = setTimeout(this.updateLeaderboard, 1000)
+
+            //store highscore data globally for end hunt button
+            if (typeof this.teamscores[0] != "undefined") {
+                bestTeam = this.teamscores[0][0]
+                highscore = this.teamscores[0][1]
+            }
         }
     }
 })
