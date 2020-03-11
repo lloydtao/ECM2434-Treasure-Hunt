@@ -14,6 +14,12 @@
         }
     </style>
     <title>Create - CampusTreks</title>
+
+    <script type="text/javascript">
+    var dberr = "";
+    var hunterr = "";
+    </script>
+
     <?php include('templates/head.php'); ?>
     <?php
     // Redirect to login.php if not already logged in
@@ -65,10 +71,10 @@
             if (!$description)
                 $descriptionErr = "Required field";
             if($locationObjectives == 0)
-                echo "<script type='text/javascript'>alert(\"At least one Location objective needed\");</script>";
+                echo "<script type='text/javascript'>hunterr = \"At least one Location objective needed\";</script>";
         } else {
             if($locationObjectives == 0)
-                echo "<script type='text/javascript'>alert(\"At least one Location objective needed\");</script>";
+            echo "<script type='text/javascript'>hunterr = \"At least one Location objective needed\";</script>";
             else {
 
                 $locations = 0;
@@ -81,7 +87,8 @@
                 if ($sql->execute()) {
                     $hunt_id = $conn->insert_id;
                 } else {
-                    echo "<script type='text/javascript'>alert('" . $sql->error . "');</script>";
+                    echo "<script type='text/javascript'>dberr = \"Error adding the hunt.
+                     Please try again. If this error persists contact the system admin\";</script>";
                 }
 
                 // Prepare sql statements for adding hunt to the database
@@ -102,7 +109,8 @@
                     if ($objectiveSql->execute()) {
                         $last_id = $conn->insert_id;
                     } else {
-                        echo "<script type='text/javascript'>alert('" . $objectiveSql->error . "');</script>";
+                        echo "<script type='text/javascript'>dberr = \"Error adding the hunt.
+                        Please try again. If this error persists contact the system admin\";</script>";
                         break;
                     }
 
@@ -122,7 +130,8 @@
                         if ($locationSql->execute())
                             $locations++;
                         else {
-                            echo "<script type='text/javascript'>alert('" . $locationSql->error . "');</script>";
+                            echo "<script type='text/javascript'>dberr = \"Error adding the hunt.
+                            Please try again. If this error persists contact the system admin\";</script>";
                         }
 
                     } else {
@@ -132,8 +141,10 @@
                             continue;
 
                         // Add photo objective to database
-                        if ($photoSql->execute())
-                            echo "<script type='text/javascript'>alert('" . $photoSql->error . "');</script>";
+                        if ($photoSql->execute()){
+                            echo "<script type='text/javascript'>dberr = \"Error adding the hunt.
+                            Please try again. If this error persists contact the system admin\";</script>";
+                        }
                     }
 
                 }
@@ -162,6 +173,8 @@
             </div>
 
           <form id="create-form" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                <p id="dberror"></p>
+                <p id="hunterror"></p>
                 <p><span class="error">* required field</span></p>
                 <div class="form-group">
                     <label for="title">Title</label><span class="error">*<?php echo $titleErr; ?></span><br>
@@ -196,6 +209,7 @@
             </form>
         </div>
     </section>
+    
 </main>
 <!-- Footer -->
 <?php include('templates/footer.php'); ?>
@@ -433,6 +447,11 @@
         txtBoxDesc.required = true;
         content.appendChild(txtBoxDesc);
         content.appendChild(document.createElement("br"));
+    }
+
+    window.onload = function(){
+        document.getElementById("dberror").innerHTML = dberr;
+        document.getElementById("hunterror").innerHTML = hunterr;
     }
 </script>
 </html>

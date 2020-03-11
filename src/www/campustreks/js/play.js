@@ -339,19 +339,14 @@ Vue.component('location', {
 		 * @param  {} pos
 		 */
 		 getLocationSuccess(pos){
-             var a = Math.abs(this.distance(this.objLoc, pos));
-             console.log(pos)
-             console.log(a)
-             console.log(this.objLoc)
+            var a = Math.abs(this.distance(this.objLoc, pos));
 		 	if (a < 10){
-		 		console.log(true);
 		 		this.getQuestionFromDb()
 		 	}
 		 	else{
 		 		clearTimeout(this.timeout)
 		 		this.alert = "you are too far from the objective"
 				setTimeout(this.alertFade, 1500);
-		 		console.log(false);
 		 	}
 		 },
 		 checkQuestion(){
@@ -420,8 +415,7 @@ Vue.component('location', {
 		getNextObjective(){
             this.objectivelist = this.jsondata["teams"][this.currentteam]["objectives"]["gps"]
             this.score = this.jsondata["teams"][this.currentteam]["teaminfo"]["score"]
-            console.log(this.objectivelist)
-
+            
 			for (let objective in this.objectivelist) {
 				if (this.objectivelist[objective]["completed"] === false) {
 					this.currentObjectiveKey = objective
@@ -560,7 +554,7 @@ Vue.component('photo-submit', {
                     }
                 },
                 error: (response) => {
-                    console.log(response);
+                    
                 }
 
             })
@@ -658,7 +652,7 @@ var play = new Vue({
                         } else {
                             this.currentteam = ""
                         }
-                    } console.log(data)
+                    }
                     this.fetchJson()
                 }
             });
