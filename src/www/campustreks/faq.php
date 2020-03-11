@@ -34,8 +34,8 @@
                         <!-- How do I get verified? -->
                         <div><p>Contact our team by emailing campustreks@outlook.com, with the subject line 'Make_Me_Verified'</p></div>
                         <!-- How can I ask my own question? -->
-                        <div><p>You can follow our <a href="https://twitter.com/Campus_treks" target="_blank">Twitter</a> and
-                        <a href="https://www.instagram.com/campus_treks/?hl=en" target="_blank">Instagram</a> pages, and either direct message us or tag us.</p></div>
+                        <div><p>You can follow our <a href="https://twitter.com/Campus_treks">Twitter</a> and
+                        <a href="https://www.instagram.com/campus_treks/?hl=en">Instagram</a> pages, and either direct message us or tag us.</p></div>
 
                     </div>
                 </div>

@@ -19,7 +19,7 @@
                 <div v-else-if="togglecomponent==1">
                     <team-table @fetch-json="fetchJson()" :jsondata="jsondata"
                         @toggle-component="togglecomponent = $event" @in-team="currentteam = $event"
-                        :currentteam="currentteam" @quit-game="quitGame()">
+                        :currentteam="currentteam">
                     </team-table>
                 </div>
                 <div v-else-if="togglecomponent==2">
@@ -28,23 +28,13 @@
                 </div>
                 <div v-else-if="togglecomponent==3">
                     <location @photo-submit="togglecomponent=4" :jsondata="jsondata"
-                    :currentteam="currentteam" @quit-game="quitGame()">
+                    :currentteam="currentteam">
                     </location>
                 </div>
                 <div v-else-if="togglecomponent==4">
                     <photo-submit :currentteam="currentteam" :pin="pin" :huntsessiondata="jsondata"
                         @return-table="togglecomponent=3">
                     </photo-submit>
-                </div>
-                <div v-else>
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Game Finished</h5>
-                        </div>
-                        <div class="card-body">
-                            <button type="button" class='btn btn-outline-primary' @click="togglecomponent=0" >Play Another</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </main>

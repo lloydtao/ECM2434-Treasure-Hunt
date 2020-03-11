@@ -33,17 +33,17 @@ Vue.component('game-start', {
         }
     },
     methods: {
-        /**
-         * Sends an ajax request to join a Game
+        /** 
+         * Sends an ajax request to join a Game 
          * @author Jakub Kwak
-         * */
+         * */ 
         joinGame() {
             $("#pin-error").css("display", "none")
             $("#name-error").css("display", "none")
             $("#form-error").css("display", "none")
             $.ajax({
                 type: "POST",
-                url: "api/join_game.php",
+                url: "api/joingame.php",
                 data: {
                     pin: this.pin,
                     nickname: this.nickname
@@ -100,11 +100,11 @@ Vue.component('team-table', {
                         <div id='currentTeam' class="btn-group" role="group" v-if='currentteam==""'>
                             <button type="button" class='btn btn-outline-primary' @click="$emit('toggle-component', 2)" value="Create Team">New Team</button>
                             <button type="button" class='btn btn-outline-primary' @click="$emit('fetch-json')" value="Refresh">Refresh</button>
-                            <button type="button" class='btn btn-outline-primary' @click="$emit('quit-game')" value="Quit">Leave</button>
+                            <button type="button" class='btn btn-outline-primary' @click="quitGame()" value="Quit">Leave</button>
                         </div>
                         <div id='currentTeam' class='btn-group' role="group" v-if='currentteam!=""'>
                             <button type="button" class='btn btn-outline-primary' @click='joinTeam("")'>Leave team</button>
-                            <button type="button" class='btn btn-outline-primary' @click='playGame()'>Play game</button>
+                            <button type="button" class='btn btn-outline-primary' @click='$emit("toggle-component", 3)'>Play game</button>
                         </div>
                     </div>
                 </div>
@@ -116,12 +116,12 @@ Vue.component('team-table', {
         /**
          * Adds the user to the chosenteam
          * @author James Caddock
-         * @param string
+         * @param string 
          */
         joinTeam(chosenteam) {
             $.ajax({
                 type: "POST",
-                url: "api/join_team.php",
+                url: "api/jointeam.php",
                 data: {chosenteam: chosenteam},
                 success: (data) => {
                     if (data === "join-team-success") {
@@ -129,24 +129,25 @@ Vue.component('team-table', {
                             this.$emit('in-team', chosenteam)
                         } else {
                             this.$emit('in-team', chosenteam)
-                        }
+                        } 
                     }
                 }
             });
         },
-        playGame() {
+        /**
+         * Sends an ajax request to end the current session
+         * @author James Caddock
+         */
+        quitGame() {
             $.ajax({
                 type: "POST",
-                url: "api/play_game.php",
+                url: "api/quitgame.php",
                 success: (data) => {
-                    if (data === "play-game-success") {
-                        this.$emit("toggle-component", 3)
-                    } else if (data === "game-already-started") {
-                        this.$emit('toggle-component', 3)
+                    if (data === "game-ended") {
+                        this.$emit('toggle-component', 0)
                     }
                 }
-
-            })
+            });
         }
     }
 })
@@ -198,10 +199,10 @@ Vue.component('create-team', {
                         this.$emit("team-made", this.newteam)
                         this.$emit("team-exit")
                         this.newteam = null
-                    }
+                    } 
                     else if (data === "team-error") {
                         $("#team-error").css("display", "block")
-                    }
+                    } 
                     else if (data === "team-form-error") {
                         $("#team-form-error").css("display", "block")
                     }
@@ -268,11 +269,6 @@ Vue.component('location', {
                     <button type="button" class='btn btn-outline-primary' @click='$emit("photo-submit")'>View</button>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header">
-                    <button type="button" class='btn btn-outline-primary' @click="$emit('quit-game')">Quit Game</button>
-                </div>
-            </div>
         </div>
     </div>
     `,
@@ -305,21 +301,21 @@ Vue.component('location', {
 		 errorCallback_highAccuracy(error) {
 		 	if (error.code == error.TIMEOUT)
 		 	{
-		        // Attempt to get GPS loc timed out after 5 seconds,
+		        // Attempt to get GPS loc timed out after 5 seconds, 
 		        // try low accuracy location
-		        navigator.geolocation.getCurrentPosition(this.getLocationSuccess,
+		        navigator.geolocation.getCurrentPosition(this.getLocationSuccess, 
 		        this.errorCallback_lowAccuracy,
                 {maximumAge:600000, timeout:10000, enableHighAccuracy: false});
 		        return;
 		    }
-
+		    
 		    var msg = "Can't get your location (high accuracy attempt). Error = ";
 		    if (error.code == 1)
 		    	msg += "PERMISSION_DENIED";
 		    else if (error.code == 2)
 		    	msg += "POSITION_UNAVAILABLE";
 		    msg += ", msg = "+error.message;
-
+		    
 		    alert(msg);
 		},
 		 /**Display error if getting location is unsuccessful
@@ -337,22 +333,26 @@ Vue.component('location', {
 
 		 	alert(msg);
 		 },
-		 /**Check if distance between user and the check in location is within a tolerance
+		 /**Check if distance between user and the check in location is within a tolerance 
 		 * and update the json to show that the objective is complete
 		 * @param  {} objLoc
 		 * @param  {} pos
 		 */
 		 getLocationSuccess(pos){
-       var a = Math.abs(this.distance(this.objLoc, pos));
-     
-		 	 if (a < 50){
-		 		 this.getQuestionFromDb()
-		 	 }
-		 	 else{
-		 		 clearTimeout(this.timeout)
-		 		 this.alert = "you are too far from the objective"
-				 setTimeout(this.alertFade, 1500);
-		 	 }
+             var a = Math.abs(this.distance(this.objLoc, pos));
+             console.log(pos)
+             console.log(a)
+             console.log(this.objLoc)
+		 	if (a < 50){
+		 		console.log(true);
+		 		this.getQuestionFromDb()
+		 	}
+		 	else{
+		 		clearTimeout(this.timeout)
+		 		this.alert = "you are too far from the objective"
+				setTimeout(this.alertFade, 1500);
+		 		console.log(false);
+		 	}
 		 },
 		 checkQuestion(){
              $.ajax({
@@ -360,7 +360,7 @@ Vue.component('location', {
                 url: "api/check_question.php",
                 data: {
                     objectiveID: this.objectivelist[this.currentObjectiveKey]["objectiveId"],
-                    answer: this.answer,
+                    answer: this.answer, 
                     objectiveKey: this.currentObjectiveKey
                 },
                 success: (data) => {
@@ -371,10 +371,10 @@ Vue.component('location', {
                         this.answer = null
                         Vue.set(this.objectivelist[this.currentObjectiveKey], "completed", true)
                         this.alert = "correct answer"
-                        this.timeout = setTimeout(this.alertFade, 1500)
+                        this.timeout = setTimeout(this.alertFade, 1500)     
                         this.getNextObjective()
 
-                    }
+                    } 
                     else if (data === "incorrect") {
                         this.alert = "wrong answer"
                         this.timeout = setTimeout(this.alertFade, 1500	)
@@ -388,7 +388,7 @@ Vue.component('location', {
             }
          },
 		 getQuestionFromDb(){
-		 	fetch("api/objective_question?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
+		 	fetch("api/objectivequestion?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
 		 	.then(response => response.text())
 		 	.then(data => {
 		 		this.question = data
@@ -418,32 +418,29 @@ Vue.component('location', {
 		    return R * c;
 		},
 		getNextObjective(){
-            if (this.currentteam == "") {
-                clearInterval(this.interval)
-            }
-
             this.objectivelist = this.jsondata["teams"][this.currentteam]["objectives"]["gps"]
             this.score = this.jsondata["teams"][this.currentteam]["teaminfo"]["score"]
-            
+            console.log(this.objectivelist)
+
 			for (let objective in this.objectivelist) {
 				if (this.objectivelist[objective]["completed"] === false) {
 					this.currentObjectiveKey = objective
-					fetch("api/location_description.php?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
+					fetch("api/locationdescription.php?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
 					.then(response => response.text())
 					.then(data => this.direction = data)
 					return
 				}
-			}
+			}    
 				clearTimeout(this.timeout)
 				this.alert = "All location objectives completed!"
 		},
 		submit(){
 			this.alert = ""
-			fetch("get_objective_location.php?ID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
+			fetch("getobjectivelocation.php?ID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
 			.then(response => response.json())
 			.then(data => {
                 this.objLoc = data
-                navigator.geolocation.getCurrentPosition(this.getLocationSuccess, this.errorCallback_highAccuracy,
+                navigator.geolocation.getCurrentPosition(this.getLocationSuccess, this.errorCallback_highAccuracy, 
                     {
                         maximumAge:600000, timeout:10000, enableHighAccuracy: true
                     });
@@ -495,7 +492,7 @@ Vue.component('photo-submit', {
                                 <td><button class='btn btn-outline-primary' v-on:click="showUploadForm(index)">Submit</button></td>
                             </tr>
                         </tbody>
-			            <button class='btn btn-outline-primary' v-on:click="$emit('return-table')">Back</button>
+			<button class='btn btn-outline-primary' v-on:click="$emit('return-table')">Back</button>
                     </table>
                 </div>
             </div>
@@ -511,10 +508,37 @@ Vue.component('photo-submit', {
         }
     },
     mounted() {
-        this.objectives = this.huntsessiondata["teams"][this.currentteam]["objectives"]['photo'];
+        this.getObjectives();
         this.currentObjective = null;
     },
     methods: {
+        /**
+         * Gets photo objectives from JSON and their descriptions from DB
+         */
+        getObjectives() {
+            //save objective data to vue component
+            this.objectives = this.huntsessiondata["teams"][this.currentteam]["objectives"]['photo'];
+            var objectiveIDs = [];
+            //create array of objective IDs
+            for (var objective in this.objectives) {
+                if (this.objectives.hasOwnProperty(objective)) {
+                    objectiveIDs.push(this.objectives[objective]["objectiveId"]);
+                }
+            }
+            //get objective descriptions from DB
+            fetch("api/objectivedescription.php?objectiveIDs=" + objectiveIDs)
+                .then(response => response.json())
+                .then(response => {
+                    let index = 0;
+                    //add objective descriptions to vue component
+                    for (let objective in this.objectives) {
+                        if (this.objectives.hasOwnProperty(objective)) {
+                            Vue.set(this.objectives[objective], "description", response[index]);
+                        }
+                        index++;
+                    }
+                });
+        },
         submitForm() {
             var formData = new FormData($('#uploadForm')[0]);
             formData.append("objective_id", this.currentObjective);
@@ -530,14 +554,14 @@ Vue.component('photo-submit', {
                     if (response['status'] === 'ok') {
                         this.showUpload = false;
                         this.currentObjective = null;
-                        this.objectives = this.huntsessiondata["teams"][this.currentteam]["objectives"]['photo'];
+                        this.getObjectives();
                     } else if (response['status'] === 'error' ) {
                         alert(response['message']);
                         //@TODO consider using custom error box
                     }
                 },
                 error: (response) => {
-                    
+                    console.log(response);
                 }
 
             })
@@ -546,9 +570,9 @@ Vue.component('photo-submit', {
             this.currentObjective = index;
             //used to prevent image caching
             var randomString =  Math.random().toString(18).substring(2, 15)
-            this.imgPath = "image_uploads/" + this.pin + this.currentteam + "-"
+            this.imgPath = "image_uploads/" + this.pin + this.currentteam + "-" 
                             + this.currentObjective + ".jpg?" + randomString
-
+                            
             this.showUpload = true;
         },
         hideUploadForm(){
@@ -592,7 +616,7 @@ var play = new Vue({
                 .then(response => response.json())
                 .then(data => {
                     this.jsondata = data
-                })
+                })   
             } else {
                 this.jsondata = {};
             }
@@ -604,11 +628,11 @@ var play = new Vue({
         checkGame() {
             $.ajax({
                 type: "POST",
-                url: "api/check_game.php",
+                url: "api/checkgame.php",
                 dataType: "json",
                 success: (data) => {
                     if (data["status"] === "fail") {
-                        if(data["game"] == "inactive") {
+                        if(data["ingame"] != true) {
                             this.togglecomponent = 0
                             this.currentteam = ""
                             this.pin = null
@@ -621,13 +645,13 @@ var play = new Vue({
                         if (this.togglecomponent == 0) {
                             this.togglecomponent = 1
                         }
-
+                       
                         this.pin = data["gameID"]
-
+                        
                         if (data["teamName"] != "" && data["teamName"] != null) {
                             this.currentteam = data["teamName"]
 
-                            if (data["game"] == "active" && this.togglecomponent != 4) {
+                            if (data["ingame"] == true && this.togglecomponent != 4) {
                                 this.togglecomponent = 3
                             }
 
@@ -635,23 +659,8 @@ var play = new Vue({
                         } else {
                             this.currentteam = ""
                         }
-                    }
+                    } console.log(data)
                     this.fetchJson()
-                }
-            });
-        },
-        /**
-         * Sends an ajax request to end the current session
-         * @author James Caddock
-         */
-        quitGame() {
-            $.ajax({
-                type: "POST",
-                url: "api/quit_game.php",
-                success: (data) => {
-                    if (data === "game-ended") {
-                        this.checkGame()
-                    }
                 }
             });
         }
