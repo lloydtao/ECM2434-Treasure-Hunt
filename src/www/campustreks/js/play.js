@@ -191,7 +191,7 @@ Vue.component('create-team', {
             $("#team-form-error").css("display", "none")
             $.ajax({
                 type: "POST",
-                url: "api/create_team.php",
+                url: "api/createteam.php",
                 data: {newteam: this.newteam},
                 success: (data) => {
                     if (data === "create-team-success") {
