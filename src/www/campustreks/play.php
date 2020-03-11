@@ -1,5 +1,4 @@
 <?php session_start(); ?>
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
@@ -11,7 +10,7 @@
 <!-- Header -->
 <?php include('templates/header_mobile.php'); ?>
 <!-- Content -->
-<main class="page">
+<main class="page" style="overflow-x: hidden">
     <div id="play">
         <div v-if="togglecomponent==0">
             <game-start @start-game="startGame()"></game-start>
@@ -39,7 +38,7 @@
         <div v-else>
             <div class="card">
                 <div class="card-header">
-                    <h5>Game has Ended</h5>
+                    <h5>{{ endGameMessage }}</h5>
                 </div>
                 <div class="card-body">
                     <button type="button" class='btn btn-outline-primary' @click="quitGame()" >Play Another?</button>

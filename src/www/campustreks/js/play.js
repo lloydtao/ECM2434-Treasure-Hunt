@@ -343,18 +343,13 @@ Vue.component('location', {
          */
         getLocationSuccess(pos){
             var a = Math.abs(this.distance(this.objLoc, pos));
-            console.log(pos)
-            console.log(a)
-            console.log(this.objLoc)
             if (a < 10){
-                console.log(true);
                 this.getQuestionFromDb()
             }
             else{
                 clearTimeout(this.timeout)
                 this.alert = "you are too far from the objective"
                 setTimeout(this.alertFade, 1500);
-                console.log(false);
             }
         },
         checkQuestion(){
@@ -427,7 +422,6 @@ Vue.component('location', {
 
             this.objectivelist = this.jsondata["teams"][this.currentteam]["objectives"]["gps"]
             this.score = this.jsondata["teams"][this.currentteam]["teaminfo"]["score"]
-            console.log(this.objectivelist)
 
             for (let objective in this.objectivelist) {
                 if (this.objectivelist[objective]["completed"] === false) {
@@ -485,6 +479,7 @@ Vue.component('photo-submit', {
                             <button class='btn btn-outline-primary' v-on:click="submitForm()">Upload</button>
                             <button class='btn btn-outline-primary' v-on:click="hideUploadForm()">Back</button>
                         </form>
+                        <p v-if="errorMessage!=null" style="margin-top:10px; margin-bottom:-20px">{{ errorMessage }}</p>
                     </div>
                     <table class="table table-striped" v-else>
                         <thead class="thead-dark">
@@ -511,7 +506,8 @@ Vue.component('photo-submit', {
             objectives: {},
             showUpload: false,
             currentObjective: null,
-            imgPath: null
+            imgPath: null,
+            errorMessage: null
         }
     },
     mounted() {
@@ -536,15 +532,19 @@ Vue.component('photo-submit', {
                         this.currentObjective = null;
                         this.objectives = this.huntsessiondata["teams"][this.currentteam]["objectives"]['photo'];
                     } else if (response['status'] === 'error' ) {
-                        alert(response['message']);
-                        //@TODO consider using custom error box
+                        this.errorMessage = response['message']
+                        setTimeout(this.errorMessageFade, 1000)
                     }
                 },
                 error: (response) => {
-                    console.log(response);
+                    this.errorMessage = response['message']
+                    setTimeout(this.errorMessageFade, 1000)
                 }
 
             })
+        },
+        errorMessageFade() {
+            this.errorMessage = null
         },
         showUploadForm(index) {
             this.currentObjective = index;
@@ -589,14 +589,16 @@ var play = new Vue({
          * @author James Caddock
          */
         fetchJson() {
-            var reqjson = this.pin
-            var randomString =  Math.random().toString(18).substring(2, 15)
-            var safejson = 'hunt_sessions/' + encodeURI(reqjson) + '.json?' + randomString
-            fetch(safejson)
-                .then(response => response.json())
-                .then(data => {
-                    this.jsondata = data
-                })
+            if (this.pin != null){
+                var reqjson = this.pin
+                var randomString =  Math.random().toString(18).substring(2, 15)
+                var safejson = 'hunt_sessions/' + encodeURI(reqjson) + '.json?' + randomString
+                fetch(safejson)
+                    .then(response => response.json())
+                    .then(data => {
+                        this.jsondata = data
+                    })
+            }
         },
         /**
          * Checks PHP session data with json data
@@ -642,7 +644,7 @@ var play = new Vue({
                         } else {
                             this.currentteam = ""
                         }
-                    } console.log(data)
+                    }
                     this.fetchJson()
                 }
             });
