@@ -37,7 +37,7 @@ export default {
             $("#form-error").css("display", "none")
             $.ajax({
                 type: "POST",
-                url: "api/joingame.php",
+                url: "api/join_game.php",
                 data: {
                     pin: this.pin,
                     nickname: this.nickname

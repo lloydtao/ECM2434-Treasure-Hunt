@@ -12,7 +12,7 @@ final class joingameTest extends TestCase
      * Tests whether running the script with no form data gives an empty form error
      */
     public function testNoFormError(){
-        require("..\..\src\www\campustreks\api\joingame.php");
+        require("..\..\src\www\campustreks\api\join_game.php");
         $this->expectOutputString("form-error");
     }
 

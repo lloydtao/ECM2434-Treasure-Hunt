@@ -219,10 +219,10 @@ Vue.component('hunt-session', {
             xhttp.onreadystatechange = function() {
                 if (xhttp.readyState === XMLHttpRequest.DONE) {
                     if (xhttp.status === 200) {
-                    } else { //console.log(params) 
+                    } else {
                     }
                 } else {
-                    //console.log(params)
+                    
                 }
             };
             xhttp.send(params)

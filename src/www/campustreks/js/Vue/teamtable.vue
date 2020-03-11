@@ -50,7 +50,7 @@ export default {
         joinTeam(chosenteam) {
             $.ajax({
                 type: "POST",
-                url: "api/jointeam.php",
+                url: "api/join_team.php",
                 data: {chosenteam: chosenteam},
                 success: (data) => {
                     if (data === "join-team-success") {
@@ -70,7 +70,7 @@ export default {
         quitGame() {
             $.ajax({
                 type: "POST",
-                url: "api/quitgame.php",
+                url: "api/quit_game.php",
                 success: (data) => {
                     if (data === "game-ended") {
                         this.$emit('quit-game')
