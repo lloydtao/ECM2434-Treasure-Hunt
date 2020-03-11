@@ -71,67 +71,75 @@ Vue.component('hunt-session', {
         username: String
     },
     template: `
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group" id="submissions">
-                    <div v-for="photo in photosubmission" v-if="currentPhoto == photo.photoID">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Photo Submissions</h5>
-                            </div>
-                            <div class="card-body align-items-center">
-                                <h5>Team: {{ photo.team }}</h5>
-                                <p>Objective: {{ photo.description }}</p>
-                                <div class="card-img">
-                                    <img class="img-fluid shadow" :src='photo.image'>
+        <div class="container">
+            <section class="portfolio-block">
+                <div class="heading">
+                    <h2>Active Hunt</h2>
+                    <h3>Pin: {{ gameid }}</h3>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group" id="submissions">
+                            <div v-for="photo in photosubmission" v-if="currentPhoto == photo.photoID">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Photo Submissions</h5>
+                                    </div>
+                                    <div class="card-body align-items-center">
+                                        <h5>Team: {{ photo.team }}</h5>
+                                        <p>Objective: {{ photo.description }}</p>
+                                        <div class="card-img">
+                                            <img class="img-fluid shadow" :src='photo.image'>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <form @submit.prevent="submitScore(photo.photoID, photo.team, photo.objective)">
+                                        <p>Current Score: {{ photo.score }}</p>
+                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                <button type="button" class='btn btn-secondary' @click="switchCurrentPhoto('prev')">&lt;</button>
+                                                <input type="number" min="0" max="100" class="input-group" placeholder="Score" v-model.number="newscore" :name="newscore">
+                                                <button type="submit" class='btn btn-outline-primary'>Send</button>
+                                                <button type="button" class='btn btn-secondary' @click="switchCurrentPhoto('next')">&gt;</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                            <div>
-                                <form @submit.prevent="submitScore(photo.photoID, photo.team, photo.objective)">
-                                <p>Current Score: {{ photo.score }}</p>
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class='btn btn-secondary' @click="switchCurrentPhoto('prev')">&lt;</button>
-                                        <input type="number" min="0" max="100" class="input-group" placeholder="Score" v-model.number="newscore" :name="newscore">
-                                        <button type="submit" class='btn btn-outline-primary'>Send</button>
-                                        <button type="button" class='btn btn-secondary' @click="switchCurrentPhoto('next')">&gt;</button>
-                                    </div>
-                                </form>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Leaderboard</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="leaderboard" content="no-cache">
+                                    <table class="table table-striped">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th scope="col">Rank</th>
+                                                <th scope="col">Team</th>
+                                                <th scope="col">Score</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(team, index) in teamscores">
+                                                <td>{{ index + 1 }}</td>
+                                                <td>{{ team[0] }}</td>
+                                                <td>{{ team[1] }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                         <h5>Leaderboard</h5>
-                    </div>
-                    <div class="card-body">
-                        <div id="leaderboard" content="no-cache">
-                            <table class="table table-striped">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">Rank</th>
-                                        <th scope="col">Team</th>
-                                        <th scope="col">Score</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(team, index) in teamscores">
-                                        <td>{{ index + 1 }}</td>
-                                        <td>{{ team[0] }}</td>
-                                        <td>{{ team[1] }}</td>
-                                    </tr>
-                                 </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div>
-                <button class="btn btn-primary" type="button" @click="$emit('hunt-game')">End Game</button>
-            </div>
+                    <div>
+                        <button class="btn btn-secondary" type="button" @click="$emit('end-hunt')">End Game</button>
+                    </div>
+                </div>
+            </section>
         </div>
     `,
     data() {
@@ -318,7 +326,7 @@ var host = new Vue({
         checkSession() {
             $.ajax({
                 type: "POST",
-                url: "api/checkgame.php",
+                url: "api/check_game.php",
                 dataType: "json",
                 success: (data) => {
                     if (data["status"] === "fail") {

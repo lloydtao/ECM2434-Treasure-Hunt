@@ -20,7 +20,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['gameID'])) {
                 compareHighscore($huntID, $_POST['highscore'], $_POST['teamName']);
             } else {
                 successResponse('Highscore not updated');
-            } unset($_SESSION["gameID"]);
+            } unset($_SESSION["hostGameID"]);
         } else {
             errorResponse('Could not end hunt');
         }

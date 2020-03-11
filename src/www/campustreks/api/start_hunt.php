@@ -28,7 +28,7 @@ if (!is_dir("../hunt_sessions/")) {
 $user = $_SESSION["username"];
 $huntID = $_POST['huntID'];
 $gamePIN = generateGamePin();
-$_SESSION["gameID"] = $gamePIN;
+$_SESSION["hostGameID"] = $gamePIN;
 $huntSession = array('gameinfo' => array('gamePin' => $gamePIN, 'huntID' => $huntID, 'master' => $user),
     'teams' => array('' => array('teaminfo' => array(), 'players' => array(), 'objectives' => json_decode("{}"))));
 $json_data = json_encode($huntSession);

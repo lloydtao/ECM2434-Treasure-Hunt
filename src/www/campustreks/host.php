@@ -22,7 +22,7 @@
                             :jsondata="jsondata"
                             :gameid="gameid" 
                             :username="username"
-                            @hunt-game="endHunt()"
+                            @end-hunt="endHunt()"
                             @best-team="bestteam = $event"
                             @high-score="highscore = $event">
                         </hunt-session>
