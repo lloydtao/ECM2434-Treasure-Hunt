@@ -158,7 +158,7 @@ var objective = new Vue({
 					this.completed = false
 					this.currentObjectiveKey = objective
 					this.currentObjective = this.objectivelist[objective]
-					fetch("api/locationdescription.php?objectiveID="+this.currentObjective["objectiveId"])
+					fetch("api/location_description.php?objectiveID="+this.currentObjective["objectiveId"])
 					.then(response => response.text())
 					.then(data => this.direction = data)
 					return
@@ -171,7 +171,7 @@ var objective = new Vue({
 		},
 		submit(){
 			this.alert = ""
-			fetch("getobjectivelocation.php?ID="+this.currentObjective["objectiveId"])
+			fetch("get_objective_location.php?ID="+this.currentObjective["objectiveId"])
 			.then(response => response.json())
 			.then(data => {this.compareLocation(data)})
 		}

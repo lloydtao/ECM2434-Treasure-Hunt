@@ -287,75 +287,79 @@ Vue.component('location', {
             timeout: null,
             interval: null,
             objLoc: null,
-	    score: 0
+            score: 0
         }
     },
-	mounted(){
+    mounted(){
         setTimeout(this.getNextObjective, 100)
         this.interval = setInterval(this.getNextObjective, 1000)
-	},
-	methods: {
-		 /**Attempt to get the user's location and compare it with objLoc
-		 * @param  {} objLoc - The location that the user is trying to check into
-		 */
-		 /**If the error is a time out try to get location again with lower accuracy,
-		 * else display the error
-		 * @param  {} error - the error thrown by getCurrentPosition
-		 */
-		 errorCallback_highAccuracy(error) {
-		 	if (error.code == error.TIMEOUT)
-		 	{
-		        // Attempt to get GPS loc timed out after 5 seconds,
-		        // try low accuracy location
-		        navigator.geolocation.getCurrentPosition(this.getLocationSuccess,
-		        this.errorCallback_lowAccuracy,
-                {maximumAge:600000, timeout:10000, enableHighAccuracy: false});
-		        return;
-		    }
+    },
+    methods: {
+        /**Attempt to get the user's location and compare it with objLoc
+         * @param  {} objLoc - The location that the user is trying to check into
+         */
+        /**If the error is a time out try to get location again with lower accuracy,
+         * else display the error
+         * @param  {} error - the error thrown by getCurrentPosition
+         */
+        errorCallback_highAccuracy(error) {
+            if (error.code == error.TIMEOUT)
+            {
+                // Attempt to get GPS loc timed out after 5 seconds,
+                // try low accuracy location
+                navigator.geolocation.getCurrentPosition(this.getLocationSuccess,
+                    this.errorCallback_lowAccuracy,
+                    {maximumAge:600000, timeout:10000, enableHighAccuracy: false});
+                return;
+            }
 
-		    var msg = "Can't get your location (high accuracy attempt). Error = ";
-		    if (error.code == 1)
-		    	msg += "PERMISSION_DENIED";
-		    else if (error.code == 2)
-		    	msg += "POSITION_UNAVAILABLE";
-		    msg += ", msg = "+error.message;
+            var msg = "Can't get your location (high accuracy attempt). Error = ";
+            if (error.code == 1)
+                msg += "PERMISSION_DENIED";
+            else if (error.code == 2)
+                msg += "POSITION_UNAVAILABLE";
+            msg += ", msg = "+error.message;
 
-		    alert(msg);
-		},
-		 /**Display error if getting location is unsuccessful
-		 * @param  {} error - the error thrown by getCurrentPosition
-		 */
-		 errorCallback_lowAccuracy(error) {
-		 	var msg = "Can't get your location (low accuracy attempt). Error = ";
-		 	if (error.code == 1)
-		 		msg += "PERMISSION_DENIED";
-		 	else if (error.code == 2)
-		 		msg += "POSITION_UNAVAILABLE";
-		 	else if (error.code == 3)
-		 		msg += "TIMEOUT";
-		 	msg += ", msg = "+error.message;
+            alert(msg);
+        },
+        /**Display error if getting location is unsuccessful
+         * @param  {} error - the error thrown by getCurrentPosition
+         */
+        errorCallback_lowAccuracy(error) {
+            var msg = "Can't get your location (low accuracy attempt). Error = ";
+            if (error.code == 1)
+                msg += "PERMISSION_DENIED";
+            else if (error.code == 2)
+                msg += "POSITION_UNAVAILABLE";
+            else if (error.code == 3)
+                msg += "TIMEOUT";
+            msg += ", msg = "+error.message;
 
-		 	alert(msg);
-		 },
-		 /**Check if distance between user and the check in location is within a tolerance
-		 * and update the json to show that the objective is complete
-		 * @param  {} objLoc
-		 * @param  {} pos
-		 */
-		 getLocationSuccess(pos){
-       var a = Math.abs(this.distance(this.objLoc, pos));
-     
-		 	 if (a < 50){
-		 		 this.getQuestionFromDb()
-		 	 }
-		 	 else{
-		 		 clearTimeout(this.timeout)
-		 		 this.alert = "you are too far from the objective"
-				 setTimeout(this.alertFade, 1500);
-		 	 }
-		 },
-		 checkQuestion(){
-             $.ajax({
+            alert(msg);
+        },
+        /**Check if distance between user and the check in location is within a tolerance
+         * and update the json to show that the objective is complete
+         * @param  {} objLoc
+         * @param  {} pos
+         */
+        getLocationSuccess(pos){
+            var a = Math.abs(this.distance(this.objLoc, pos));
+            console.log(pos)
+            console.log(a)
+            console.log(this.objLoc)
+            if (a < 10){
+                console.log(true);
+                this.getQuestionFromDb()
+            }
+            else{
+                clearTimeout(this.timeout)
+                this.alert = "you are too far from the objective"
+                setTimeout(this.alertFade, 1500);
+                console.log(false);
+            }
+        },
+        checkQuestion(){
+            $.ajax({
                 type: "POST",
                 url: "api/check_question.php",
                 data: {
@@ -381,75 +385,76 @@ Vue.component('location', {
                     }
                 }
             });
-         },
-         alertFade() {
+        },
+        alertFade() {
             if(!(this.alert === "All location objectives completed!")){
                 this.alert = null
             }
-         },
-		 getQuestionFromDb(){
-		 	fetch("api/objective_question?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
-		 	.then(response => response.text())
-		 	.then(data => {
-		 		this.question = data
-		 	})
-		 },
-		 /**
-		 * Uses the Haversine formula to calculate the distance beween two points
-		 * @param  pos1 - The first position
-		 * @param  pos2 - The second position
-		 * @returns Distance betweent the two points
-		 */
-		 distance(pos1, pos2){
-		 	function toRad(angle){
-		 		return angle*Math.PI/180;
-		 	}
+        },
+        getQuestionFromDb(){
+            fetch("api/objective_question?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
+                .then(response => response.text())
+                .then(data => {
+                    this.question = data
+                })
+        },
+        /**
+         * Uses the Haversine formula to calculate the distance beween two points
+         * @param  pos1 - The first position
+         * @param  pos2 - The second position
+         * @returns Distance betweent the two points
+         */
+        distance(pos1, pos2){
+            function toRad(angle){
+                return angle*Math.PI/180;
+            }
 
-		    var R = 6371e3; //metres
-		    var lat1 = toRad(pos1.coords.latitude);
-		    var lat2 = toRad(pos2.coords.latitude);
-		    var diffLong  = toRad(pos2.coords.longitude - pos1.coords.longitude);
-		    var diffLat = toRad(lat2 - lat1);
+            var R = 6371e3; //metres
+            var lat1 = toRad(pos1.coords.latitude);
+            var lat2 = toRad(pos2.coords.latitude);
+            var diffLong  = toRad(pos2.coords.longitude - pos1.coords.longitude);
+            var diffLat = toRad(lat2 - lat1);
 
-		    var a = Math.pow(Math.sin(diffLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(diffLong/2), 2)
+            var a = Math.pow(Math.sin(diffLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(diffLong/2), 2)
 
-		    var c = 2 * Math.atan(Math.sqrt(a) * Math.sqrt(1 - a));
+            var c = 2 * Math.atan(Math.sqrt(a) * Math.sqrt(1 - a));
 
-		    return R * c;
-		},
-		getNextObjective(){
+            return R * c;
+        },
+        getNextObjective(){
             if (this.currentteam == "") {
                 clearInterval(this.interval)
             }
 
             this.objectivelist = this.jsondata["teams"][this.currentteam]["objectives"]["gps"]
             this.score = this.jsondata["teams"][this.currentteam]["teaminfo"]["score"]
-            
-			for (let objective in this.objectivelist) {
-				if (this.objectivelist[objective]["completed"] === false) {
-					this.currentObjectiveKey = objective
-					fetch("api/location_description.php?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
-					.then(response => response.text())
-					.then(data => this.direction = data)
-					return
-				}
-			}
-				clearTimeout(this.timeout)
-				this.alert = "All location objectives completed!"
-		},
-		submit(){
-			this.alert = ""
-			fetch("get_objective_location.php?ID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
-			.then(response => response.json())
-			.then(data => {
-                this.objLoc = data
-                navigator.geolocation.getCurrentPosition(this.getLocationSuccess, this.errorCallback_highAccuracy,
-                    {
-                        maximumAge:600000, timeout:10000, enableHighAccuracy: true
-                    });
-            })
-		}
-	}
+            console.log(this.objectivelist)
+
+            for (let objective in this.objectivelist) {
+                if (this.objectivelist[objective]["completed"] === false) {
+                    this.currentObjectiveKey = objective
+                    fetch("api/location_description.php?objectiveID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
+                        .then(response => response.text())
+                        .then(data => this.direction = data)
+                    return
+                }
+            }
+            clearTimeout(this.timeout)
+            this.alert = "All location objectives completed!"
+        },
+        submit(){
+            this.alert = ""
+            fetch("get_objective_location.php?ID="+this.objectivelist[this.currentObjectiveKey]["objectiveId"])
+                .then(response => response.json())
+                .then(data => {
+                    this.objLoc = data
+                    navigator.geolocation.getCurrentPosition(this.getLocationSuccess, this.errorCallback_highAccuracy,
+                        {
+                            maximumAge:600000, timeout:10000, enableHighAccuracy: true
+                        });
+                })
+        }
+    }
 })
 
 
@@ -537,7 +542,7 @@ Vue.component('photo-submit', {
                     }
                 },
                 error: (response) => {
-                    
+                    console.log(response);
                 }
 
             })
@@ -547,7 +552,7 @@ Vue.component('photo-submit', {
             //used to prevent image caching
             var randomString =  Math.random().toString(18).substring(2, 15)
             this.imgPath = "image_uploads/" + this.pin + this.currentteam + "-"
-                            + this.currentObjective + ".jpg?" + randomString
+                + this.currentObjective + ".jpg?" + randomString
 
             this.showUpload = true;
         },
@@ -589,10 +594,10 @@ var play = new Vue({
                 var randomString =  Math.random().toString(18).substring(2, 15)
                 var safejson = 'hunt_sessions/' + encodeURI(reqjson) + '.json?' + randomString
                 fetch(safejson)
-                .then(response => response.json())
-                .then(data => {
-                    this.jsondata = data
-                })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.jsondata = data
+                    })
             } else {
                 this.jsondata = {};
             }
@@ -635,7 +640,7 @@ var play = new Vue({
                         } else {
                             this.currentteam = ""
                         }
-                    }
+                    } console.log(data)
                     this.fetchJson()
                 }
             });
