@@ -33,13 +33,8 @@
                 </div>
                 <div class="row">
                     <?php
-                    include "../utils/connection.php";
+                    include "utils/connection.php";
                     $conn = opencon();
-
-
-                    if ($conn->connect_error) {
-                        die("Database connection failed - " . $conn->connect_error . "<br>");
-                    }
 
                     $query = "SELECT * FROM Hunt";
                     $result = $conn->query($query);
