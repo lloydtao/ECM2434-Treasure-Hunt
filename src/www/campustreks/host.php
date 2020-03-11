@@ -75,7 +75,7 @@
                             echo '</div>';
                         }
                     } else {
-                        echo '<p>No hunts found. Click <a href="/create.php">here</a> to create a new hunt.<p><br>';
+                        echo '<p>No hunts found. Click <a href="/create.php">here</a> to create a new hunt.</p><br>';
                     }
                     ?>
                 </div>
