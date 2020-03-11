@@ -22,7 +22,7 @@ var objective = new Vue({
 		 */
 		 compareLocation(objLoc) {
 		 	navigator.geolocation.getCurrentPosition(function(position){
-		 		console.log(position);
+		 		
 		 		objective.getLocationSuccess(objLoc, position);
 		 	}, this.errorCallback_highAccuracy, 
 		 	{
@@ -78,7 +78,7 @@ var objective = new Vue({
 		 getLocationSuccess(objLoc, pos){
 		 	var a =Math.abs(this.distance(objLoc, pos));
 		 	if (a < 100){
-		 		console.log(true);
+		 		
 		 		this.show = true
 		 		this.getQuestionFromDb()
 		 	}
@@ -86,7 +86,7 @@ var objective = new Vue({
 		 		clearTimeout(this.timeout)
 		 		this.alert = "you are too far from the objective"
 				setTimeout(function(){ objective.alert = "" }, 1500);
-		 		console.log(false);
+		 		
 		 	}
 		 },
 		 checkQuestion(){
