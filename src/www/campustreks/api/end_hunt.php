@@ -5,17 +5,22 @@
  */
 include "../utils/connection.php";
 
-if (isset($_REQUEST['gameID']) && isset($_REQUEST['highscore']) && isset($_REQUEST['teamName'])) {
+if (isset($_SESSION['Username']) && isset($_REQUEST['gameID']) && isset($_REQUEST['highscore']) && isset($_REQUEST['teamName']) ) {
     //get Hunt ID
     $jsonData = file_get_contents('../hunt_sessions/' . $_REQUEST['gameID'] . '.json');
-    $huntID = json_decode($jsonData, true)["gameinfo"]["huntID"];
+    if ($_SESSION['Username'] == json_decode($jsonData, true)["gameinfo"]["master"]){
+        $huntID = json_decode($jsonData, true)["gameinfo"]["huntID"];
 
-    //close hunt
-    if (endHunt($_REQUEST['gameID'], $huntID)) {
-        //update highscore
-        compareHighscore($huntID, $_REQUEST['highscore'], $_REQUEST['teamName']);
-    } else {
-        errorResponse('Could not end hunt');
+        //close hunt
+        if (endHunt($_REQUEST['gameID'], $huntID)) {
+            //update highscore
+            compareHighscore($huntID, $_REQUEST['highscore'], $_REQUEST['teamName']);
+        } else {
+            errorResponse('Could not end hunt');
+        }
+    }
+    else{
+        errorResponse('Unauthorised');
     }
 } else {
     errorResponse('Invalid request');
