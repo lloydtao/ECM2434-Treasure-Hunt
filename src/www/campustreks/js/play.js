@@ -33,10 +33,10 @@ Vue.component('game-start', {
         }
     },
     methods: {
-        /** 
-         * Sends an ajax request to join a Game 
+        /**
+         * Sends an ajax request to join a Game
          * @author Jakub Kwak
-         * */ 
+         * */
         joinGame() {
             $("#pin-error").css("display", "none")
             $("#name-error").css("display", "none")
@@ -116,7 +116,7 @@ Vue.component('team-table', {
         /**
          * Adds the user to the chosenteam
          * @author James Caddock
-         * @param string 
+         * @param string
          */
         joinTeam(chosenteam) {
             $.ajax({
@@ -129,7 +129,7 @@ Vue.component('team-table', {
                             this.$emit('in-team', chosenteam)
                         } else {
                             this.$emit('in-team', chosenteam)
-                        } 
+                        }
                     }
                 }
             });
@@ -140,9 +140,9 @@ Vue.component('team-table', {
                 url: "api/play_game.php",
                 success: (data) => {
                     if (data === "play-game-success") {
-                        this.$emit("play-game")
+                        this.$emit("toggle-component", 3)
                     } else if (data === "game-already-started") {
-                        this.$emit('play-game')
+                        this.$emit('toggle-component', 3)
                     }
                 }
 
@@ -198,10 +198,10 @@ Vue.component('create-team', {
                         this.$emit("team-made", this.newteam)
                         this.$emit("team-exit")
                         this.newteam = null
-                    } 
+                    }
                     else if (data === "team-error") {
                         $("#team-error").css("display", "block")
-                    } 
+                    }
                     else if (data === "team-form-error") {
                         $("#team-form-error").css("display", "block")
                     }
@@ -305,21 +305,21 @@ Vue.component('location', {
 		 errorCallback_highAccuracy(error) {
 		 	if (error.code == error.TIMEOUT)
 		 	{
-		        // Attempt to get GPS loc timed out after 5 seconds, 
+		        // Attempt to get GPS loc timed out after 5 seconds,
 		        // try low accuracy location
-		        navigator.geolocation.getCurrentPosition(this.getLocationSuccess, 
+		        navigator.geolocation.getCurrentPosition(this.getLocationSuccess,
 		        this.errorCallback_lowAccuracy,
                 {maximumAge:600000, timeout:10000, enableHighAccuracy: false});
 		        return;
 		    }
-		    
+
 		    var msg = "Can't get your location (high accuracy attempt). Error = ";
 		    if (error.code == 1)
 		    	msg += "PERMISSION_DENIED";
 		    else if (error.code == 2)
 		    	msg += "POSITION_UNAVAILABLE";
 		    msg += ", msg = "+error.message;
-		    
+
 		    alert(msg);
 		},
 		 /**Display error if getting location is unsuccessful
@@ -337,7 +337,7 @@ Vue.component('location', {
 
 		 	alert(msg);
 		 },
-		 /**Check if distance between user and the check in location is within a tolerance 
+		 /**Check if distance between user and the check in location is within a tolerance
 		 * and update the json to show that the objective is complete
 		 * @param  {} objLoc
 		 * @param  {} pos
@@ -364,7 +364,7 @@ Vue.component('location', {
                 url: "api/check_question.php",
                 data: {
                     objectiveID: this.objectivelist[this.currentObjectiveKey]["objectiveId"],
-                    answer: this.answer, 
+                    answer: this.answer,
                     objectiveKey: this.currentObjectiveKey
                 },
                 success: (data) => {
@@ -375,10 +375,10 @@ Vue.component('location', {
                         this.answer = null
                         Vue.set(this.objectivelist[this.currentObjectiveKey], "completed", true)
                         this.alert = "correct answer"
-                        this.timeout = setTimeout(this.alertFade, 1500)     
+                        this.timeout = setTimeout(this.alertFade, 1500)
                         this.getNextObjective()
 
-                    } 
+                    }
                     else if (data === "incorrect") {
                         this.alert = "wrong answer"
                         this.timeout = setTimeout(this.alertFade, 1500	)
@@ -438,7 +438,7 @@ Vue.component('location', {
 					.then(data => this.direction = data)
 					return
 				}
-			}    
+			}
 				clearTimeout(this.timeout)
 				this.alert = "All location objectives completed!"
 		},
@@ -448,7 +448,7 @@ Vue.component('location', {
 			.then(response => response.json())
 			.then(data => {
                 this.objLoc = data
-                navigator.geolocation.getCurrentPosition(this.getLocationSuccess, this.errorCallback_highAccuracy, 
+                navigator.geolocation.getCurrentPosition(this.getLocationSuccess, this.errorCallback_highAccuracy,
                     {
                         maximumAge:600000, timeout:10000, enableHighAccuracy: true
                     });
@@ -551,9 +551,9 @@ Vue.component('photo-submit', {
             this.currentObjective = index;
             //used to prevent image caching
             var randomString =  Math.random().toString(18).substring(2, 15)
-            this.imgPath = "image_uploads/" + this.pin + this.currentteam + "-" 
+            this.imgPath = "image_uploads/" + this.pin + this.currentteam + "-"
                             + this.currentObjective + ".jpg?" + randomString
-                            
+
             this.showUpload = true;
         },
         hideUploadForm(){
@@ -597,7 +597,7 @@ var play = new Vue({
                 .then(response => response.json())
                 .then(data => {
                     this.jsondata = data
-                })   
+                })
             } else {
                 this.jsondata = {};
             }
@@ -626,9 +626,9 @@ var play = new Vue({
                         if (this.togglecomponent == 0) {
                             this.togglecomponent = 1
                         }
-                       
+
                         this.pin = data["gameID"]
-                        
+
                         if (data["teamName"] != "" && data["teamName"] != null) {
                             this.currentteam = data["teamName"]
 

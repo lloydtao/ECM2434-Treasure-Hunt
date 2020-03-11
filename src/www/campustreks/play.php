@@ -18,7 +18,7 @@
                 </div>
                 <div v-else-if="togglecomponent==1">
                     <team-table @fetch-json="fetchJson()" :jsondata="jsondata"
-                        @play-game="togglecomponent = 3" @in-team="currentteam = $event"
+                        @toggle-component="togglecomponent = $event" @in-team="currentteam = $event"
                         :currentteam="currentteam" @quit-game="quitGame()">
                     </team-table>
                 </div>
@@ -41,7 +41,7 @@
                         <div class="card-header">
                             <h5>Game Finished</h5>
                         </div>
-                        <div class="card-body"> 
+                        <div class="card-body">
                             <button type="button" class='btn btn-outline-primary' @click="togglecomponent=0" >Play Another</button>
                         </div>
                     </div>
