@@ -12,13 +12,12 @@ Vue.component('start-hunt', {
                     <img v-if="!hunt['verified']" src="img/exeter-logo.png" height="14px" width="14px">
                     </h4>
                     <h4>{{ hunt['description'] }}</h4>
-                    <a class="btn btn-outline-primary btn-sm" role="button" href="#" @click="startHunt(hunt['huntid'])">Host</a>
-                    <div class="tags">High Score: {{ hunt['highscore'] }}</div>
+                    <a class="btn btn-outline-primary btn-sm" role="button" @click="startHunt(hunt['huntid'])">Host</a>
+                    <div class="tags">High Score: {{ hunt['highscore'] }} - {{ hunt['bestteam'] }}</div>
                 </div>
             </div>
         </div>
         <div v-show="hunts.length==0">
-            <button class='btn btn-outline-primary' @click="getHunts">Refresh</button>
             <p>No hunts found. Click <a href="/create.php">here</a> to create a new hunt.</p>
         </div>
     </div>
@@ -35,7 +34,7 @@ Vue.component('start-hunt', {
         getHunts() {
             $.ajax({
                 type: "POST",
-                url: "api/queryhunts.php",
+                url: "api/query_hunts.php",
                 dataType: "json",
                 success: (data) => {
                     if (data["status"] === "fail") {
@@ -52,14 +51,13 @@ Vue.component('start-hunt', {
                 type: "POST",
                 url: "api/start_hunt.php",
                 data: { huntID: huntID },
-                dataType: "json",
                 success: (data) => {
-                    if (data["status"] === "success") {
+                    if (data === "start-hunt-success") {
                         this.$emit("hunt-started")
                         console.log(data)
-                    }
+                    } 
                 }
-            })
+            });
         }
     }
 })
@@ -73,25 +71,6 @@ Vue.component('hunt-session', {
         username: String
     },
     template: `
-<<<<<<< HEAD
-        <div>
-            <div class="heading">
-                <h2>Game Pin</h2>
-                <h3>{{ gameid }}</h3>
-            </div>
-            <div class="form-group" id="submissions">
-                <div v-for="photo in photosubmission" v-if="currentPhoto == photo.photoID">
-                    <h4>{{ photo.team }}</h4>
-                    <img class="img-fluid" :src='photo.image'>
-
-                    <div>
-                        <form @submit.prevent="submitScore(photo.photoID, photo.team, photo.objective)" style="margin-left: -40px">
-                            <button type="button" class='btn btn-outline-primary' @click="switchCurrentPhoto('prev')">Previous</button>
-                            <input type="number" v-model.number="newscore" :name="newscore" required style="width:40%;">
-                            <button type="submit" class='btn btn-outline-primary'>Submit</button>
-                            <button type="button" class='btn btn-outline-primary' @click="switchCurrentPhoto('next')">Next</button>
-                        </form>
-=======
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group" id="submissions">
@@ -119,7 +98,6 @@ Vue.component('hunt-session', {
                                 </form>
                             </div>
                         </div>
->>>>>>> origin/master
                     </div>
                 </div>
             </div>
@@ -152,7 +130,7 @@ Vue.component('hunt-session', {
             </div>
 
             <div>
-                <button class="btn btn-primary" type="button">End Game</button>
+                <button class="btn btn-primary" type="button" @click="$emit('hunt-game')">End Game</button>
             </div>
         </div>
     `,
@@ -252,7 +230,6 @@ Vue.component('hunt-session', {
             }
         },
         updateLeaderboard(){
-<<<<<<< HEAD
             if (this.jsondata["gameinfo"]["master"] != this.username) {
                 this.$emit('game-ended')
                 return
@@ -270,35 +247,6 @@ Vue.component('hunt-session', {
                             newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"], 
                                                     "objective": objective, "score": objectivelist[objective]["score"]})
                             counter++
-=======
-            if (this.gameID === null) {
-                url_string = window.location.href
-                url = new URL(url_string)
-                this.gameID = url.searchParams.get("sessionID")
-                gameID = this.gameID
-            }
-
-            randomString =  Math.random().toString(18).substring(2, 15)
-            safejson = './hunt_sessions/'+this.gameID+'.json?' + randomString
-
-            fetch(safejson)
-            .then(response => response.json())
-            .then(data => {
-                var teamlist = data["teams"]                
-                var newphotosubmission = []
-                var counter = 0
-                var date = new Date();
-
-                for (let team in teamlist) {
-                    if (teamlist[team] != "") {
-                        var objectivelist = teamlist[team]["objectives"]["photo"]
-                        for (let objective in objectivelist) {
-                            if (objectivelist[objective]["completed"] === true) {
-                                newphotosubmission.push({"photoID": counter, "team": team, "image": objectivelist[objective]["path"] + "?" + date.getSeconds(),
-                                                        "objective": objective,"description":objectivelist[objective]["description"], "score": objectivelist[objective]["score"]})
-                                counter++
-                            }
->>>>>>> origin/master
                         }
                     }
                 }
@@ -320,8 +268,8 @@ Vue.component('hunt-session', {
 
             //store highscore data globally for end hunt button
             if (typeof this.teamscores[0] != "undefined") {
-                bestTeam = this.teamscores[0][0]
-                highscore = this.teamscores[0][1]
+                this.$emit('best-team', this.teamscores[0][0])
+                this.$emit('high-score',this.teamscores[0][1])
             }
         }
     }
@@ -337,7 +285,9 @@ var host = new Vue({
         username: null,
         gameid: null,
         jsondata: {},
-        sessionInterval: null
+        sessionInterval: null,
+        bestteam: null,
+        highscore: null
     },
     mounted() {
         this.sessionIntervalStart()
@@ -356,11 +306,9 @@ var host = new Vue({
                 .then(response => response.json())
                 .then(data => {
                     this.jsondata = data
-                    this.huntstarted = true
                 })   
             } else {
                 this.jsondata = {}
-                this.huntstarted = false
             }
         },
         sessionIntervalStart() {
@@ -377,11 +325,37 @@ var host = new Vue({
                         this.huntstarted = false
                         clearInterval(this.sessionInterval)
                     } else if (data["status"] === "success") {
-                        this.huntstarted = true
-                        this.gameid = data["gameID"]
-                        this.username = data["username"]
-                        this.fetchJson()
-                    } console.log(data)
+                        if (data["username"] != null && data["gameID"] != null)
+                            this.username = data["username"]
+                            this.gameid = data["gameID"]
+                            this.fetchJson()
+                            this.huntstarted = true
+                        } console.log(data)
+                }
+            });
+        },
+        endHunt() {
+            $.ajax({
+                type: "POST",
+                url: "api/end_hunt.php",
+                data: {
+                    gameID : this.gameid,
+                    teamName : this.bestTeam,
+                    highscore : this.highscore
+                },
+                dataType: "json",
+                success: (response) => {
+                    if (response['status'] === 'ok') {
+                        this.huntstarted = false
+                        this.gameid = null
+                        clearInterval(this.sessionInterval)
+                        this.jsondata = {}
+                        this.highscore = null
+                        this.bestteam = null
+                    } else if (response['status'] === 'error' ) {
+                        alert(response['message']);
+                        //@TODO consider using custom error box
+                    }
                 }
             });
         }

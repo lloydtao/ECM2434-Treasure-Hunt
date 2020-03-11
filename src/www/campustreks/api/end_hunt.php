@@ -5,16 +5,22 @@
  */
 include "../utils/connection.php";
 
-if (isset($_SESSION['Username']) && isset($_REQUEST['gameID']) && isset($_REQUEST['highscore']) && isset($_REQUEST['teamName']) ) {
+session_start();
+
+if (isset($_SESSION['username']) && isset($_SESSION['gameID'])) {
     //get Hunt ID
-    $jsonData = file_get_contents('../hunt_sessions/' . $_REQUEST['gameID'] . '.json');
-    if ($_SESSION['Username'] == json_decode($jsonData, true)["gameinfo"]["master"]){
+    $jsonData = file_get_contents('../hunt_sessions/' . $_SESSION['gameID'] . '.json');
+    if ($_SESSION['username'] == json_decode($jsonData, true)["gameinfo"]["master"]){
         $huntID = json_decode($jsonData, true)["gameinfo"]["huntID"];
 
         //close hunt
-        if (endHunt($_REQUEST['gameID'], $huntID)) {
-            //update highscore
-            compareHighscore($huntID, $_REQUEST['highscore'], $_REQUEST['teamName']);
+        if (endHunt($_SESSION['gameID'], $huntID)) {
+            if (isset($_POST['highscore']) && isset($_POST['teamName'])) {
+                //update highscore
+                compareHighscore($huntID, $_POST['highscore'], $_POST['teamName']);
+            } else {
+                successResponse('Highscore not updated');
+            } unset($_SESSION["gameID"]);
         } else {
             errorResponse('Could not end hunt');
         }

@@ -23,7 +23,8 @@ if ($result->num_rows > 0) {
         }
 
         $json["results"][] = array("huntid" => $row["HuntID"], "name" => $row["Name"], "username" => $row["Username"], 
-                            "description" => $row["Description"], "highscore" => $row["Highscore"], "verified" => $verified);
+                            "description" => $row["Description"], "highscore" => $row["Highscore"], 
+                            "bestteam" => $row["BestTeam"], "verified" => $verified);
     }
 }
 
