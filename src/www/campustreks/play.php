@@ -28,7 +28,7 @@
         </div>
         <div v-else-if="togglecomponent==3">
             <location @photo-submit="togglecomponent=4" :jsondata="jsondata"
-                      :currentteam="currentteam">
+                      :currentteam="currentteam" @quit-game="quitGame()">
             </location>
         </div>
         <div v-else-if="togglecomponent==4">
