@@ -90,9 +90,9 @@ if (isset($_FILES['image'])) {
 
         $json_data = file_get_contents('../hunt_sessions/' . $huntSessionID . '.json');
         $hunt_session_data = json_decode($json_data, true);
-        $objective_id = makeSafe($_REQUEST['objective_id']);
+        $objective_id = makeSafe($_POST['objective_id']);
         $hunt_session_data['teams'][$teamName]['objectives']['photo'][$objective_id]['completed'] = true;
-        $hunt_session_data['teams'][$teamName]['objectives']['photo'][$objective_id]['path'] = $path;
+        $hunt_session_data['teams'][$teamName]['objectives']['photo'][$objective_id]['path'] = "image_uploads/" . $huntSessionID . $teamName . '-' . $_POST['objective_id'] . '.jpg';
 
         file_put_contents('../hunt_sessions/' . $huntSessionID . '.json', json_encode($hunt_session_data));
         successResponse("File uploaded");

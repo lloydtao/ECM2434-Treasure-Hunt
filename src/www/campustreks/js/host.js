@@ -9,7 +9,7 @@ Vue.component('start-hunt', {
                 <div class="project-card-no-image">
                     <h3>{{ hunt['name'] }}</h3>
                     <h4>Author: {{ hunt['username'] }}
-                    <img v-if="!hunt['verified']" src="img/exeter-logo.png" height="14px" width="14px">
+                    <img v-if="hunt['verified']==1" src="img/exeter-logo.png" height="14px" width="14px">
                     </h4>
                     <h4>{{ hunt['description'] }}</h4>
                     <a class="btn btn-outline-primary btn-sm" role="button" @click="startHunt(hunt['huntid'])">Host</a>
@@ -90,7 +90,7 @@ Vue.component('hunt-session', {
                                         <h5>Team: {{ photo.team }}</h5>
                                         <p>Objective: {{ photo.description }}</p>
                                         <div class="card-img">
-                                            <img class="img-fluid shadow" :src='photo.image'>
+                                            <img class="img-fluid shadow" :src=photo.image>
                                         </div>
                                     </div>
                                     <div>
@@ -176,30 +176,31 @@ Vue.component('hunt-session', {
         switchCurrentPhoto(dir) {
             if (this.photosubmission.length > 1) {
                 var newPhoto = this.currentPhoto;
-                var counter = -1
+                var counter = -1 
                 for (let photo in this.photosubmission) {
                     if (dir == "next" && this.currentPhoto == (photo[0]-1)) {
                         newPhoto = photo[0]
                     } else if (dir == "prev" && this.currentPhoto == (photo[0]+1)) {
                         newPhoto = photo[0]
-                    }
+                    } 
                     counter++
                 }
                 if (dir =="next" && newPhoto == this.currentPhoto) {
-                    if (this.currentPhoto == 0) {
-                        this.currentPhoto += 1
-                    } else {
+                    if (this.currentPhoto == counter) {
                         this.currentPhoto = 0
+                    } else {
+                        this.currentPhoto += 1
                     }
                 } else if (dir == "prev" && newPhoto == this.currentPhoto) {
-                    if (this.currentPhoto == counter) {
-                        this.currentPhoto -= 1
-                    } else {
+                    if (this.currentPhoto == 0) {
                         this.currentPhoto = counter
+                    } else {
+                        this.currentPhoto -= 1
                     }
                 } else {
                     this.currentPhoto = newPhoto
                 }
+                console.log(this.currentPhoto)
             }
         },
         submitScore(photoID, team, objective) {
