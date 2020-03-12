@@ -37,6 +37,5 @@
 </html>
 
 <script src="js/jquery-3.4.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<!--<script src="js/vue.min.js"></script>-->
+<script src="js/vue.min.js"></script>
 <script src="js/host.js"></script>
