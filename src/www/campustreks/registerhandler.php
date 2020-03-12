@@ -51,8 +51,7 @@ function registerUser($conn)
                 while ($row = mysqli_fetch_assoc($dbUser)) {
                     $dbEmail = $row['Email'];
                     $dbUsername = $row['Username'];
-                    $dbPass = $row['Password'];
-
+                    
                     //Validates that the email and username are unique
                     if (strtoupper($email) == strtoupper($dbEmail)) {
                         echo "email-fail";
@@ -66,11 +65,14 @@ function registerUser($conn)
             //Hashes password and inputs user data to database
             $pass = password_hash($password, PASSWORD_DEFAULT);
 
-            $insert = "INSERT INTO users (Email, Username, Password)
-                       VALUES ('$email', '$username', '$pass')";
-            $result = mysqli_query($conn, $insert);
-
-            echo "register-success";
+            $insert = $conn->prepare("INSERT INTO users (Email, Username, Password, Verified) 
+            VALUES (?, ?, ?, 0);");
+            $insert->bind_param("sss", $email, $username, $pass);
+            if(!$insert->execute()){
+                echo "register-fail";
+            }else{
+                echo "register-success";
+            }
         } else {
             echo "password-confirm-fail";
         }

@@ -7,7 +7,8 @@
  */
 function CheckLogin()
 {
-    session_start();
+    //ignore session errors for the sake of unit testing
+    @session_start();
     if (!isset($_SESSION['isLoggedIn']) || $_SESSION['isLoggedIn'] == false) {
         return false;
     }

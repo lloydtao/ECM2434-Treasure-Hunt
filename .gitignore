@@ -1,10 +1,12 @@
-
+.idea/php.xml
 src/www/campustreks/.idea/workspace.xml
 src/www/campustreks/.idea/vcs.xml
 src/www/campustreks/.idea/campustreks.iml
 src/www/campustreks/.idea/codeStyles/codeStyleConfig.xml
 src/www/campustreks/.idea/misc.xml
 src/www/campustreks/.idea/modules.xml
+src/www/campustreks/hunt_sessions
+src/www/campustreks/image_uploads
 .idea/deployment.xml
 .idea/ECM2434-Treasure-Hunt.iml
 .idea/misc.xml
@@ -12,3 +14,4 @@ src/www/campustreks/.idea/modules.xml
 .idea/vcs.xml
 .idea/workspace.xml
 .idea/codeStyles/codeStyleConfig.xml
+src/www/campustreks/api/google_api_key.php

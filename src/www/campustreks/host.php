@@ -1,60 +1,41 @@
-<html>
-  <head>
-    <meta name="author" content = "Lewis Lloyd">
-    <meta name="Contributor" content = "Marek Tancak">
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta name="author" content = "Marek Tancak">
+      <meta name="contributors" content = "Jakub Kwak">
     <title>Host - CampusTreks</title>
-	<?php include('templates/head.php'); ?>
+    <?php include('templates/head.php'); ?>
   </head>
   <body>
-    <script>
-        function startHunt(huntID){
-            location.href = '/start_hunt.php?huntID='+huntID;
-        }
-    </script>
-	<!-- Header -->
-	<?php include('templates/header.php'); ?>
-	<!-- Content -->
-    <main class="page host-page">
-        <section class="portfolio-block project-no-images">
-            <div class="container">
-                <div class="heading">
-                    <h2>Host a Hunt</h2>
-                </div>
-                <div class="row">
-                    <?php
-                    $ip = "localhost";
-                    $username = "root";
-                    $password = "";
-                    $dbname = "campustreks";
+    <!-- Header -->
+    <?php include('templates/header.php'); ?>
+    <!-- Content -->
+    <div id="host">
+        <main class="page host-page">
+            <section class="portfolio-block project-no-images">
+                    <div v-if="!huntstarted">
+                        <start-hunt @hunt-started="sessionIntervalStart()"></start-hunt>
+                    </div>
+                    <div v-else>
+                        <hunt-session 
+                            :jsondata="jsondata"
+                            :gameid="gameid" 
+                            :username="username"
+                            @end-hunt="endHunt()"
+                            @best-team="bestteam = $event"
+                            @high-score="highscore = $event">
+                        </hunt-session>
+                    </div>
+            </section>
+        </main>
+    </div>
+    <!-- Footer -->
+    <?php include('templates/footer.php'); ?>
 
-                    $conn = new mysqli($ip, $username, $password, $dbname);
-                    if ($conn->connect_error) {
-                        die("Database connection failed - " . $conn->connect_error . "<br>");
-                    }
+</body>
 
-                    $query = "SELECT * FROM Hunt";
-                    $result = $conn->query($query);
-
-                    if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            echo '<div class="col-md-6 col-lg-4">';
-                            echo '<div class="project-card-no-image">';
-                            echo '<h3>' . $row["Name"] . '</h3>';
-                            echo '<h4>' . $row["Description"] . '</h4>';
-                            echo '<a class="btn btn-outline-primary btn-sm" role="button" href="#" onclick=startHunt(' . $row["HuntID"] . ')>Host</a>';
-                            echo '<div class="tags">High Score: ' . $row["Highscore"] . '</div>';
-                            echo '</div>';
-                            echo '</div>';
-                        }
-                    } else {
-                        echo 'No hunts found. Click <a href="/create.php">here</a> to create a new hunt.<br>';
-                    }
-                    ?>
-                </div>
-            </div>
-        </section>
-    </main>
-	<!-- Footer -->
-	<?php include('templates/footer.php'); ?>
-  </body>
 </html>
+
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/vue.min.js"></script>
+<script src="js/host.js"></script>

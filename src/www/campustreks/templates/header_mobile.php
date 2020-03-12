@@ -1,3 +1,3 @@
-<header>	
-    <h1>CampusTreks</h1>
-</header>
+<nav class="navbar gradient">
+    <a style=color:white; href="index.php">Campus Treks</a>
+</nav>

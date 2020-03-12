@@ -10,8 +10,10 @@
                 if (session_status() == PHP_SESSION_NONE) session_start();
                 if (!isset($_SESSION['isLoggedIn']) || $_SESSION['isLoggedIn'] == false) :?>
                     <li class="nav-item" role="presentation"><a class="nav-link" href="login.php">Log In</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="register.php">Register</a></li>
                 <?php else: ?>
                     <li class="nav-item" role="presentation"><a class="nav-link" href="logout.php">Log Out</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="account.php"><?php echo $_SESSION["username"]?></a></li>
                 <?php endif ?>
             </ul>
         </div>
