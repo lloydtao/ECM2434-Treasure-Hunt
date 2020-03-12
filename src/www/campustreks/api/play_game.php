@@ -1,7 +1,7 @@
 <?php
 
 /**
- *
+ * Check if game is in session, if not add it
  * @author James Caddock
  */
 function playGame() {

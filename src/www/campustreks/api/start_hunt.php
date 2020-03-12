@@ -1,4 +1,9 @@
 <?php
+/**
+ * Generate a random game pin
+ * @return string
+ * @author Marek Tancak
+ */
 function generateGamePin()
 {
     $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
