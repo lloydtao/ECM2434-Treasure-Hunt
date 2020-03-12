@@ -637,6 +637,7 @@ var play = new Vue({
 
                             if (this.jsondata.length <= 0) {
                                 this.togglecomponent = 0
+                                this.quitGame()
                             }
                         }
 

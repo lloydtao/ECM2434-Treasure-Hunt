@@ -78,8 +78,7 @@
 </body>
 
 <script src="js/jquery-3.4.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<!--<script src="../js/vue.min.js"></script>-->
+<script src="js/vue.min.js"></script>
 <script type="module" src="js/play.js"></script>
 
 </html>
