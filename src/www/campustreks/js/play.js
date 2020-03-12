@@ -416,7 +416,7 @@ Vue.component('location', {
             return R * c;
         },
         getNextObjective(){
-            if (this.currentteam == "") {
+            if (this.currentteam == "" || this.jsondata == {}) {
                 clearInterval(this.interval)
             }
 
@@ -433,6 +433,7 @@ Vue.component('location', {
                 }
             }
             clearTimeout(this.timeout)
+            clearInterval(this.interval)
             this.alert = "All location objectives completed!"
         },
         submit(){
@@ -623,6 +624,15 @@ var play = new Vue({
                                 this.endGameMessage = "Game has Prematurely Finished"
                             }
                             this.togglecomponent = 5
+
+                            var newtscores = []
+                            var teamlist = this.jsondata["teams"]
+                            for (let team in teamlist) {
+                                if (team != "") {
+                                    newtscores.push([team, teamlist[team]["teaminfo"]["score"]])
+                                }
+                            }
+                            newtscores.sort(this.sortScores)
                         }
 
                         clearInterval(this.gameInterval)
@@ -630,17 +640,13 @@ var play = new Vue({
                         if (this.togglecomponent == 0) {
                             this.togglecomponent = 1
                         }
-
                         this.pin = data["gameID"]
 
                         if (data["teamName"] != "" && data["teamName"] != null) {
                             this.currentteam = data["teamName"]
-
                             if (data["game"] == "active" && this.togglecomponent != 4) {
                                 this.togglecomponent = 3
                             }
-
-
                         } else {
                             this.currentteam = ""
                         }
@@ -648,6 +654,14 @@ var play = new Vue({
                     this.fetchJson()
                 }
             });
+        },
+        sortScores(a, b) {
+            if (a[1] === b[1]) {
+                return 0;
+            }
+            else {
+                return (a[1] > b[1]) ? -1 : 1;
+            }
         },
         /**
          * Sends an ajax request to end the current session

@@ -40,6 +40,34 @@
                 <div class="card-header">
                     <h5>{{ endGameMessage }}</h5>
                 </div>
+                <div class="col-md-6" v-if="jsondata.length != 0">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Leaderboard</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="leaderboard" content="no-cache">
+                                    <table class="table table-striped">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th scope="col">Rank</th>
+                                                <th scope="col">Team</th>
+                                                <th scope="col">Score</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(team, index) in jsondata">
+                                                <td>{{ index + 1 }}</td>
+                                                <td>{{ team[0] }}</td>
+                                                <td>{{ team[1] }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-body">
                     <button type="button" class='btn btn-outline-primary' @click="quitGame()" >Play Another?</button>
                 </div>

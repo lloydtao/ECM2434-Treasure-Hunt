@@ -38,7 +38,7 @@ Vue.component('start-hunt', {
                 dataType: "json",
                 success: (data) => {
                     if (data["status"] === "fail") {
-                        //console.log(data)
+                        this.hunts = {}
                     } else if (data["status"] === "success") {
                         this.hunts = data["results"]
                     }
@@ -54,7 +54,6 @@ Vue.component('start-hunt', {
                 success: (data) => {
                     if (data === "start-hunt-success") {
                         this.$emit("hunt-started")
-                        console.log(data)
                     } 
                 }
             });
@@ -200,7 +199,6 @@ Vue.component('hunt-session', {
                 } else {
                     this.currentPhoto = newPhoto
                 }
-                console.log(this.currentPhoto)
             }
         },
         submitScore(photoID, team, objective) {
@@ -337,7 +335,7 @@ var host = new Vue({
                             this.gameid = data["hostGameID"]
                             this.fetchJson()
                             this.huntstarted = true
-                        } console.log(data)
+                        }
                 }
             });
         },
