@@ -70,7 +70,7 @@ function compareHighscore($huntID, $highscore, $teamName)
 {
     $conn = openCon();
 
-    $sql = $conn->prepare("SELECT `Highscore` FROM `Hunt` WHERE `HuntID` = ?");
+    $sql = $conn->prepare("SELECT `Highscore` FROM `hunt` WHERE `HuntID` = ?");
     $sql->bind_param('i', $huntID);
     $sql->execute();
     $result = $sql->get_result();
