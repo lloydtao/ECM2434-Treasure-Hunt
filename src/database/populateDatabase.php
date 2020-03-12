@@ -1,4 +1,5 @@
 <meta name="author" content = "Michael Freeman">
+<meta name="contributor" content="James Caddock">
 
 <?php
 include "../www/campustreks/utils/connection.php";
@@ -71,10 +72,10 @@ $start_number = 0;
 $total_obj = 0;
 
 foreach ($objectives as $objective) {
-    $huntId = $objective["id"];
+    $huntID = $objective["id"];
 
     for($i = $start_number; $i < $objective["objnum"] + $start_number; $i++){
-        if($conn->query("INSERT INTO objectives (HuntID) VALUES ('$huntId');")){
+        if($conn->query("INSERT INTO objectives (HuntID) VALUES ('$huntID');")){
             $total_obj += 1;
             echo "Objective successfully created <br>";
         }else{
