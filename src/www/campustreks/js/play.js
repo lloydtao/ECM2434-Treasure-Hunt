@@ -551,7 +551,7 @@ Vue.component('photo-submit', {
             this.currentObjective = index;
             //used to prevent image caching
             var randomString =  Math.random().toString(18).substring(2, 15)
-            this.imgPath = "../image_uploads/" + this.pin + this.currentteam + "-"
+            this.imgPath = "./image_uploads/" + this.pin + this.currentteam + "-"
                 + this.currentObjective + ".jpg?" + randomString
 
             this.showUpload = true;
