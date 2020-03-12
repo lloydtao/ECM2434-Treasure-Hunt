@@ -94,8 +94,8 @@
                 $objectiveSql->bind_param("i", $hunt_id);
 
                 $locationSql = $conn->prepare("INSERT INTO location (ObjectiveID, Longitude,
-                Latitude, Question, Answer, Direction) VALUES(?, ?, ?, ?, ?, ?, ?);");
-                $locationSql->bind_param("iiddsss", $last_id, $longitude, $latitude,
+                Latitude, Question, Answer, Direction) VALUES(?, ?, ?, ?, ?, ?);");
+                $locationSql->bind_param("iddsss", $last_id, $longitude, $latitude,
                 $question, $answer, $directions);
 
                 $photoSql = $conn->prepare( "INSERT INTO PhotoOps (ObjectiveID, Specification)

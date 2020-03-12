@@ -87,7 +87,7 @@ foreach ($objectives as $objective) {
 
 /** Location Creation **/
 $locations = array( 
-    array("1" => 
+    array("Computer Science Induction" => 
         array("id" => "1", "lat" => 50.737477, "lon" => -3.532928, "question" => "What is the name of the cafe in Harrison?", "answer" => "The Engine Room",
             "direction" => "From the Innovation Centre go back along North park road and enter the building that are up the steps on the right"),
         array("id" => "2","lat" => 50.736429, "lon" => -3.535956, "question" => "Which colours are names of lecture theatres in Newman?", "answer" => "Blue, Purple, Red, Green",
@@ -101,21 +101,19 @@ $locations = array(
         array("id" => "6","lat" => 50.738207, "lon" => -3.531090, "question" => "How many buildings are paart of the Innovation Centre?", "answer" => "2",
             "direction" => "Go up the path to th left of Amory then turn right and go to the building at the end of North Park road")
             ),
-    array("2" => 
-        array("id" => "10","lat" => 50.737477, "lon" => -3.532928, "question" => "What is the name of the cafe in Harrison?", "answer" => "The Engine Room",
-            "direction" => "From the Innovation Centre go back along North park road and enter the building that are up the steps on the right"),
-        array("id" => "11","lat" => 50.736429, "lon" => -3.535956, "question" => "Which colours are names of lecture theatres in Newman?", "answer" => "Blue, Purple, Red, Green",
-            "direction" => "From Harrison head back towards the Forum and go to the building at the bend in the road."),
-        array("id" => "12","lat" => 50.735458, "lon" => -3.533437, "question" => "Which floor is the Computer Science section on in the Library?", "answer" => "-1",
-            "direction" => "From Peter Chalk enter the Forum and pass through the barriers on the left"),
-        array("id" => "13","lat" => 50.735728, "lon" => -3.531318, "question" => "Which college is Streatham Court part of?", "answer" => "Business School",
-            "direction" => "Head down Forum hill, cross the road and find a fountain"),
-        array("id" => "14","lat" => 50.736313, "lon" => -3.531622, "question" => "What is the name of the large lecture theatre in Amory?", "answer" => "Parker Moot",
-            "direction" => "Cross back over the road and go to the building opposite the bus stop"),
-        array("id" => "15","lat" => 50.738207, "lon" => -3.531090, "question" => "How many buildings are paart of the Innovation Centre?", "answer" => "2",
-            "direction" => "Go up the path to th left of Amory then turn right and go to the building at the end of North Park road")
+    array("Campus Tours" => 
+        array("id" => "10","lat" => 50.73584, "lon" => -3.53528, "question" => "What is this building commonly used for?", "answer" => "Theatre",
+            "direction" => "It is attatched to the great hall and could be seen as very dramatic"),
+        array("id" => "11","lat" => 50.73489, "lon" => -3.53454, "question" => "What is the place nearby called that sells pizza?", "answer" => "Italiano Pizza",
+            "direction" => "Go into the forum and head upwards, past the student bar, the ram"),
+        array("id" => "12","lat" => 50.73486, "lon" => -3.52973, "question" => "What cold drinks do they serve at the lemon grove?", "answer" => "Milkshakes",
+            "direction" => "Exit downwards from forum hill and continue up past the business school"),
+        array("id" => "13","lat" => 50.73643, "lon" => -3.53166, "question" => "What is it hard to do here?", "answer" => "Find your way around",
+            "direction" => "Head down Forum hill, turn left and continue up to the first building you see"),
+        array("id" => "14","lat" => 50.73776, "lon" => -3.53717, "question" => "What is the big building you saw on your way up called?", "answer" => "The Tennis Centre",
+            "direction" => "Continue upwards, and then keep going up, you will feel very fit afterwards!")
     ),
-    array("3" => 
+    array("Best Campus Spots" => 
         array("id" => "16","lat" => 50.737477, "lon" => -3.532928, "question" => "What is the name of the cafe in Harrison?", "answer" => "The Engine Room",
             "direction" => "From the Innovation Centre go back along North park road and enter the building that are up the steps on the right"),
         array("id" => "17","lat" => 50.736429, "lon" => -3.535956, "question" => "Which colours are names of lecture theatres in Newman?", "answer" => "Blue, Purple, Red, Green",
@@ -129,7 +127,7 @@ $locations = array(
         array("id" => "21","lat" => 50.738207, "lon" => -3.531090, "question" => "How many buildings are paart of the Innovation Centre?", "answer" => "2",
             "direction" => "Go up the path to th left of Amory then turn right and go to the building at the end of North Park road")
     ),
-    array("4" => 
+    array("Strictly No Caching" => 
         array("id" => "25","lat" => 50.737477, "lon" => -3.532928, "question" => "What is the name of the cafe in Harrison?", "answer" => "The Engine Room",
             "direction" => "From the Innovation Centre go back along North park road and enter the building that are up the steps on the right"),
         array("id" => "26","lat" => 50.736429, "lon" => -3.535956, "question" => "Which colours are names of lecture theatres in Newman?", "answer" => "Blue, Purple, Red, Green",
@@ -143,7 +141,7 @@ $locations = array(
         array("id" => "30","lat" => 50.738207, "lon" => -3.531090, "question" => "How many buildings are paart of the Innovation Centre?", "answer" => "2",
             "direction" => "Go up the path to th left of Amory then turn right and go to the building at the end of North Park road")
     ),
-    array("5" => 
+    array("Campus Highlights" => 
         array("id" => "32","lat" => 50.737477, "lon" => -3.532928, "question" => "What is the name of the cafe in Harrison?", "answer" => "The Engine Room",
             "direction" => "From the Innovation Centre go back along North park road and enter the building that are up the steps on the right"),
         array("id" => "33","lat" => 50.736429, "lon" => -3.535956, "question" => "Which colours are names of lecture theatres in Newman?", "answer" => "Blue, Purple, Red, Green",
@@ -157,7 +155,7 @@ $locations = array(
         array("id" => "37","lat" => 50.738207, "lon" => -3.531090, "question" => "How many buildings are paart of the Innovation Centre?", "answer" => "2",
             "direction" => "Go up the path to th left of Amory then turn right and go to the building at the end of North Park road")
     ),
-    array("6" => 
+    array("The Beauty of Exeter" => 
         array("id" => "41","lat" => 50.737477, "lon" => -3.532928, "question" => "What is the name of the cafe in Harrison?", "answer" => "The Engine Room",
             "direction" => "From the Innovation Centre go back along North park road and enter the building that are up the steps on the right"),
         array("id" => "42","lat" => 50.736429, "lon" => -3.535956, "question" => "Which colours are names of lecture theatres in Newman?", "answer" => "Blue, Purple, Red, Green",
@@ -176,11 +174,10 @@ $locations = array(
 
 
 foreach ($locations as $location) {
-    $i = 0;
     foreach ($location as $objective) { 
         $location = $conn->prepare("INSERT INTO location (ObjectiveID, Longitude,
-            Latitude, Question, Answer, Direction) Values(?, ?, ?, ?, ?, ?, ?);");
-        $location->bind_param("iiddsss", $id, $long, $lat, $question, $answer, $direction);
+            Latitude, Question, Answer, Direction) Values(?, ?, ?, ?, ?, ?);");
+        $location->bind_param("iddsss", $id, $long, $lat, $question, $answer, $direction);
 
         $id = $objective['id'];
         $lat = $objective['lat'];
@@ -189,53 +186,63 @@ foreach ($locations as $location) {
         $answer = $objective['answer'];
         $direction = $objective['direction'];
         if($location->execute()){
-            echo "Location{$i} successfully created <br>";
+            echo "Location{$id} successfully created <br>";
         }else{
-            echo "Failed to create location{$i} <br>";
+            echo "Failed to create location{$id} <br>";
         }
-        $i++;
     }
 }
 
 $location->close();
 
 /** Photo Creation **/
-$photo = $conn->prepare("INSERT INTO photoops (ObjectiveID, Specification) VALUES(?, ?);");
-$photo->bind_param("is", $id, $spec);
+$photos = array(
+    array("Computer Science Induction" =>
+        array("id" => "7", "spec" => "Take a picture of the Harrision Learning Resource Centre"),
+        array("id" => "8", "spec" => "Take a picture of the Forum Hill cat"),
+        array("id" => "9", "spec" => "Take a picture of the plaque for the opening of the Guild")
+    ),
+    array("Campus Tours" => 
+        array("id" => "15", "spec" => "Get a great picture of the campus")
+    ),
+    array("Best Campus Spots" =>
+        array("id" => "22", "spec" => "Take a picture of a cool looking building"),
+        array("id" => "23", "spec" => "Take a picture of an interesting pathway"),
+        array("id" => "24", "spec" => "Capture the best view")
+    ),
+    array("Strictly No Caching" =>
+        array("id" => "31", "spec" => "Most creative team photo")
+    ),
+    array("Campus Highlights" =>
+        array("id" => "38", "spec" => "Take a picture of a campus cat"),
+        array("id" => "39", "spec" => "Get a stunning shot of reed hall"),
+        array("id" => "40", "spec" => "Surprise us!"),
+    ),
+    array("The Beauty of Exeter" =>
+        array("id" => "47", "spec" => "Take a picture of a rabbit"),
+        array("id" => "48", "spec" => "Take a picture from a great height"),
+        array("id" => "49", "spec" => "Get creative!"),
+        array("id" => "50", "spec" => "Find the biggest tree")
+    )
 
-$i++;
-$id = $objectiveIds[$i];
-$spec = "Take a picture of the Harrision Learning Resource Centre";
-if($photo->execute()){
-    echo "Photo successfully created <br>";
-}else{
-    echo "Failed to create photo <br>";
-}
+);
 
-$i++;
-$id = $objectiveIds[$i];
-$spec = "Take a picture of the Forum Hill cat";
-if($photo->execute()){
-    echo "Photo successfully created <br>";
-}else{
-    echo "Failed to create photo <br>";
-}
-
-$i++;
-$id = $objectiveIds[$i];
-$spec = "Take a picture of the plaque for the opening of the Guild";
-if($photo->execute()){
-    echo "Photo successfully created <br>";
-}else{
-    echo "Failed to create photo <br>";
+foreach ($photos as $photo) {
+    foreach ($photo as $objective) {
+        $photo = $conn->prepare("INSERT INTO photoops (ObjectiveID, Specification) VALUES(?, ?);");
+        $photo->bind_param("is", $id, $spec);
+        
+        $id = $objective["id"];
+        $spec = $objective["spec"];
+        
+        if($photo->execute()){
+            echo "Photo successfully created <br>";
+        }else{
+            echo "Failed to create photo <br>";
+        }
+    }
 }
 
 $photo->close();
-
-
-
-
 $conn->close();
-
-
 ?>
