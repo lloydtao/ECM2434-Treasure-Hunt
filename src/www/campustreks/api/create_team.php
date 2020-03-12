@@ -139,12 +139,6 @@ function createTeam()
         echo "team-form-error";
         return;
     }
-
-	//if either field is empty, echo error
-    if (empty($team)) {
-        echo "team-form-error";
-        return;
-    }
 	
     // Gets pin and nickname from session
     $pin = $_SESSION['gameID'];

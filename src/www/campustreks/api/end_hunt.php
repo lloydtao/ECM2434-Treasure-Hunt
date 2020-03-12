@@ -6,18 +6,20 @@
 include "../utils/connection.php";
 
 session_start();
-if (isset($_SESSION['username']) && isset($_REQUEST['gameID'])) {
+
+if (isset($_SESSION['username']) && isset($_SESSION['hostGameID'])) {
     //get Hunt ID
-    $jsonData = file_get_contents('../hunt_sessions/' . $_REQUEST['gameID'] . '.json');
+    $jsonData = file_get_contents('../hunt_sessions/' . $_SESSION['hostGameID'] . '.json');
     if ($_SESSION['username'] == json_decode($jsonData, true)["gameinfo"]["master"]){
         $huntID = json_decode($jsonData, true)["gameinfo"]["huntID"];
 
         //close hunt
-        if (endHunt($_REQUEST['gameID'], $huntID)) {
-            if (isset($_REQUEST['highscore']) && isset($_REQUEST['teamName'])) {
+        if (endHunt($_SESSION['hostGameID'], $huntID)) {
+            if (isset($_POST['highscore']) && isset($_POST['teamName'])) {
                 //update highscore
-                compareHighscore($huntID, $_REQUEST['highscore'], $_REQUEST['teamName']);
+                compareHighscore($huntID, $_POST['highscore'], $_POST['teamName']);
             } else {
+                unset($_SESSION["hostGameID"]);
                 successResponse('Highscore not updated');
             }
         } else {
@@ -25,6 +27,7 @@ if (isset($_SESSION['username']) && isset($_REQUEST['gameID'])) {
         }
     }
     else{
+        unset($_SESSION["hostGameID"]);
         errorResponse('Unauthorised');
     }
 } else {
@@ -81,6 +84,7 @@ function compareHighscore($huntID, $highscore, $teamName)
             updateHighscore($huntID, $highscore, $teamName, $conn);
         } else {
             $conn->close();
+            unset($_SESSION["hostGameID"]);
             successResponse('Highscore unchanged');
         }
     } else {
@@ -102,9 +106,11 @@ function updateHighscore($huntID, $highscore, $teamName, $conn)
     $sql->bind_param('isi', $highscore, $teamName, $huntID);
     if ($sql->execute()) {
         $conn->close();
+        unset($_SESSION["hostGameID"]);
         successResponse('Highscore updated');
     } else {
         $conn->close();
+        unset($_SESSION["hostGameID"]);
         errorResponse('Update unsuccessful');
     }
 }

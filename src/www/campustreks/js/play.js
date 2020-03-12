@@ -99,7 +99,6 @@ Vue.component('team-table', {
                     <div class='form-group'>
                         <div id='currentTeam' class="btn-group" role="group" v-if='currentteam==""'>
                             <button type="button" class='btn btn-outline-primary' @click="$emit('toggle-component', 2)" value="Create Team">New Team</button>
-                            <button type="button" class='btn btn-outline-primary' @click="$emit('fetch-json')" value="Refresh">Refresh</button>
                             <button type="button" class='btn btn-outline-primary' @click="$emit('quit-game')" value="Quit">Leave</button>
                         </div>
                         <div id='currentTeam' class='btn-group' role="group" v-if='currentteam!=""'>
@@ -344,18 +343,13 @@ Vue.component('location', {
          */
         getLocationSuccess(pos){
             var a = Math.abs(this.distance(this.objLoc, pos));
-            console.log(pos)
-            console.log(a)
-            console.log(this.objLoc)
             if (a < 10){
-                console.log(true);
                 this.getQuestionFromDb()
             }
             else{
                 clearTimeout(this.timeout)
                 this.alert = "you are too far from the objective"
                 setTimeout(this.alertFade, 1500);
-                console.log(false);
             }
         },
         checkQuestion(){
@@ -422,13 +416,12 @@ Vue.component('location', {
             return R * c;
         },
         getNextObjective(){
-            if (this.currentteam == "") {
+            if (this.currentteam == "" || this.jsondata == {}) {
                 clearInterval(this.interval)
             }
 
             this.objectivelist = this.jsondata["teams"][this.currentteam]["objectives"]["gps"]
             this.score = this.jsondata["teams"][this.currentteam]["teaminfo"]["score"]
-            console.log(this.objectivelist)
 
             for (let objective in this.objectivelist) {
                 if (this.objectivelist[objective]["completed"] === false) {
@@ -440,6 +433,7 @@ Vue.component('location', {
                 }
             }
             clearTimeout(this.timeout)
+            clearInterval(this.interval)
             this.alert = "All location objectives completed!"
         },
         submit(){
@@ -480,12 +474,13 @@ Vue.component('photo-submit', {
                     <div v-if="showUpload">
                         <form id="uploadForm" v-on:submit.prevent enctype="multipart/form-data">
                             <h4> {{objectives[currentObjective]["description"]}} </h4>
-                            <img width="500px" @error="imgPath=null" v-if="imgPath!=null" v-bind:src="imgPath" style=' width: 100%'>
+                            <img width="100%" @error="imgPath=null" v-if="imgPath!=null" v-bind:src="imgPath">
                             <p>Select image to upload:</p><br>
                             <input type="file" accept="image/*" capture="camera" name="image" /><br>
                             <button class='btn btn-outline-primary' v-on:click="submitForm()">Upload</button>
                             <button class='btn btn-outline-primary' v-on:click="hideUploadForm()">Back</button>
                         </form>
+                        <p v-if="errorMessage!=null" style="margin-top:10px; margin-bottom:-20px">{{ errorMessage }}</p>
                     </div>
                     <table class="table table-striped" v-else>
                         <thead class="thead-dark">
@@ -512,7 +507,8 @@ Vue.component('photo-submit', {
             objectives: {},
             showUpload: false,
             currentObjective: null,
-            imgPath: null
+            imgPath: null,
+            errorMessage: null
         }
     },
     mounted() {
@@ -527,31 +523,35 @@ Vue.component('photo-submit', {
                 type: "POST",
                 url: "api/upload_photo.php",
                 data: formData,
+                dataType: "json",
                 cache: false,
                 contentType: false,
                 processData: false,
                 success: (response) => {
-                    response = $.parseJSON(response);
                     if (response['status'] === 'ok') {
                         this.showUpload = false;
                         this.currentObjective = null;
                         this.objectives = this.huntsessiondata["teams"][this.currentteam]["objectives"]['photo'];
                     } else if (response['status'] === 'error' ) {
-                        alert(response['message']);
-                        //@TODO consider using custom error box
+                        this.errorMessage = response['message']
+                        setTimeout(this.errorMessageFade, 1000)
                     }
                 },
                 error: (response) => {
-                    console.log(response);
+                    this.errorMessage = response['message']
+                    setTimeout(this.errorMessageFade, 1000)
                 }
 
             })
+        },
+        errorMessageFade() {
+            this.errorMessage = null
         },
         showUploadForm(index) {
             this.currentObjective = index;
             //used to prevent image caching
             var randomString =  Math.random().toString(18).substring(2, 15)
-            this.imgPath = "image_uploads/" + this.pin + this.currentteam + "-"
+            this.imgPath = "../image_uploads/" + this.pin + this.currentteam + "-"
                 + this.currentObjective + ".jpg?" + randomString
 
             this.showUpload = true;
@@ -574,7 +574,8 @@ var play = new Vue({
         pin: null,
         jsondata: {},
         currentteam: "",
-        gameInterval: null
+        gameInterval: null,
+        endGameMessage: null
     },
     beforeMount() {
         this.startGame()
@@ -589,7 +590,7 @@ var play = new Vue({
          * @author James Caddock
          */
         fetchJson() {
-            if (this.pin != null) {
+            if (this.pin != null){
                 var reqjson = this.pin
                 var randomString =  Math.random().toString(18).substring(2, 15)
                 var safejson = 'hunt_sessions/' + encodeURI(reqjson) + '.json?' + randomString
@@ -598,8 +599,6 @@ var play = new Vue({
                     .then(data => {
                         this.jsondata = data
                     })
-            } else {
-                this.jsondata = {};
             }
         },
         /**
@@ -611,14 +610,34 @@ var play = new Vue({
                 type: "POST",
                 url: "api/check_game.php",
                 dataType: "json",
+                data: { type : "play" },
                 success: (data) => {
                     if (data["status"] === "fail") {
-                        if(data["game"] == "inactive") {
+                        if(data["game"] == "inactive" && this.togglecomponent != 1 && this.togglecomponent != 2) {
                             this.togglecomponent = 0
                             this.currentteam = ""
                             this.pin = null
                         } else {
+                            if(data["game"] == "active") {
+                                this.endGameMessage = "Game has Finished"
+                            } else {
+                                this.endGameMessage = "Game has Prematurely Finished"
+                            }
                             this.togglecomponent = 5
+
+                            var newtscores = []
+                            var teamlist = this.jsondata["teams"]
+                            for (let team in teamlist) {
+                                if (team != "") {
+                                    newtscores.push([team, teamlist[team]["teaminfo"]["score"]])
+                                }
+                            }
+                            newtscores.sort(this.sortScores)
+                            this.jsondata = newtscores
+
+                            if (this.jsondata.length <= 0) {
+                                this.togglecomponent = 0
+                            }
                         }
 
                         clearInterval(this.gameInterval)
@@ -626,24 +645,28 @@ var play = new Vue({
                         if (this.togglecomponent == 0) {
                             this.togglecomponent = 1
                         }
-
                         this.pin = data["gameID"]
 
                         if (data["teamName"] != "" && data["teamName"] != null) {
                             this.currentteam = data["teamName"]
-
                             if (data["game"] == "active" && this.togglecomponent != 4) {
                                 this.togglecomponent = 3
                             }
-
-
                         } else {
                             this.currentteam = ""
                         }
-                    } console.log(data)
+                    }
                     this.fetchJson()
                 }
             });
+        },
+        sortScores(a, b) {
+            if (a[1] === b[1]) {
+                return 0;
+            }
+            else {
+                return (a[1] > b[1]) ? -1 : 1;
+            }
         },
         /**
          * Sends an ajax request to end the current session
