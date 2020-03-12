@@ -78,7 +78,7 @@ foreach ($objectives as $objective) {
             $total_obj += 1;
             echo "Objective successfully created <br>";
         }else{
-            echo "Failed to create Objective <br>";
+            echo "Failed to create objective <br>";
         }
     }
     $start_number += $i;
@@ -98,8 +98,8 @@ $locations = array(
             "direction" => "Head down Forum hill, cross the road and find a fountain"),
         array("id" => "5","lat" => 50.736313, "lon" => -3.531622, "question" => "What is the name of the large lecture theatre in Amory?", "answer" => "Parker Moot",
             "direction" => "Cross back over the road and go to the building opposite the bus stop"),
-        array("id" => "6","lat" => 50.738207, "lon" => -3.531090, "question" => "How many buildings are paart of the Innovation Centre?", "answer" => "2",
-            "direction" => "Go up the path to th left of Amory then turn right and go to the building at the end of North Park road")
+        array("id" => "6","lat" => 50.738207, "lon" => -3.531090, "question" => "How many buildings are a part of the Innovation Centre?", "answer" => "2",
+            "direction" => "Go up the path to the left of Amory then turn right and go to the building at the end of North Park road")
             ),
     array("Campus Tours" => 
         array("id" => "10","lat" => 50.73584, "lon" => -3.53528, "question" => "What is this building commonly used for?", "answer" => "Theatre",
@@ -114,18 +114,18 @@ $locations = array(
             "direction" => "Continue upwards, and then keep going up, you will feel very fit afterwards!")
     ),
     array("Best Campus Spots" => 
-        array("id" => "16","lat" => 50.737477, "lon" => -3.532928, "question" => "What is the name of the cafe in Harrison?", "answer" => "The Engine Room",
-            "direction" => "From the Innovation Centre go back along North park road and enter the building that are up the steps on the right"),
-        array("id" => "17","lat" => 50.736429, "lon" => -3.535956, "question" => "Which colours are names of lecture theatres in Newman?", "answer" => "Blue, Purple, Red, Green",
-            "direction" => "From Harrison head back towards the Forum and go to the building at the bend in the road."),
-        array("id" => "18","lat" => 50.735458, "lon" => -3.533437, "question" => "Which floor is the Computer Science section on in the Library?", "answer" => "-1",
-            "direction" => "From Peter Chalk enter the Forum and pass through the barriers on the left"),
-        array("id" => "19","lat" => 50.735728, "lon" => -3.531318, "question" => "Which college is Streatham Court part of?", "answer" => "Business School",
-            "direction" => "Head down Forum hill, cross the road and find a fountain"),
-        array("id" => "20","lat" => 50.736313, "lon" => -3.531622, "question" => "What is the name of the large lecture theatre in Amory?", "answer" => "Parker Moot",
-            "direction" => "Cross back over the road and go to the building opposite the bus stop"),
-        array("id" => "21","lat" => 50.738207, "lon" => -3.531090, "question" => "How many buildings are paart of the Innovation Centre?", "answer" => "2",
-            "direction" => "Go up the path to th left of Amory then turn right and go to the building at the end of North Park road")
+        array("id" => "16","lat" => 50.73745, "lon" => -3.53942, "question" => "What makes this place spectacular?", "answer" => "The View",
+            "direction" => "Lovely area but very expensive accommodation, head up past peter chalk and take a left"),
+        array("id" => "17","lat" => 50.73605, "lon" => -3.53034, "question" => "What is the general name of this area?", "answer" => "Business School",
+            "direction" => "Go into the forum and head upwards, past the student bar, the ram"),
+        array("id" => "18","lat" => 50.73486, "lon" => -3.52973, "question" => "What cold drinks do they serve at the lemon grove?", "answer" => "Milkshakes",
+            "direction" => "Exit downwards from forum hill and continue up past the business school"),
+        array("id" => "19","lat" => 50.73596, "lon" => -3.52623, "question" => "What catering does this place accomodate?", "answer" => "Catered",
+            "direction" => "Head up to the top of lafrowda and then go past the trees"),
+        array("id" => "20","lat" => 50.73851, "lon" => -3.53101, "question" => "What are there a lot of in this area?", "answer" => "Cars",
+            "direction" => "Walk towards innovation 2 but make your way to the back"),
+        array("id" => "21","lat" => 50.738207, "lon" => -3.531090, "question" => "How many buildings are a part of the Innovation Centre?", "answer" => "2",
+            "direction" => "Go up the path to the left of Amory then turn right and go to the building at the end of North Park road")
     ),
     array("Strictly No Caching" => 
         array("id" => "25","lat" => 50.737477, "lon" => -3.532928, "question" => "What is the name of the cafe in Harrison?", "answer" => "The Engine Room",
@@ -139,7 +139,7 @@ $locations = array(
         array("id" => "29","lat" => 50.736313, "lon" => -3.531622, "question" => "What is the name of the large lecture theatre in Amory?", "answer" => "Parker Moot",
             "direction" => "Cross back over the road and go to the building opposite the bus stop"),
         array("id" => "30","lat" => 50.738207, "lon" => -3.531090, "question" => "How many buildings are paart of the Innovation Centre?", "answer" => "2",
-            "direction" => "Go up the path to th left of Amory then turn right and go to the building at the end of North Park road")
+            "direction" => "Go up the path to the left of Amory then turn right and go to the building at the end of North Park road")
     ),
     array("Campus Highlights" => 
         array("id" => "32","lat" => 50.737477, "lon" => -3.532928, "question" => "What is the name of the cafe in Harrison?", "answer" => "The Engine Room",
@@ -153,7 +153,7 @@ $locations = array(
         array("id" => "36","lat" => 50.736313, "lon" => -3.531622, "question" => "What is the name of the large lecture theatre in Amory?", "answer" => "Parker Moot",
             "direction" => "Cross back over the road and go to the building opposite the bus stop"),
         array("id" => "37","lat" => 50.738207, "lon" => -3.531090, "question" => "How many buildings are paart of the Innovation Centre?", "answer" => "2",
-            "direction" => "Go up the path to th left of Amory then turn right and go to the building at the end of North Park road")
+            "direction" => "Go up the path to the left of Amory then turn right and go to the building at the end of North Park road")
     ),
     array("The Beauty of Exeter" => 
         array("id" => "41","lat" => 50.737477, "lon" => -3.532928, "question" => "What is the name of the cafe in Harrison?", "answer" => "The Engine Room",
@@ -167,7 +167,7 @@ $locations = array(
         array("id" => "45","lat" => 50.736313, "lon" => -3.531622, "question" => "What is the name of the large lecture theatre in Amory?", "answer" => "Parker Moot",
             "direction" => "Cross back over the road and go to the building opposite the bus stop"),
         array("id" => "46","lat" => 50.738207, "lon" => -3.531090, "question" => "How many buildings are paart of the Innovation Centre?", "answer" => "2",
-            "direction" => "Go up the path to th left of Amory then turn right and go to the building at the end of North Park road")
+            "direction" => "Go up the path to the left of Amory then turn right and go to the building at the end of North Park road")
     )
 );
 
