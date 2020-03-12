@@ -67,7 +67,7 @@ function registerUser($conn)
             mysqli_stmt_close($stmt);
 
             //Hashes password and inputs user data to database
-            $insert = "UPDATE Users SET Password=? WHERE Username=?";
+            $insert = "UPDATE users SET Password=? WHERE Username=?";
             if($stmt = mysqli_prepare($conn, $insert)){
                 mysqli_stmt_bind_param($stmt, "ss", $pass, $username);
                 $pass = password_hash($password, PASSWORD_DEFAULT);

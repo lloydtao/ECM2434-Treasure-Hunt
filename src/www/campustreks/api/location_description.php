@@ -6,7 +6,7 @@ $_SESSION['ingame'] = true;
 
 function getDescription($objectiveID){
 	$conn = opencon();
-	$sql = "SELECT `Direction` FROM `location` WHERE `objectiveID` = ".$objectiveID;
+	$sql = "SELECT `Direction` FROM `location` WHERE `ObjectiveID` = ".$objectiveID;
 	$result = $conn->query($sql);
 
 	if ($result->num_rows > 0) {

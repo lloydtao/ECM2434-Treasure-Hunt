@@ -24,7 +24,7 @@
         $username = $_SESSION["username"];
 
         //Retrieves information of the user from the database
-        $sql = "SELECT * FROM Users WHERE Username=?";
+        $sql = "SELECT * FROM users WHERE Username=?";
         $stmt = mysqli_stmt_init($conn);
         if (mysqli_stmt_prepare($stmt, $sql)) {
             mysqli_stmt_bind_param($stmt, "s", $username);

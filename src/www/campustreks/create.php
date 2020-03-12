@@ -79,7 +79,7 @@
                 $logitude = $latitude = $question = $answer = $photoDescription = "";
 
                 // Create the hunt in the database
-                $sql = $conn->prepare("INSERT INTO Hunt (Name, Description, Username) VALUES(?, ?, ?);");
+                $sql = $conn->prepare("INSERT INTO hunt (Name, Description, Username) VALUES(?, ?, ?);");
                 $sql->bind_param("sss", $title, $description, $user);
 
                 if ($sql->execute()) {
@@ -98,7 +98,7 @@
                 $locationSql->bind_param("iddsss", $last_id, $longitude, $latitude,
                 $question, $answer, $directions);
 
-                $photoSql = $conn->prepare( "INSERT INTO PhotoOps (ObjectiveID, Specification)
+                $photoSql = $conn->prepare( "INSERT INTO photoOps (ObjectiveID, Specification)
                 VALUES(?, ?);");
                 $photoSql->bind_param("is", $last_id, $specification);
 
