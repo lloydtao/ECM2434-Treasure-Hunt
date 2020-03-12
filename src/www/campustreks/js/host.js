@@ -98,7 +98,7 @@ Vue.component('hunt-session', {
                                         <p>Current Score: {{ photo.score }}</p>
                                             <div class="btn-group" role="group" aria-label="Basic example">
                                                 <button type="button" class='btn btn-secondary' @click="switchCurrentPhoto('prev')">&lt;</button>
-                                                <input type="number" min="0" max="100" class="input-group" placeholder="Score" v-model.number="newscore" :name="newscore">
+                                                <input type="number" min="0" max="1000" class="input-group" placeholder="Score" v-model.number="newscore" :name="newscore">
                                                 <button type="submit" class='btn btn-outline-primary'>Send</button>
                                                 <button type="button" class='btn btn-secondary' @click="switchCurrentPhoto('next')">&gt;</button>
                                             </div>
