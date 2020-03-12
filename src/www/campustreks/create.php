@@ -174,41 +174,40 @@
           <form id="create-form" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                 <p id="dberror"></p>
                 <p id="hunterror"></p>
-                <p><span class="error">* required field</span></p>
                 <div class="form-group">
-                    <label for="title">Title</label><span class="error">*<?php echo $titleErr; ?></span><br>
+                    <label for="title">Title</label><br>
                     <input class="form-control" type="text" name="title" required value= <?php echo $title; ?>>
                 </div>
                 <div class="form-group">
-                    <label for="description">Description</label><span
-                            class="error">*<?php echo $descriptionErr; ?></span><br>
-                    <textarea class="form-control form-control-lg"
+                    <label for="description">Description</label><br>
+                    <textarea class="form-control"
                               name="description" required><?php echo $description; ?></textarea>
                 </div>
                 <div class="form-group">
                     <label for="objectives">Objectives</label><br>
-                    <button class="btn btn-primary" type="button" onclick=newGPSObjective()>Add GPS Objective</button>
-                    <button class="btn btn-primary" type="button" onclick=newPhotoObjective()>Add Photo Objective
-                    </button>
+                    <div class="btn-group d-flex btn-block">
+                        <button class="btn btn-primary border" type="button" onclick=newGPSObjective()>Add GPS Objective</button>
+                        <button class="btn btn-primary border" type="button" onclick=newPhotoObjective()>Add Photo Objective</button>
+                    </div>
                     <br>
                     <br>
                     <div id="objectives"></div>
                 </div>
                 <div class="form-row">
-                    <div class="col-md-6 button">
-                        <input class="btn btn-primary btn-block" type="submit" name="submit">
-                    </div>
+                    <input class="btn btn-primary btn-block" type="submit" name="submit" value="Submit Hunt">
                 </div>
             </form>
             <form id="map-window" style="display: none">
                 <div id="map"></div>
                 <br>
-                <button class="btn btn-primary" type="button" onclick=submitMap()>Confirm Location</button>
-                <button class="btn btn-primary" type="button" onclick=hideMap()>Back</button>
+                <div class="btn-group btn-block">
+                    <button class="btn btn-primary border" type="button" onclick=submitMap()>Confirm Location</button>
+                    <button class="btn btn-primary border" type="button" onclick=hideMap()>Back</button>
+                </div>
             </form>
         </div>
     </section>
-    
+
 </main>
 <!-- Footer -->
 <?php include('templates/footer.php'); ?>
@@ -327,15 +326,18 @@
      */
     function newObjective(type) {
         objectiveCounter++;
-        var newObj = document.createElement("div");
+        var objCard = document.createElement("div");
         newObjective.className = "objective";
         newObjective.id = "objective" + objectiveCounter.toString();
-        document.getElementById("objectives").appendChild(newObj);
+        document.getElementById("objectives").appendChild(objCard);
+        objCard.className = "card bg-light";
+
+
 
         //adds expand button
         var expandButton = document.createElement("button");
         expandButton.type = "button";
-        expandButton.className = "form-control";
+        expandButton.className = "form-control bg-secondary text-white";
         if (type === "GPS") {
             expandButton.innerHTML = "GPS Objective";
         } else if (type === "PHOTO") {
@@ -344,14 +346,13 @@
         expandButton.onclick = expand;
 
         var content = document.createElement("div");
+        content.className = "card-body bg-light";
         content.id = "content";
 
-        content.appendChild(document.createElement("br"));
+        objCard.appendChild(expandButton);
+        objCard.appendChild(content);
 
-        newObj.appendChild(expandButton);
-        newObj.appendChild(content);
-
-        return newObj;
+        return objCard;
     }
 
     /**
@@ -376,7 +377,7 @@
         //adds map button
         var mapBtn = document.createElement("button");
         mapBtn.type = "button";
-        mapBtn.className = "btn btn-primary";
+        mapBtn.className = "btn btn-outline-primary btn-block";
         mapBtn.name = objectiveCounter.toString();
         mapBtn.innerHTML = "Select location on map";
         content.appendChild(mapBtn);
@@ -448,7 +449,7 @@
         content.appendChild(document.createElement("br"));
     }
 
-    
+
     window.onload = function(){
         document.getElementById("dberror").innerHTML = dberr;
         document.getElementById("hunterror").innerHTML = hunterr;
