@@ -32,7 +32,7 @@ if ($conn->query($sql) === TRUE) {
 
 // sql to create table
 $sql = "USE campustreks;
-    CREATE TABLE Users (
+    CREATE TABLE users (
     Email VARCHAR(50) NOT NULL PRIMARY KEY,
     Username VARCHAR(30) UNIQUE NOT NULL,
     Password VARCHAR(70) NOT NULL,
@@ -41,7 +41,7 @@ $sql = "USE campustreks;
     );";
 
 
-$sql .= "CREATE TABLE Hunt (
+$sql .= "CREATE TABLE hunt (
     HuntID INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(30) NOT NULL,
     Description TEXT NOT NULL,
@@ -53,23 +53,22 @@ $sql .= "CREATE TABLE Hunt (
     );";
 
 
-$sql .= "CREATE TABLE Objectives (
+$sql .= "CREATE TABLE objectives (
     ObjectiveID INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     HuntID INT(6) UNSIGNED NOT NULL,
     FOREIGN KEY (HuntID) REFERENCES Hunt(HuntID),
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );";
 
-$sql .= "CREATE TABLE PhotoOps (
+$sql .= "CREATE TABLE photoops (
     ObjectiveID INT(6) UNSIGNED NOT NULL UNIQUE,
     Specification TEXT NOT NULL,
     FOREIGN KEY (ObjectiveID) REFERENCES Objectives(ObjectiveID),
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );";
 
-$sql .= "CREATE TABLE Location (
+$sql .= "CREATE TABLE location (
     ObjectiveID INT(6) UNSIGNED NOT NULL UNIQUE,
-    HuntOrder INT(6) NOT NULL,
     Longitude FLOAT(20) NOT NULL,
     Latitude FLOAT(20) NOT NULL,
     Question VARCHAR(255) NOT NULL,
@@ -79,7 +78,7 @@ $sql .= "CREATE TABLE Location (
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );";
 
-$sql .= "CREATE TABLE HuntData (
+$sql .= "CREATE TABLE huntdata (
     JsonID INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     HuntID INT(6) UNSIGNED NOT NULL,
     FOREIGN KEY (HuntID) REFERENCES Hunt(HuntID),

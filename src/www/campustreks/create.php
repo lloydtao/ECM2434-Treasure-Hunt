@@ -76,7 +76,6 @@
             echo "<script type='text/javascript'>hunterr = \"At least one Location objective needed\";</script>";
             else {
 
-                $locations = 0;
                 $logitude = $latitude = $question = $answer = $photoDescription = "";
 
                 // Create the hunt in the database
@@ -94,9 +93,9 @@
                 $objectiveSql = $conn->prepare("INSERT INTO objectives (HuntID) Values(?)");
                 $objectiveSql->bind_param("i", $hunt_id);
 
-                $locationSql = $conn->prepare("INSERT INTO location (ObjectiveID, HuntOrder, Longitude,
-                Latitude, Question, Answer, Direction) VALUES(?, ?, ?, ?, ?, ?, ?);");
-                $locationSql->bind_param("iiddsss", $last_id, $locations, $longitude, $latitude,
+                $locationSql = $conn->prepare("INSERT INTO location (ObjectiveID, Longitude,
+                Latitude, Question, Answer, Direction) VALUES(?, ?, ?, ?, ?, ?);");
+                $locationSql->bind_param("iddsss", $last_id, $longitude, $latitude,
                 $question, $answer, $directions);
 
                 $photoSql = $conn->prepare( "INSERT INTO PhotoOps (ObjectiveID, Specification)
@@ -126,9 +125,7 @@
                             continue;
                         }
                         // Add Location to database
-                        if ($locationSql->execute())
-                            $locations++;
-                        else {
+                        if (!($locationSql->execute())){
                             echo "<script type='text/javascript'>dberr = \"Error adding the hunt.
                             Please try again. If this error persists contact the system admin\";</script>";
                         }
