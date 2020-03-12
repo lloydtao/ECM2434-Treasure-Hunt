@@ -13,7 +13,6 @@
     <div id="host">
         <main class="page host-page">
             <section class="portfolio-block project-no-images">
-                <div class="container">
                     <div v-if="!huntstarted">
                         <start-hunt @hunt-started="sessionIntervalStart()"></start-hunt>
                     </div>
@@ -27,7 +26,6 @@
                             @high-score="highscore = $event">
                         </hunt-session>
                     </div>
-                </div>
             </section>
         </main>
     </div>

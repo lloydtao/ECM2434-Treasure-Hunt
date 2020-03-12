@@ -4,21 +4,22 @@ Vue.component('start-hunt', {
         <div class="heading">
             <h2>Host a Hunt</h2>
         </div>
-        <div class="row" v-for="hunt in hunts" :key="hunt['huntid']">
-            <div class="col-md-6 col-lg-4">
-                <div class="project-card-no-image">
-                    <h3>{{ hunt['name'] }}</h3>
-                    <h4>Author: {{ hunt['username'] }}
-                    <img v-if="hunt['verified']==1" src="img/exeter-logo.png" height="14px" width="14px">
-                    </h4>
-                    <h4>{{ hunt['description'] }}</h4>
-                    <a class="btn btn-outline-primary btn-sm" role="button" @click="startHunt(hunt['huntid'])">Host</a>
-                    <div class="tags">High Score: {{ hunt['highscore'] }} - {{ hunt['bestteam'] }}</div>
+            <div class="row">
+                <div class="col-md-6 col-lg-4"v-for="hunt in hunts" :key="hunt['huntid']">
+                    <div class="project-card-no-image">
+                        <h3>{{ hunt['name'] }}</h3>
+                        <h4>Author: {{ hunt['username'] }}
+                        <img v-if="hunt['verified']==1" src="img/exeter-logo.png" height="14px" width="14px">
+                        </h4>
+                        <h4>{{ hunt['description'] }}</h4>
+                        <a class="btn btn-outline-primary btn-sm" role="button" @click="startHunt(hunt['huntid'])">Host</a>
+                        <div class="tags">High Score: {{ hunt['highscore'] }} - {{ hunt['bestteam'] }}</div>
+                    </div>
+                </div>
+                <div v-show="hunts.length==0">
+                    <p>No hunts found. Click <a href="/create.php">here</a> to create a new hunt.</p>
                 </div>
             </div>
-        </div>
-        <div v-show="hunts.length==0">
-            <p>No hunts found. Click <a href="/create.php">here</a> to create a new hunt.</p>
         </div>
     </div>
     `,
