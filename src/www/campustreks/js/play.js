@@ -623,6 +623,9 @@ var play = new Vue({
                             } else {
                                 this.endGameMessage = "Game has Prematurely Finished"
                             }
+                            if (this.togglecomponent == 5) {
+                                this.togglecomponent = 0
+                            }
                             this.togglecomponent = 5
 
                             var newtscores = []
