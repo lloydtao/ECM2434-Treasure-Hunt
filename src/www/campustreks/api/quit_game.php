@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 
+ * Quit the game session
  * @author James Caddock
  */
 function quitGame() 

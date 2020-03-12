@@ -4,6 +4,11 @@ include "../utils/connection.php";
 session_start();
 $_SESSION['ingame'] = true;
 
+/**
+ * Get objective description/direction
+ * @param $objectiveID
+ * @return mixed
+ */
 function getDescription($objectiveID){
 	$conn = opencon();
 	$sql = "SELECT `Direction` FROM `location` WHERE `ObjectiveID` = ".$objectiveID;

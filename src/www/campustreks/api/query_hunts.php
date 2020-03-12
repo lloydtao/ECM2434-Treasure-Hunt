@@ -1,4 +1,8 @@
 <?php
+/**
+ *
+ */
+
 include "../utils/connection.php";
 
 $conn = openCon();
